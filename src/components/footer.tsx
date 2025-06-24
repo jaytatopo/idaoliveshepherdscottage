@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Facebook, Instagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Footer() {
@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
-            <p className="font-headline text-lg font-semibold">Ida Olive Cottage Retreat</p>
+            <p className="font-serif text-lg font-semibold">Ida Olive Shepherd’s Cottage</p>
             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Ida Olive Cottage. All Rights Reserved.</p>
           </div>
           <div className="flex items-center gap-4">
@@ -22,15 +22,11 @@ export default function Footer() {
                 <Instagram className="h-5 w-5" />
               </Button>
             </Link>
-             <Link href="#" passHref>
-              <Button variant="ghost" size="icon" aria-label="Twitter">
-                <Twitter className="h-5 w-5" />
-              </Button>
-            </Link>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>
             <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
+            <Link href="/admin" className="hover:text-primary transition-colors">Admin Login</Link>
           </div>
         </div>
       </div>

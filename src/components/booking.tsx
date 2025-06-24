@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Calendar, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
@@ -42,6 +41,7 @@ export default function Booking() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log('Enquiry Submitted:', values);
+        // In a real application, this would send an email and/or save to a database.
         toast({
             title: "Enquiry Sent!",
             description: "Thank you for your interest. We'll get back to you shortly.",
@@ -53,7 +53,7 @@ export default function Booking() {
         <section id="booking" className="py-16 md:py-24 bg-background">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
-                    <h2 className="font-headline text-3xl md:text-4xl font-bold">Rates & Availability</h2>
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold">Rates & Availability</h2>
                     <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
                         Ready for your peaceful escape? Check our availability or send us an enquiry.
                     </p>
@@ -63,18 +63,25 @@ export default function Booking() {
                     <div className="lg:col-span-2 space-y-8">
                         <Card>
                             <CardHeader>
-                                <CardTitle className="font-headline">Live Availability</CardTitle>
+                                <CardTitle className="font-serif">Live Availability</CardTitle>
                                 <CardDescription>
-                                    Our booking widget is coming soon! For now, please use the enquiry form.
+                                    Check up-to-the-minute availability and book securely.
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="flex items-center justify-center h-48 bg-muted rounded-b-lg">
-                                <p className="text-muted-foreground">Nightsbridge Widget Placeholder</p>
+                            <CardContent>
+                                <div className="aspect-[4/3] bg-muted rounded-b-lg p-2">
+                                     <iframe 
+                                        src="https://www.nightsbridge.co.za/bridge/book?bbid=16933"
+                                        className="w-full h-full border-0 rounded-md"
+                                        title="Nightsbridge Booking Engine"
+                                     />
+                                </div>
+                                <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardHeader>
-                                <CardTitle className="font-headline">Seasonal Rates</CardTitle>
+                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
                                 <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800 / night</span></div>
@@ -88,7 +95,7 @@ export default function Booking() {
                     <div className="lg:col-span-3">
                         <Card>
                             <CardHeader>
-                                <CardTitle className="font-headline">Send an Enquiry</CardTitle>
+                                <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Fill out the form below and our team will get back to you promptly.</CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -110,7 +117,7 @@ export default function Booking() {
                                                 <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="you@example.com" {...field} /></FormControl><FormMessage /></FormItem>
                                             )} />
                                             <FormField control={form.control} name="phone" render={({ field }) => (
-                                                <FormItem><FormLabel>Phone Number (Optional)</FormLabel><FormControl><Input placeholder="+1 234 567 890" {...field} /></FormControl><FormMessage /></FormItem>
+                                                <FormItem><FormLabel>Phone Number (Optional)</FormLabel><FormControl><Input placeholder="+27 12 345 6789" {...field} /></FormControl><FormMessage /></FormItem>
                                             )} />
                                         </div>
                                         <div className="grid md:grid-cols-2 gap-6">

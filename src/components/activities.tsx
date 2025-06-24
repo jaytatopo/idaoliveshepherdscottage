@@ -49,7 +49,7 @@ export default function Activities() {
     <section id="activities" className="py-16 md:py-24 bg-card">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold">Reconnect with Nature & Adventure</h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold">Reconnect with Nature & Adventure</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
             From serene on-site activities to exciting local excursions, there's something for every nature enthusiast.
           </p>
@@ -61,7 +61,7 @@ export default function Activities() {
                 <div className="bg-primary/10 p-4 rounded-full mb-4">
                   <activity.icon className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="font-headline">{activity.title}</CardTitle>
+                <CardTitle className="font-serif">{activity.title}</CardTitle>
                 <CardDescription className="pt-2">{activity.description}</CardDescription>
               </CardHeader>
             </Card>

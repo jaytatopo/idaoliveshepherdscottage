@@ -50,8 +50,8 @@ export default function Header() {
       }`}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Link href="#home" className="text-lg font-headline font-bold text-primary">
-          Ida Olive Cottage Retreat
+        <Link href="#home" className="text-lg font-serif font-bold text-primary">
+          Ida Olive Shepherd’s Cottage
         </Link>
 
         <nav className="hidden items-center space-x-2 md:flex">
@@ -68,8 +68,8 @@ export default function Header() {
           <SheetContent side="right" className="w-full bg-background">
             <div className="flex h-full flex-col p-6">
               <div className="mb-8 flex items-center justify-between">
-                <Link href="#home" className="text-lg font-headline font-bold text-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                  Ida Olive
+                <Link href="#home" className="text-lg font-serif font-bold text-primary" onClick={() => setIsMobileMenuOpen(false)}>
+                  Ida Olive Cottage
                 </Link>
                 <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
                   <X className="h-6 w-6" />
