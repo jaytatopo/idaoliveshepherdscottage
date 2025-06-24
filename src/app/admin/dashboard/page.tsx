@@ -3,8 +3,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { FilePenLine, Trash2 } from "lucide-react";
+import { db } from "@/lib/db";
+import { format } from 'date-fns';
 
-export default function DashboardPage() {
+interface Inquiry {
+    id: number;
+    name: string;
+    email: string;
+    check_in: string;
+    check_out: string;
+}
+
+async function getInquiries(): Promise<Inquiry[]> {
+    try {
+        // This assumes you have an 'inquiries' table created in your database.
+        const [rows] = await db.query('SELECT id, name, email, check_in, check_out FROM inquiries ORDER BY id DESC LIMIT 20');
+        return rows as Inquiry[];
+    } catch (error) {
+        console.error("Failed to fetch inquiries:", error);
+        // Returning an empty array if the table doesn't exist or another error occurs.
+        return [];
+    }
+}
+
+export default async function DashboardPage() {
+    const inquiries = await getInquiries();
+    
     return (
         <div className="space-y-6">
             <header>
@@ -35,24 +59,27 @@ export default function DashboardPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell>John Doe</TableCell>
-                                        <TableCell>john.doe@example.com</TableCell>
-                                        <TableCell className="hidden md:table-cell">2024-10-15 to 2024-10-18</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon"><FilePenLine /></Button>
-                                            <Button variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
-                                        </TableCell>
-                                    </TableRow>
-                                     <TableRow>
-                                        <TableCell>Jane Smith</TableCell>
-                                        <TableCell>jane.smith@example.com</TableCell>
-                                        <TableCell className="hidden md:table-cell">2024-11-01 to 2024-11-05</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon"><FilePenLine /></Button>
-                                            <Button variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
-                                        </TableCell>
-                                    </TableRow>
+                                    {inquiries.length > 0 ? (
+                                        inquiries.map((inquiry) => (
+                                            <TableRow key={inquiry.id}>
+                                                <TableCell className="font-medium">{inquiry.name}</TableCell>
+                                                <TableCell>{inquiry.email}</TableCell>
+                                                <TableCell className="hidden md:table-cell">
+                                                    {format(new Date(inquiry.check_in), "PPP")} to {format(new Date(inquiry.check_out), "PPP")}
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    <Button variant="ghost" size="icon"><FilePenLine /></Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center h-24">
+                                                No inquiries found. Ensure your database is connected and the 'inquiries' table exists.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
                                 </TableBody>
                             </Table>
                         </CardContent>

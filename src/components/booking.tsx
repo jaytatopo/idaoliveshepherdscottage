@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { saveInquiry } from '@/app/actions/save-inquiry';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -40,13 +41,21 @@ export default function Booking() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log('Enquiry Submitted:', values);
-        // In a real application, this would send an email and/or save to a database.
-        toast({
-            title: "Enquiry Sent!",
-            description: "Thank you for your interest. We'll get back to you shortly.",
-        });
-        form.reset();
+        const result = await saveInquiry(values);
+
+        if (result.success) {
+            toast({
+                title: "Enquiry Sent!",
+                description: "Thank you for your interest. We'll get back to you shortly.",
+            });
+            form.reset();
+        } else {
+             toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: result.message,
+            });
+        }
     }
 
     return (
