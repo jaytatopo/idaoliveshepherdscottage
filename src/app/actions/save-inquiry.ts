@@ -2,6 +2,10 @@
 
 import { z } from 'zod';
 import { db } from '@/lib/db';
+import { Resend } from 'resend';
+import InquiryNotificationEmail from '@/components/emails/inquiry-notification';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -18,10 +22,7 @@ export async function saveInquiry(inquiry: Inquiry) {
   try {
     const validatedInquiry = formSchema.parse(inquiry);
 
-    // NOTE: You must create an 'inquiries' table in your MySQL database
-    // with columns like: id (INT, PK, AI), name (VARCHAR), email (VARCHAR),
-    // phone (VARCHAR), check_in (DATE), check_out (DATE), guests (INT),
-    // created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
+    // Save to database
     const sql = `
       INSERT INTO inquiries (name, email, phone, check_in, check_out, guests)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -37,12 +38,24 @@ export async function saveInquiry(inquiry: Inquiry) {
 
     await db.execute(sql, values);
 
-    return { success: true, message: "Enquiry saved successfully!" };
+    // Send email notification
+    if (process.env.RESEND_API_KEY) {
+        await resend.emails.send({
+            from: 'onboarding@resend.dev', // Replace with your verified domain, e.g., 'noreply@yourdomain.com'
+            to: 'reservations@idaolivecottagemcgregor.co.za',
+            subject: 'New Inquiry for Ida Olive Cottage',
+            react: InquiryNotificationEmail(validatedInquiry),
+        });
+    } else {
+        console.warn('RESEND_API_KEY is not set. Skipping email notification.');
+    }
+
+    return { success: true, message: "Enquiry sent successfully!" };
   } catch (error) {
-    console.error('Database Error:', error);
+    console.error('Action Error:', error);
     if (error instanceof z.ZodError) {
          return { success: false, message: 'Invalid form data.' };
     }
-    return { success: false, message: 'Failed to save enquiry. Please try again later.' };
+    return { success: false, message: 'Failed to send enquiry. Please try again later.' };
   }
 }

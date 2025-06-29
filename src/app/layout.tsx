@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
+import CookieBanner from '@/components/cookie-banner';
 
 export const metadata: Metadata = {
   title: 'Ida Olive Shepherd’s Cottage, McGregor',
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         <Toaster />
+        <CookieBanner />
       </body>
     </html>
   );
