@@ -1,5 +1,7 @@
-# Firebase Studio
 
-This is a NextJS starter in Firebase Studio.
+Ida Olive Shepherds Cottage, McGregor
 
-To get started, take a look at src/app/page.tsx.
+Our new website is under construction and will be launching soon.
+
+For enquiries and bookings, please contact us at:
+reservations@idaolivecottagemcgregor.co.za
