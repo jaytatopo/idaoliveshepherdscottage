@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <section id="home" className="relative h-[85vh] w-full text-white">
       <Image
-        src="https://storage.googleapis.com/project-pinocchio-testing-data/images/45b597c2118357a7d48386de856b3e9a.png"
+        src="/hero-background.png"
         alt="Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"
         fill
         className="object-cover"
