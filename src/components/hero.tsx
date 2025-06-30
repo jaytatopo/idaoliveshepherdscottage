@@ -6,12 +6,11 @@ export default function Hero() {
   return (
     <section id="home" className="relative h-[85vh] w-full text-white">
       <Image
-        src="https://placehold.co/1600x900.png"
+        src="https://storage.googleapis.com/project-pinocchio-testing-data/images/45b597c2118357a7d48386de856b3e9a.png"
         alt="Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"
         fill
         className="object-cover"
         priority
-        data-ai-hint="cottage exterior nature"
       />
       <div className="absolute inset-0 bg-black/50" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
