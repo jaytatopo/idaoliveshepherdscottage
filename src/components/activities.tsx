@@ -29,7 +29,7 @@ export default function Activities({ content, activities }: ActivitiesProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {activities.map((activity) => {
             return (
-                <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 overflow-hidden group bg-background">
+                <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background">
                     <div className="relative overflow-hidden">
                         <Image
                             src={activity.image_src || `https://placehold.co/300x200.png`}
