@@ -26,17 +26,55 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const NavContent = () => (
+  const DesktopNav = () => (
     <>
       {navLinks.map((link) => (
         <Link key={link.href} href={link.href} passHref>
-          <Button variant="link" className="text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+          <Button
+            variant="link"
+            className={`transition-colors duration-300 ${
+              isScrolled
+                ? 'text-foreground hover:text-primary'
+                : 'text-white hover:text-white/80'
+            }`}
+          >
             {link.label}
           </Button>
         </Link>
       ))}
       <Link href="#booking" passHref>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => setIsMobileMenuOpen(false)}>
+        <Button
+          variant={isScrolled ? 'default' : 'outline'}
+          className={`transition-all duration-300 ${
+            isScrolled
+              ? 'bg-accent hover:bg-accent/90 text-accent-foreground border-transparent'
+              : 'border-white text-white hover:bg-white/10 hover:text-white bg-transparent'
+          }`}
+        >
+          Book Now
+        </Button>
+      </Link>
+    </>
+  );
+
+  const MobileNav = () => (
+    <>
+      {navLinks.map((link) => (
+        <Link key={link.href} href={link.href} passHref>
+          <Button
+            variant="link"
+            className="text-2xl h-auto text-foreground hover:text-primary justify-start"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            {link.label}
+          </Button>
+        </Link>
+      ))}
+      <Link href="#booking" passHref>
+        <Button
+          className="bg-accent hover:bg-accent/90 text-accent-foreground text-2xl h-auto"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
           Book Now
         </Button>
       </Link>
@@ -45,22 +83,35 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled ? 'bg-background/80 shadow-md backdrop-blur-sm' : 'bg-transparent'
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled ? 'bg-background/90 shadow-md backdrop-blur-sm' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Link href="#home" className="text-lg font-serif font-bold text-primary">
+        <Link
+          href="#home"
+          className={`text-lg font-serif font-bold transition-colors duration-300 ${
+            isScrolled ? 'text-primary' : 'text-white'
+          }`}
+        >
           Ida Olive Shepherd’s Cottage
         </Link>
 
         <nav className="hidden items-center space-x-2 md:flex">
-          <NavContent />
+          <DesktopNav />
         </nav>
 
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`transition-colors duration-300 ${
+                isScrolled
+                  ? 'text-foreground'
+                  : 'text-white hover:bg-white/10 hover:text-white'
+              }`}
+            >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
@@ -68,16 +119,24 @@ export default function Header() {
           <SheetContent side="right" className="w-full bg-background">
             <div className="flex h-full flex-col p-6">
               <div className="mb-8 flex items-center justify-between">
-                <Link href="#home" className="text-lg font-serif font-bold text-primary" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link
+                  href="#home"
+                  className="text-lg font-serif font-bold text-primary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
                   Ida Olive Cottage
                 </Link>
-                <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
                   <X className="h-6 w-6" />
                   <span className="sr-only">Close menu</span>
                 </Button>
               </div>
-              <nav className="flex flex-col items-start space-y-4">
-                 <NavContent />
+              <nav className="flex flex-col items-stretch space-y-6">
+                <MobileNav />
               </nav>
             </div>
           </SheetContent>
