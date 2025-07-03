@@ -11,7 +11,12 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import { format } from 'date-fns';
 import type { Inquiry, Activity, Amenity, Review } from '@/lib/content';
-import { deleteInquiry, manageActivity, manageAmenity, manageReview } from '@/app/actions/content-actions';
+import {
+    deleteInquiry,
+    addAmenity, updateAmenity, deleteAmenity,
+    addActivity, updateActivity, deleteActivity,
+    addReview, updateReview, deleteReview,
+} from '@/app/actions/content-actions';
 
 // INQUIRIES TAB
 export function InquiriesTab({ inquiries }: { inquiries: Inquiry[] }) {
@@ -43,7 +48,7 @@ export function InquiriesTab({ inquiries }: { inquiries: Inquiry[] }) {
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell">{inquiry.guests}</TableCell>
                                     <TableCell className="text-right">
-                                        <form action={async () => await deleteInquiry(inquiry.id)}>
+                                        <form action={async () => { 'use server'; await deleteInquiry(inquiry.id); }}>
                                             <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                                         </form>
                                     </TableCell>
@@ -66,8 +71,8 @@ export function InquiriesTab({ inquiries }: { inquiries: Inquiry[] }) {
 // AMENITIES TAB
 function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => void }) {
     const action = amenity 
-        ? manageAmenity.update.bind(null, amenity.id) 
-        : manageAmenity.add;
+        ? updateAmenity.bind(null, amenity.id) 
+        : addAmenity;
 
     return (
         <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
@@ -137,7 +142,7 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
                         <AmenityForm amenity={amenity} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={manageAmenity.delete.bind(null, amenity.id)} className="inline-block">
+                <form action={async () => { 'use server'; await deleteAmenity(amenity.id); }} className="inline-block">
                     <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                 </form>
             </TableCell>
@@ -149,8 +154,8 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
 // ACTIVITIES TAB
 function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () => void }) {
     const action = activity 
-        ? manageActivity.update.bind(null, activity.id) 
-        : manageActivity.add;
+        ? updateActivity.bind(null, activity.id) 
+        : addActivity;
 
     return (
         <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
@@ -223,7 +228,7 @@ function ActivityRow({ activity }: { activity: Activity }) {
                         <ActivityForm activity={activity} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={manageActivity.delete.bind(null, activity.id)} className="inline-block">
+                <form action={async () => { 'use server'; await deleteActivity(activity.id); }} className="inline-block">
                     <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                 </form>
             </TableCell>
@@ -235,8 +240,8 @@ function ActivityRow({ activity }: { activity: Activity }) {
 // REVIEWS TAB
 function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void }) {
     const action = review
-        ? manageReview.update.bind(null, review.id)
-        : manageReview.add;
+        ? updateReview.bind(null, review.id)
+        : addReview;
     
     return (
         <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
@@ -307,7 +312,7 @@ function ReviewRow({ review }: { review: Review }) {
                         <ReviewForm review={review} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={manageReview.delete.bind(null, review.id)} className="inline-block">
+                <form action={async () => { 'use server'; await deleteReview(review.id); }} className="inline-block">
                     <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                 </form>
             </TableCell>

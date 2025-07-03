@@ -113,65 +113,155 @@ export async function deleteInquiry(id: number) {
     }
 }
 
-// Generic CRUD Action Creator
-function createCrudActions<T>(tableName: string, schema: z.ZodObject<any>) {
-    
-    const addAction = async (formData: FormData) => {
-        const rawData = Object.fromEntries(formData.entries());
-        try {
-            const data = schema.parse(rawData);
-            const columns = Object.keys(data).join(', ');
-            const placeholders = Object.keys(data).map(() => '?').join(', ');
-            const values = Object.values(data);
-            
-            await db.execute(`INSERT INTO ${tableName} (${columns}) VALUES (${placeholders})`, values);
-            revalidatePath('/');
-            revalidatePath('/admin/dashboard');
-            return { success: true };
-        } catch (error) {
-            console.error(`Failed to add to ${tableName}:`, error);
-            return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
-        }
-    };
 
-    const updateAction = async (id: number, formData: FormData) => {
-        const rawData = Object.fromEntries(formData.entries());
-        try {
-            const data = schema.parse(rawData);
-            const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
-            const values = [...Object.values(data), id];
-
-            await db.execute(`UPDATE ${tableName} SET ${setClauses} WHERE id = ?`, values);
-            revalidatePath('/');
-            revalidatePath('/admin/dashboard');
-            return { success: true };
-        } catch (error) {
-            console.error(`Failed to update ${tableName}:`, error);
-            return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
-        }
-    };
-
-    const deleteAction = async (id: number) => {
-        try {
-            await db.execute(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
-            revalidatePath('/');
-            revalidatePath('/admin/dashboard');
-            return { success: true };
-        } catch (error) {
-            console.error(`Failed to delete from ${tableName}:`, error);
-            return { success: false, message: 'Database error.' };
-        }
-    };
-
-    return { add: addAction, update: updateAction, delete: deleteAction };
-}
-
-// Create CRUD actions for each table
+// --- Amenities Actions ---
 const amenitySchema = z.object({ text: z.string().min(1), icon: z.string().min(1), sort_order: z.coerce.number().default(0) });
-export const manageAmenity = createCrudActions('amenities', amenitySchema);
 
+export async function addAmenity(formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = amenitySchema.parse(rawData);
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
+        
+        await db.execute(`INSERT INTO amenities (${columns}) VALUES (${placeholders})`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to add to amenities:`, error);
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+};
+
+export async function updateAmenity(id: number, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = amenitySchema.parse(rawData);
+        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const values = [...Object.values(data), id];
+
+        await db.execute(`UPDATE amenities SET ${setClauses} WHERE id = ?`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to update amenity:`, error);
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+};
+
+export async function deleteAmenity(id: number) {
+    try {
+        await db.execute(`DELETE FROM amenities WHERE id = ?`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to delete from amenities:`, error);
+        return { success: false, message: 'Database error.' };
+    }
+};
+
+
+// --- Activities Actions ---
 const activitySchema = z.object({ title: z.string().min(1), description: z.string().min(1), icon: z.string().min(1), sort_order: z.coerce.number().default(0) });
-export const manageActivity = createCrudActions('activities', activitySchema);
 
+export async function addActivity(formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = activitySchema.parse(rawData);
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
+        
+        await db.execute(`INSERT INTO activities (${columns}) VALUES (${placeholders})`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to add to activities:`, error);
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+};
+
+export async function updateActivity(id: number, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = activitySchema.parse(rawData);
+        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const values = [...Object.values(data), id];
+
+        await db.execute(`UPDATE activities SET ${setClauses} WHERE id = ?`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to update activity:`, error);
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+};
+
+export async function deleteActivity(id: number) {
+    try {
+        await db.execute(`DELETE FROM activities WHERE id = ?`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to delete from activities:`, error);
+        return { success: false, message: 'Database error.' };
+    }
+};
+
+
+// --- Reviews Actions ---
 const reviewSchema = z.object({ quote: z.string().min(1), author: z.string().min(1), rating: z.coerce.number().min(1).max(5), sort_order: z.coerce.number().default(0) });
-export const manageReview = createCrudActions('reviews', reviewSchema);
+
+export async function addReview(formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = reviewSchema.parse(rawData);
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
+        
+        await db.execute(`INSERT INTO reviews (${columns}) VALUES (${placeholders})`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to add to reviews:`, error);
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+};
+
+export async function updateReview(id: number, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = reviewSchema.parse(rawData);
+        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const values = [...Object.values(data), id];
+
+        await db.execute(`UPDATE reviews SET ${setClauses} WHERE id = ?`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to update review:`, error);
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+};
+
+export async function deleteReview(id: number) {
+    try {
+        await db.execute(`DELETE FROM reviews WHERE id = ?`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard');
+        return { success: true };
+    } catch (error) {
+        console.error(`Failed to delete from reviews:`, error);
+        return { success: false, message: 'Database error.' };
+    }
+};
