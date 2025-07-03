@@ -57,7 +57,7 @@ function shapeContent(rows: any[]): WebsiteContent {
     const content: WebsiteContent = {};
     const defaultContent = {
         hero: { heading: 'Ida Olive Shepherd’s Cottage', subheading: 'A serene, off-the-grid escape for nature lovers.' },
-        accommodation: { heading: 'The Accommodation', subheading: 'Explore the comfort and charm of our cottage.', main_text: 'Default main text about the cottage.', secondary_text: '' },
+        accommodation: { heading: 'The Accommodation', subheading: 'Explore the comfort and charm of our cottage.', main_text: 'Default main text about the cottage.', secondary_text: 'Default amenities text.' },
         activities: { heading: 'Things to Do', subheading: 'Discover local attractions and activities.' },
         booking: { heading: 'Rates & Booking', subheading: 'Check availability or send us an enquiry.' },
         reviews: { heading: 'Guest Reviews', subheading: 'Hear what our guests have to say.' },

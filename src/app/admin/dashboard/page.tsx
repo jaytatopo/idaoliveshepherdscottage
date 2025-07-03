@@ -79,6 +79,10 @@ export default async function DashboardPage() {
                                         <Label htmlFor="accommodation_main_text">Main Text Block</Label>
                                         <Textarea id="accommodation_main_text" name="accommodation_main_text" rows={5} defaultValue={content.accommodation?.main_text} />
                                     </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="accommodation_secondary_text">Secondary Text (Amenities)</Label>
+                                        <Textarea id="accommodation_secondary_text" name="accommodation_secondary_text" rows={5} defaultValue={content.accommodation?.secondary_text} />
+                                    </div>
                                 </div>
 
                                  <div className="space-y-4 p-4 border rounded-lg">
@@ -160,7 +164,7 @@ export default async function DashboardPage() {
                                     <div key={image.id} className="relative group">
                                         <Image src={image.src} alt={image.alt} width={300} height={200} className="rounded-md object-cover aspect-video"/>
                                         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                             <form action={async () => { 'use server'; await deleteGalleryImage(image.id); }}>
+                                             <form action={deleteGalleryImage.bind(null, image.id)}>
                                                  <Button variant="destructive" size="icon" className="h-8 w-8"><Trash2/></Button>
                                              </form>
                                         </div>

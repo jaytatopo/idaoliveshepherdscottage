@@ -35,7 +35,7 @@ export default function Activities({ content, activities }: ActivitiesProps) {
             {content.subheading}
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {activities.map((activity) => {
             const imageInfo = activityImageMap[activity.icon] || { src: '/Cottage.jpg', hint: 'activity' };
             return (
