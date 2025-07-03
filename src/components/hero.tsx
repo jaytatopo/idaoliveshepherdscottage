@@ -1,19 +1,21 @@
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowDown } from 'lucide-react';
+import type { GalleryImage } from '@/lib/content';
 
 interface HeroContent {
   heading: string;
   subheading: string;
 }
 
-export default function Hero({ content }: { content: HeroContent }) {
+export default function Hero({ content, image }: { content: HeroContent, image?: GalleryImage }) {
   return (
     <section id="home" className="relative h-screen w-full">
       <Image
-        src="/hero-background.jpg"
-        alt="Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"
+        src={image?.src || "/hero-background.jpg"}
+        alt={image?.alt || "Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"}
         fill
         className="object-cover"
         priority
@@ -34,9 +36,9 @@ export default function Hero({ content }: { content: HeroContent }) {
                     Book Your Stay
                   </Button>
               </Link>
-              <Link href="#accommodation" passHref>
+              <Link href="#gallery" passHref>
                   <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-foreground">
-                    Explore the Cottage
+                    Explore the Gallery
                   </Button>
               </Link>
             </div>

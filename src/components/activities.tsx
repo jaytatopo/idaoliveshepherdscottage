@@ -1,3 +1,4 @@
+
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Activity } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
@@ -12,18 +13,6 @@ interface ActivitiesProps {
     content: ActivitiesContent;
     activities: Activity[];
 }
-
-const activityImageMap: { [key: string]: { src: string; hint: string } } = {
-    Mountain: { src: '/Farm Road.jpg', hint: 'hiking trail' },
-    Milk: { src: '/BabyGoats.jpg', hint: 'baby goats' },
-    Star: { src: '/Cottage 3.jpg', hint: 'night sky' },
-    Bird: { src: '/Flowers 2.jpg', hint: 'bird nature' },
-    Wine: { src: '/Flowers.jpg', hint: 'vineyard flowers' },
-    Bike: { src: '/Farm Road.jpg', hint: 'mountain bike' },
-    Fish: { src: '/Dam.jpg', hint: 'dam fishing' },
-    BookOpen: { src: '/Stoep.jpg', hint: 'cottage stoep' },
-};
-
 
 export default function Activities({ content, activities }: ActivitiesProps) {
   return (
@@ -40,17 +29,15 @@ export default function Activities({ content, activities }: ActivitiesProps) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {activities.map((activity) => {
-            const imageInfo = activityImageMap[activity.icon] || { src: '/Cottage.jpg', hint: 'activity' };
             return (
                 <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 overflow-hidden group bg-background">
                     <div className="relative overflow-hidden">
                         <Image
-                            src={imageInfo.src}
+                            src={activity.image_src || '/Cottage.jpg'}
                             alt={activity.title}
                             width={300}
                             height={200}
                             className="aspect-video object-cover w-full transition-transform duration-300 group-hover:scale-105"
-                            data-ai-hint={imageInfo.hint}
                         />
                          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-background p-3 rounded-full border-2 transition-transform duration-300 group-hover:scale-110">
                             <DynamicIcon name={activity.icon} className="w-6 h-6 text-primary" />

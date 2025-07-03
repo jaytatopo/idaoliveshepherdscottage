@@ -1,6 +1,7 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, StarHalf } from 'lucide-react';
-import type { Review } from '@/lib/content';
+import type { Review, GalleryImage } from '@/lib/content';
 import Image from 'next/image';
 
 interface ReviewsContent {
@@ -11,6 +12,7 @@ interface ReviewsContent {
 interface ReviewsProps {
   content: ReviewsContent;
   reviews: Review[];
+  image?: GalleryImage;
 }
 
 const renderStars = (rating: number) => {
@@ -31,7 +33,7 @@ const renderStars = (rating: number) => {
   return stars;
 };
 
-export default function Reviews({ content, reviews }: ReviewsProps) {
+export default function Reviews({ content, reviews, image }: ReviewsProps) {
   return (
     <section 
         id="reviews" 
@@ -48,8 +50,8 @@ export default function Reviews({ content, reviews }: ReviewsProps) {
         <div className="grid lg:grid-cols-2 lg:gap-16 items-center">
             <div className="relative h-96 rounded-lg overflow-hidden shadow-xl mb-8 lg:mb-0">
                  <Image
-                    src="/Stoep 1.jpg"
-                    alt="Peaceful view from the cottage stoep"
+                    src={image?.src || "/Stoep 1.jpg"}
+                    alt={image?.alt || "Peaceful view from the cottage stoep"}
                     fill
                     className="object-cover"
                     data-ai-hint="cottage stoep"

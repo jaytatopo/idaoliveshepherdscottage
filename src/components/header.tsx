@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const navLinks = [
-  { href: '#accommodation', label: 'Accommodation' },
+  { href: '#accommodation', label: 'The Cottage' },
+  { href: '#gallery', label: 'Gallery' },
   { href: '#activities', label: 'Things To Do' },
   { href: '#booking', label: 'Rates & Booking' },
   { href: '#reviews', label: 'Reviews' },
