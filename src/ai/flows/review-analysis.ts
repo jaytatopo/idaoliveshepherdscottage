@@ -20,13 +20,13 @@ const ReviewSchema = z.object({
   sort_order: z.number(),
 });
 
-export const ReviewAnalysisInputSchema = z.object({
+const ReviewAnalysisInputSchema = z.object({
   reviews: z.array(ReviewSchema),
 });
 export type ReviewAnalysisInput = z.infer<typeof ReviewAnalysisInputSchema>;
 
 
-export const ReviewAnalysisOutputSchema = z.object({
+const ReviewAnalysisOutputSchema = z.object({
   positiveThemes: z.array(z.string()).describe('A list of common positive themes mentioned in the reviews.'),
   areasForImprovement: z.array(z.string()).describe('A list of common areas for improvement suggested by the reviews.'),
   sentiment: z.enum(['Positive', 'Neutral', 'Negative']).describe('The overall sentiment of the reviews.'),
