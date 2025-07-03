@@ -32,24 +32,6 @@ export default function AdminLayout({
                             <span>Dashboard</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="#" tooltip="Inquiries">
-                            <MessageSquareQuote />
-                            <span>Inquiries</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="#" tooltip="Text Content">
-                            <Newspaper />
-                            <span>Content</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="#" tooltip="Media">
-                            <ImageIcon />
-                            <span>Media</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
