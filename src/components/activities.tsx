@@ -16,10 +16,10 @@ interface ActivitiesProps {
 const activityImageMap: { [key: string]: { src: string; hint: string } } = {
     Mountain: { src: '/Farm Road.jpg', hint: 'hiking trail' },
     Milk: { src: '/BabyGoats.jpg', hint: 'baby goats' },
-    Star: { src: 'https://placehold.co/600x400.png', hint: 'night sky' },
-    Bird: { src: 'https://placehold.co/600x400.png', hint: 'bird nature' },
+    Star: { src: '/Cottage 3.jpg', hint: 'night sky' },
+    Bird: { src: '/Flowers 2.jpg', hint: 'bird nature' },
     Wine: { src: '/Flowers.jpg', hint: 'vineyard flowers' },
-    Bike: { src: 'https://placehold.co/600x400.png', hint: 'mountain bike' },
+    Bike: { src: '/Farm Road.jpg', hint: 'mountain bike' },
     Fish: { src: '/Dam.jpg', hint: 'dam fishing' },
     BookOpen: { src: '/Stoep.jpg', hint: 'cottage stoep' },
 };
@@ -37,7 +37,7 @@ export default function Activities({ content, activities }: ActivitiesProps) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {activities.map((activity) => {
-            const imageInfo = activityImageMap[activity.icon] || { src: 'https://placehold.co/600x400.png', hint: 'activity' };
+            const imageInfo = activityImageMap[activity.icon] || { src: '/Cottage.jpg', hint: 'activity' };
             return (
                 <Card key={activity.id} className="flex flex-col text-center hover:shadow-lg transition-shadow duration-300 overflow-hidden">
                     <div className="relative">
