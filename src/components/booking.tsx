@@ -66,22 +66,19 @@ export default function Booking({ content }: { content: BookingContent }) {
     return (
         <section 
             id="booking" 
-            className="py-16 md:py-24 opacity-0 animate-fade-in-up [animation-delay:400ms] relative bg-cover bg-center bg-fixed"
-            style={{backgroundImage: "url('/Cottage 3.jpg')"}}
-            data-ai-hint="cottage night"
+            className="py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms]"
         >
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-            <div className="container relative mx-auto px-4 md:px-6">
-                <div className="text-center mb-12 text-white">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
-                    <p className="mt-2 text-lg text-background/80 max-w-3xl mx-auto">
+                    <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
                         {content.subheading}
                     </p>
                 </div>
 
                 <div className="grid lg:grid-cols-5 gap-12">
                     <div className="lg:col-span-3 space-y-8">
-                        <Card className="bg-background/80 backdrop-blur-md">
+                        <Card>
                             <CardHeader>
                                 <CardTitle className="font-serif">Live Availability</CardTitle>
                                 <CardDescription>
@@ -99,7 +96,7 @@ export default function Booking({ content }: { content: BookingContent }) {
                                 <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-background/80 backdrop-blur-md">
+                        <Card>
                             <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                             </CardHeader>
@@ -113,7 +110,7 @@ export default function Booking({ content }: { content: BookingContent }) {
                     </div>
 
                     <div className="lg:col-span-2">
-                        <Card className="bg-background/80 backdrop-blur-md">
+                        <Card>
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Fill out the form below and our team will get back to you promptly.</CardDescription>

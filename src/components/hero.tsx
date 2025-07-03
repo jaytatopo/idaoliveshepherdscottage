@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { ArrowDown } from 'lucide-react';
 
 interface HeroContent {
   heading: string;
@@ -9,7 +10,7 @@ interface HeroContent {
 
 export default function Hero({ content }: { content: HeroContent }) {
   return (
-    <section id="home" className="relative h-[85vh] w-full text-white">
+    <section id="home" className="relative h-screen w-full">
       <Image
         src="/hero-background.jpg"
         alt="Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"
@@ -18,28 +19,32 @@ export default function Hero({ content }: { content: HeroContent }) {
         priority
         data-ai-hint="cottage landscape"
       />
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
-        <div className="max-w-4xl p-6 rounded-lg bg-black/20 backdrop-blur-sm">
-            <h1 className="font-serif text-4xl font-bold md:text-6xl lg:text-7xl">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+      <div className="relative z-10 flex h-full flex-col items-center justify-end text-center text-white pb-20 md:pb-32">
+        <div className="max-w-4xl p-6">
+            <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg">
               {content.heading}
             </h1>
-            <p className="mt-4 max-w-2xl text-lg md:text-xl">
+            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl drop-shadow-md">
               {content.subheading}
             </p>
-            <div className="mt-8 flex justify-center gap-4">
-            <Link href="#accommodation" passHref>
-                <Button size="lg" variant="secondary">
-                Explore the Cottage
-                </Button>
-            </Link>
-            <Link href="#booking" passHref>
-                <Button size="lg" variant="default">
-                Check Availability
-                </Button>
-            </Link>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="#booking" passHref>
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Book Your Stay
+                  </Button>
+              </Link>
+              <Link href="#accommodation" passHref>
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-foreground">
+                    Explore the Cottage
+                  </Button>
+              </Link>
             </div>
         </div>
+        <Link href="#accommodation" className="absolute bottom-10 animate-bounce">
+            <ArrowDown className="h-8 w-8 text-white/80"/>
+            <span className="sr-only">Scroll down</span>
+        </Link>
       </div>
     </section>
   );
