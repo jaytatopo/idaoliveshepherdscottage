@@ -1,8 +1,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, StarHalf } from 'lucide-react';
-import type { Review, GalleryImage } from '@/lib/content';
-import Image from 'next/image';
+import type { Review } from '@/lib/content';
 
 interface ReviewsContent {
   heading: string;
@@ -12,7 +11,6 @@ interface ReviewsContent {
 interface ReviewsProps {
   content: ReviewsContent;
   reviews: Review[];
-  images: GalleryImage[];
 }
 
 const renderStars = (rating: number) => {
@@ -33,9 +31,8 @@ const renderStars = (rating: number) => {
   return stars;
 };
 
-export default function Reviews({ content, reviews, images }: ReviewsProps) {
+export default function Reviews({ content, reviews }: ReviewsProps) {
   const reviewsToShow = reviews.slice(0, 2);
-  const imagesToShow = images.slice(0, 2);
 
   return (
     <section 
@@ -48,27 +45,6 @@ export default function Reviews({ content, reviews, images }: ReviewsProps) {
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
             {content.subheading}
           </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-xl bg-muted">
-                <Image
-                    src={imagesToShow[0]?.src || "https://placehold.co/600x450.png"}
-                    alt={imagesToShow[0]?.alt || "A view of the cottage"}
-                    fill
-                    className="object-cover"
-                    data-ai-hint="cottage ambiance"
-                />
-            </div>
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-xl bg-muted">
-                <Image
-                    src={imagesToShow[1]?.src || "https://placehold.co/600x450.png"}
-                    alt={imagesToShow[1]?.alt || "Another view of the cottage"}
-                    fill
-                    className="object-cover"
-                    data-ai-hint="cottage interior"
-                />
-            </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

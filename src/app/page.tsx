@@ -28,11 +28,12 @@ export default async function Home() {
         <Accommodation 
           content={content.accommodation} 
           amenities={amenities}
+          images={accommodationGalleryImages}
         />
         <Gallery galleryImages={accommodationGalleryImages} />
         <Activities content={content.activities} activities={activities} />
         <Booking content={content.booking}/>
-        <Reviews content={content.reviews} reviews={reviews} images={accommodationGalleryImages}/>
+        <Reviews content={content.reviews} reviews={reviews} />
         <Location content={content.location}/>
       </main>
       <Footer />
