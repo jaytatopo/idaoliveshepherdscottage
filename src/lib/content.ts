@@ -13,6 +13,7 @@ export interface Activity {
     icon: string;
     title: string;
     description: string;
+    image_src: string | null;
     sort_order: number;
 }
 
@@ -114,7 +115,7 @@ export async function getAmenities(): Promise<Amenity[]> {
 export async function getActivities(): Promise<Activity[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, icon, title, description, sort_order FROM activities ORDER BY sort_order ASC');
+        const [rows] = await db.query('SELECT id, icon, title, description, image_src, sort_order FROM activities ORDER BY sort_order ASC');
         return rows as Activity[];
     } catch (error) {
         console.error("Failed to fetch activities:", error);
