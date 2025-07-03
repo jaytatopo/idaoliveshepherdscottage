@@ -1,36 +1,29 @@
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { BedDouble, Bath, Wind, FlameKindling, UtensilsCrossed, Star, WifiOff, Trees, Waves } from 'lucide-react';
+import type { Amenity, GalleryImage } from '@/lib/content';
+import DynamicIcon from './ui/dynamic-icon';
 
-const amenities = [
-  { icon: BedDouble, text: '2 Bedrooms (King & Queen)' },
-  { icon: BedDouble, text: 'Twin beds on request' },
-  { icon: Bath, text: 'Indoor & Outdoor Showers' },
-  { icon: FlameKindling, text: 'Cozy Indoor Fireplace' },
-  { icon: UtensilsCrossed, text: 'Gas Stove & Fridge' },
-  { icon: Star, text: 'Boma & Gas Braai Areas' },
-  { icon: Waves, text: 'Water Tank Plunge Pool' },
-  { icon: WifiOff, text: 'Completely Off-the-Grid' },
-  { icon: Trees, text: 'Endangered Succulent Karoo' },
-];
+interface AccommodationContent {
+  heading: string;
+  subheading: string;
+  main_text: string;
+  secondary_text: string;
+}
 
-const galleryImages = [
-  { src: '/Main Bedroom.jpg', alt: 'Cozy main bedroom with a king-size bed', hint: 'cottage bedroom' },
-  { src: '/Kitchen.jpg', alt: 'Well-equipped kitchen with a gas stove', hint: 'cottage kitchen' },
-  { src: '/Bathroom.jpg', alt: 'Bathroom with a bathtub and view', hint: 'cottage bathroom' },
-  { src: '/Outdoor Shower.jpg', alt: 'An invigorating outdoor shower experience', hint: 'outdoor shower' },
-  { src: '/Fire place.jpg', alt: 'Cozy indoor fireplace for cool nights', hint: 'cottage fireplace' },
-  { src: '/Stoep.jpg', alt: 'Relaxing stoep with a view', hint: 'cottage stoep' },
-];
+interface AccommodationProps {
+  content: AccommodationContent;
+  amenities: Amenity[];
+  galleryImages: GalleryImage[];
+}
 
-export default function Accommodation() {
+export default function Accommodation({ content, amenities, galleryImages }: AccommodationProps) {
   return (
     <section id="accommodation" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold">A Cozy, Off-Grid Retreat</h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
-            Experience the charm of shepherd’s cottage living, thoughtfully equipped for a comfortable and memorable stay in nature.
+            {content.subheading}
           </p>
         </div>
 
@@ -38,15 +31,15 @@ export default function Accommodation() {
           <div className="space-y-6">
             <h3 className="font-serif text-2xl font-semibold">The Heart of the Cottage</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Ida Olive Shepherd’s Cottage is a self-catering sanctuary on the remote Giddy Goat Farm. Surrounded by the endangered Robertson Succulent Karoo, large glass sliding doors and windows seamlessly connect you to the natural beauty outside, where indigenous vegetation and wildlife thrive.
+              {content.main_text}
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              Completely off the grid, the cottage has no electricity. The open-plan lounge and kitchen feature a gas stove and refrigerator, while an indoor fireplace keeps the space warm on cooler nights. Solar lamps, candles, and fairy lights provide a magical ambiance.
+              {content.secondary_text}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-              {amenities.map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <item.icon className="w-6 h-6 text-primary" />
+              {amenities.map((item) => (
+                <div key={item.id} className="flex items-center gap-3">
+                  <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
                   <span className="font-medium">{item.text}</span>
                 </div>
               ))}
@@ -54,8 +47,8 @@ export default function Accommodation() {
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            {galleryImages.map((img, index) => (
-              <Card key={index} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+            {galleryImages.map((img) => (
+              <Card key={img.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="p-0">
                   <Image
                     src={img.src}
@@ -63,7 +56,7 @@ export default function Accommodation() {
                     width={600}
                     height={400}
                     className="aspect-video object-cover w-full h-full transform hover:scale-105 transition-transform duration-300"
-                    data-ai-hint={img.hint}
+                    data-ai-hint="cottage interior"
                   />
                 </CardContent>
               </Card>

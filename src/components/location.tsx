@@ -1,16 +1,23 @@
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { MapPin, Mail, Phone } from 'lucide-react';
 
-export default function Location() {
+interface LocationContent {
+  heading: string;
+  subheading: string;
+  address: string;
+  email: string;
+  phone: string;
+}
+
+export default function Location({ content }: { content: LocationContent }) {
   return (
     <section id="location" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold">Find Your Way to Paradise</h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
-            We're nestled in the heart of the Karoo, just a few kilometers outside the charming village of McGregor.
+            {content.subheading}
           </p>
         </div>
 
@@ -34,17 +41,17 @@ export default function Location() {
               <div className="space-y-4 text-muted-foreground">
                 <div className="flex items-start gap-4">
                   <MapPin className="w-5 h-5 mt-1 text-primary shrink-0" />
-                  <span>Giddy Goat Farm, 6km outside McGregor, Western Cape, South Africa</span>
+                  <span>{content.address}</span>
                 </div>
                  <div className="flex items-center gap-4">
                   <Mail className="w-5 h-5 text-primary shrink-0" />
-                  <a href="mailto:reservations@idaolivecottagemcgregor.co.za" className="hover:text-primary transition-colors">
-                    reservations@idaolivecottagemcgregor.co.za
+                  <a href={`mailto:${content.email}`} className="hover:text-primary transition-colors">
+                    {content.email}
                   </a>
                 </div>
                  <div className="flex items-center gap-4">
                   <Phone className="w-5 h-5 text-primary shrink-0" />
-                  <span>+27 12 345 6789 (Sample)</span>
+                  <span>{content.phone}</span>
                 </div>
               </div>
               <Button asChild className="mt-8">

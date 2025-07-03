@@ -26,7 +26,12 @@ const formSchema = z.object({
   guests: z.coerce.number().min(1, { message: 'Must have at least 1 guest.' }).max(4, { message: 'Cannot exceed 4 guests.' }),
 });
 
-export default function Booking() {
+interface BookingContent {
+    heading: string;
+    subheading: string;
+}
+
+export default function Booking({ content }: { content: BookingContent }) {
     const { toast } = useToast();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -62,9 +67,9 @@ export default function Booking() {
         <section id="booking" className="py-16 md:py-24 bg-background">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold">Rates & Availability</h2>
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
                     <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
-                        Ready for your peaceful escape? Check our availability or send us an enquiry.
+                        {content.subheading}
                     </p>
                 </div>
 
