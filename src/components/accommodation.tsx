@@ -7,7 +7,6 @@ interface AccommodationContent {
   heading: string;
   subheading: string;
   main_text: string;
-  secondary_text: string;
 }
 
 interface AccommodationProps {
@@ -30,11 +29,8 @@ export default function Accommodation({ content, amenities, galleryImages }: Acc
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h3 className="font-serif text-2xl font-semibold">The Heart of the Cottage</h3>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
               {content.main_text}
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              {content.secondary_text}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
               {amenities.map((item) => (
@@ -47,7 +43,7 @@ export default function Accommodation({ content, amenities, galleryImages }: Acc
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            {galleryImages.map((img) => (
+            {galleryImages.slice(0, 4).map((img) => (
               <Card key={img.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="p-0">
                   <Image
@@ -56,7 +52,6 @@ export default function Accommodation({ content, amenities, galleryImages }: Acc
                     width={600}
                     height={400}
                     className="aspect-video object-cover w-full h-full transform hover:scale-105 transition-transform duration-300"
-                    data-ai-hint="cottage interior"
                   />
                 </CardContent>
               </Card>

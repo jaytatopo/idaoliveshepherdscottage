@@ -1,0 +1,316 @@
+'use client';
+
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { format } from 'date-fns';
+import type { Inquiry, Activity, Amenity, Review } from '@/lib/content';
+import { deleteInquiry, manageActivity, manageAmenity, manageReview } from '@/app/actions/content-actions';
+
+// INQUIRIES TAB
+export function InquiriesTab({ inquiries }: { inquiries: Inquiry[] }) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Recent Inquiries</CardTitle>
+                <CardDescription>Here are the latest messages from your visitors.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead className="hidden sm:table-cell">Dates</TableHead>
+                            <TableHead className="hidden md:table-cell">Guests</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {inquiries.length > 0 ? (
+                            inquiries.map((inquiry) => (
+                                <TableRow key={inquiry.id}>
+                                    <TableCell className="font-medium">{inquiry.name}</TableCell>
+                                    <TableCell>{inquiry.email}</TableCell>
+                                    <TableCell className="hidden sm:table-cell">
+                                        {format(new Date(inquiry.check_in), "PP")} - {format(new Date(inquiry.check_out), "PP")}
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">{inquiry.guests}</TableCell>
+                                    <TableCell className="text-right">
+                                        <form action={async () => await deleteInquiry(inquiry.id)}>
+                                            <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                                        </form>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={5} className="text-center h-24">
+                                    No inquiries found.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+// AMENITIES TAB
+function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => void }) {
+    const action = amenity 
+        ? manageAmenity.update.bind(null, amenity.id) 
+        : manageAmenity.add;
+
+    return (
+        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
+            <div>
+                <Label htmlFor="text">Amenity Text</Label>
+                <Input id="text" name="text" defaultValue={amenity?.text} required />
+            </div>
+            <div>
+                <Label htmlFor="icon">Icon Name</Label>
+                <Input id="icon" name="icon" defaultValue={amenity?.icon} placeholder="e.g., Wifi, Wind" required />
+                <p className="text-xs text-muted-foreground mt-1">Use any icon name from <a href="https://lucide.dev/icons/" target="_blank" rel="noopener noreferrer" className="underline">lucide.dev</a>.</p>
+            </div>
+             <div>
+                <Label htmlFor="sort_order">Sort Order</Label>
+                <Input id="sort_order" name="sort_order" type="number" defaultValue={amenity?.sort_order ?? 0} required />
+            </div>
+            <DialogFooter>
+                <Button type="submit">{amenity ? 'Save Changes' : 'Add Amenity'}</Button>
+            </DialogFooter>
+        </form>
+    );
+}
+export function AmenitiesTab({ amenities }: { amenities: Amenity[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <CardTitle>Manage Amenities</CardTitle>
+                        <CardDescription>Add, edit, or remove cottage amenities.</CardDescription>
+                    </div>
+                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Amenity</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Add New Amenity</DialogTitle>
+                            </DialogHeader>
+                            <AmenityForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Text</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {amenities.map(item => <AmenityRow key={item.id} amenity={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+function AmenityRow({ amenity }: { amenity: Amenity }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    return (
+        <TableRow>
+            <TableCell>{amenity.text}</TableCell>
+            <TableCell>{amenity.icon}</TableCell>
+            <TableCell>{amenity.sort_order}</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader><DialogTitle>Edit Amenity</DialogTitle></DialogHeader>
+                        <AmenityForm amenity={amenity} onDone={() => setIsEditOpen(false)} />
+                    </DialogContent>
+                </Dialog>
+                <form action={manageAmenity.delete.bind(null, amenity.id)} className="inline-block">
+                    <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                </form>
+            </TableCell>
+        </TableRow>
+    );
+}
+
+
+// ACTIVITIES TAB
+function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () => void }) {
+    const action = activity 
+        ? manageActivity.update.bind(null, activity.id) 
+        : manageActivity.add;
+
+    return (
+        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
+            <div>
+                <Label htmlFor="title">Title</Label>
+                <Input id="title" name="title" defaultValue={activity?.title} required />
+            </div>
+             <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea id="description" name="description" defaultValue={activity?.description} required />
+            </div>
+            <div>
+                <Label htmlFor="icon">Icon Name</Label>
+                <Input id="icon" name="icon" defaultValue={activity?.icon} placeholder="e.g., Mountain, Wine" required />
+            </div>
+             <div>
+                <Label htmlFor="sort_order">Sort Order</Label>
+                <Input id="sort_order" name="sort_order" type="number" defaultValue={activity?.sort_order ?? 0} required />
+            </div>
+            <DialogFooter>
+                <Button type="submit">{activity ? 'Save Changes' : 'Add Activity'}</Button>
+            </DialogFooter>
+        </form>
+    );
+}
+
+export function ActivitiesTab({ activities }: { activities: Activity[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <CardTitle>Manage Activities</CardTitle>
+                        <CardDescription>Add, edit, or remove nearby activities.</CardDescription>
+                    </div>
+                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Activity</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Add New Activity</DialogTitle></DialogHeader>
+                            <ActivityForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Description</TableHead><TableHead>Icon</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {activities.map(item => <ActivityRow key={item.id} activity={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+function ActivityRow({ activity }: { activity: Activity }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    return (
+        <TableRow>
+            <TableCell>{activity.title}</TableCell>
+            <TableCell className="max-w-sm truncate">{activity.description}</TableCell>
+            <TableCell>{activity.icon}</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader><DialogTitle>Edit Activity</DialogTitle></DialogHeader>
+                        <ActivityForm activity={activity} onDone={() => setIsEditOpen(false)} />
+                    </DialogContent>
+                </Dialog>
+                <form action={manageActivity.delete.bind(null, activity.id)} className="inline-block">
+                    <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                </form>
+            </TableCell>
+        </TableRow>
+    );
+}
+
+
+// REVIEWS TAB
+function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void }) {
+    const action = review
+        ? manageReview.update.bind(null, review.id)
+        : manageReview.add;
+    
+    return (
+        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
+            <div>
+                <Label htmlFor="quote">Quote</Label>
+                <Textarea id="quote" name="quote" defaultValue={review?.quote} required />
+            </div>
+            <div>
+                <Label htmlFor="author">Author</Label>
+                <Input id="author" name="author" defaultValue={review?.author} required />
+            </div>
+            <div>
+                <Label htmlFor="rating">Rating (1-5)</Label>
+                <Input id="rating" name="rating" type="number" min="1" max="5" step="0.5" defaultValue={review?.rating} required />
+            </div>
+            <div>
+                <Label htmlFor="sort_order">Sort Order</Label>
+                <Input id="sort_order" name="sort_order" type="number" defaultValue={review?.sort_order ?? 0} required />
+            </div>
+            <DialogFooter>
+                <Button type="submit">{review ? 'Save Changes' : 'Add Review'}</Button>
+            </DialogFooter>
+        </form>
+    );
+}
+export function ReviewsTab({ reviews }: { reviews: Review[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <CardTitle>Manage Reviews</CardTitle>
+                        <CardDescription>Add, edit, or remove guest testimonials.</CardDescription>
+                    </div>
+                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Review</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Add New Review</DialogTitle></DialogHeader>
+                            <ReviewForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+function ReviewRow({ review }: { review: Review }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    return (
+        <TableRow>
+            <TableCell>{review.author}</TableCell>
+            <TableCell className="max-w-sm truncate">"{review.quote}"</TableCell>
+            <TableCell>{review.rating} / 5</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader><DialogTitle>Edit Review</DialogTitle></DialogHeader>
+                        <ReviewForm review={review} onDone={() => setIsEditOpen(false)} />
+                    </DialogContent>
+                </Dialog>
+                <form action={manageReview.delete.bind(null, review.id)} className="inline-block">
+                    <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                </form>
+            </TableCell>
+        </TableRow>
+    );
+}
