@@ -29,46 +29,40 @@ export default function Accommodation({ content, amenities, images }: Accommodat
           </p>
         </div>
 
-        <div className="space-y-16">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {image1 && (
-              <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-xl">
-                 <Image
-                    src={image1.src}
-                    alt={image1.alt}
-                    fill
-                    className="object-cover"
-                    data-ai-hint="cottage interior"
-                  />
-              </div>
-            )}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+               <Image
+                  src={image1?.src || "https://placehold.co/600x400.png"}
+                  alt={image1?.alt || "Interior view of the cottage"}
+                  fill
+                  className="object-cover"
+                  data-ai-hint="cottage interior"
+                />
+            </div>
+            <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+               <Image
+                  src={image2?.src || "https://placehold.co/600x400.png"}
+                  alt={image2?.alt || "Cottage amenity details"}
+                  fill
+                  className="object-cover"
+                  data-ai-hint="cottage amenities"
+                />
+            </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-4">
               <h3 className="font-serif text-2xl font-semibold">The Heart of the Cottage</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.main_text}
               </p>
             </div>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-             <div className="space-y-4 md:order-2">
+            <div className="space-y-4">
               <h3 className="font-serif text-2xl font-semibold">Comforts & Details</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.secondary_text}
               </p>
             </div>
-            {image2 && (
-                <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-xl md:order-1">
-                    <Image
-                      src={image2.src}
-                      alt={image2.alt}
-                      fill
-                      className="object-cover"
-                      data-ai-hint="cottage amenities"
-                    />
-                </div>
-            )}
-          </div>
         </div>
         
         {amenities.length > 0 && (
