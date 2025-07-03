@@ -15,10 +15,10 @@ const amenities = [
 ];
 
 const galleryImages = [
-  { src: 'https://placehold.co/600x400.png', alt: 'Cozy bedroom with a king-size bed', hint: 'cottage bedroom' },
-  { src: 'https://placehold.co/600x400.png', alt: 'Open-plan living area with fireplace', hint: 'cottage living room' },
-  { src: 'https://placehold.co/600x400.png', alt: 'Bathroom with a view of the Karoo', hint: 'cottage bathroom' },
-  { src: 'https://placehold.co/600x400.png', alt: 'Outdoor shower surrounded by nature', hint: 'outdoor shower nature' },
+  { src: '/accommodation-bedroom.jpg', alt: 'Cozy bedroom with a king-size bed', hint: 'cottage bedroom' },
+  { src: '/accommodation-living-room.jpg', alt: 'Open-plan living area with fireplace', hint: 'cottage living room' },
+  { src: '/accommodation-bathroom.jpg', alt: 'Bathroom with a view of the Karoo', hint: 'cottage bathroom' },
+  { src: '/accommodation-outdoor-shower.jpg', alt: 'Outdoor shower surrounded by nature', hint: 'outdoor shower nature' },
 ];
 
 export default function Accommodation() {

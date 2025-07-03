@@ -15,7 +15,7 @@ export default function AdminLayout({
             <SidebarHeader>
                 <div className="flex items-center gap-2">
                     <Avatar>
-                        <AvatarImage src="https://placehold.co/40x40.png" alt="Admin" />
+                        <AvatarImage src="/admin-avatar.png" alt="Admin" />
                         <AvatarFallback>A</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">

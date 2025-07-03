@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <section id="home" className="relative h-[85vh] w-full text-white">
       <Image
-        src="/hero-background.png"
+        src="/hero-background.jpg"
         alt="Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"
         fill
         className="object-cover"
