@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
 import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 
@@ -79,21 +79,42 @@ export default function Accommodation({ content, amenities, galleryImages }: Acc
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {galleryImages.map((img, index) => (
-              <button
-                key={img.id}
-                onClick={() => handleOpen(index)}
-                className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-            ))}
+            {galleryImages.map((img, index) => {
+              if (index >= 9) return null;
+
+              if (index === 8 && galleryImages.length > 9) {
+                return (
+                  <button
+                    key="view-more"
+                    onClick={() => handleOpen(8)}
+                    className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80"
+                  >
+                    <div className="text-center text-muted-foreground">
+                      <Plus className="h-8 w-8 mx-auto" />
+                      <span className="text-sm font-medium mt-1">
+                        +{galleryImages.length - 8} More
+                      </span>
+                    </div>
+                  </button>
+                );
+              }
+              
+              return (
+                <button
+                  key={img.id}
+                  onClick={() => handleOpen(index)}
+                  className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
