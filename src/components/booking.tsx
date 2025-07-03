@@ -64,7 +64,7 @@ export default function Booking({ content }: { content: BookingContent }) {
     }
 
     return (
-        <section id="booking" className="py-16 md:py-24 bg-background">
+        <section id="booking" className="py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms]">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
@@ -74,7 +74,7 @@ export default function Booking({ content }: { content: BookingContent }) {
                 </div>
 
                 <div className="grid lg:grid-cols-5 gap-12">
-                    <div className="lg:col-span-2 space-y-8">
+                    <div className="lg:col-span-3 space-y-8">
                         <Card>
                             <CardHeader>
                                 <CardTitle className="font-serif">Live Availability</CardTitle>
@@ -85,7 +85,7 @@ export default function Booking({ content }: { content: BookingContent }) {
                             <CardContent>
                                 <div className="aspect-[4/3] bg-muted rounded-b-lg p-2">
                                      <iframe 
-                                        src="https://www.nightsbridge.co.za/bridge/book?bbid=16933"
+                                        src="https://book.nightsbridge.com/32988"
                                         className="w-full h-full border-0 rounded-md"
                                         title="Nightsbridge Booking Engine"
                                      />
@@ -106,7 +106,7 @@ export default function Booking({ content }: { content: BookingContent }) {
                         </Card>
                     </div>
 
-                    <div className="lg:col-span-3">
+                    <div className="lg:col-span-2">
                         <Card>
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
