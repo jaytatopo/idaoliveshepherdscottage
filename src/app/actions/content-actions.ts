@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
+const MAX_FILE_SIZE_MB = 3;
+
 // Helper function to update a single content entry
 async function updateSingleContent(section: string, key: string, value: string) {
     const sql = `
@@ -37,14 +39,24 @@ export async function updateContent(formData: FormData) {
 
 // Action to upload a new gallery image
 export async function uploadGalleryImage(formData: FormData) {
-    const file = formData.get('image') as File;
+    const file = formData.get('image');
     const section = formData.get('section') as string;
     const alt = formData.get('alt') as string;
 
-    if (!file || !section) {
-        return { success: false, message: 'Missing file or section.' };
+    if (!file || !(file instanceof File) || file.size === 0) {
+        return { success: false, message: 'No valid image file was selected for upload.' };
     }
     
+    if (!section) {
+        return { success: false, message: 'Missing section for image upload.' };
+    }
+    
+    // Vercel serverless function has a 4.5MB body limit. Base64 is ~33% larger.
+    // Let's set a limit around 3MB for the original file.
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        return { success: false, message: `File is too large. Please upload an image under ${MAX_FILE_SIZE_MB}MB.` };
+    }
+
     // For singleton sections, remove existing image record before uploading a new one.
     if (section === 'hero' || section === 'reviews') {
         try {
@@ -55,23 +67,27 @@ export async function uploadGalleryImage(formData: FormData) {
         }
     }
     
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
-    
     try {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
+
         await db.execute(
             'INSERT INTO gallery_images (src, alt, section) VALUES (?, ?, ?)',
             [dataUri, alt || file.name, section]
         );
 
         revalidatePath('/');
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/admin/dashboard/content');
         return { success: true, message: 'Image uploaded successfully.' };
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to upload image:', error);
-        return { success: false, message: 'Failed to upload image.' };
+        // Check for a common MySQL error when data is too long for the column
+        if (error.code === 'ER_DATA_TOO_LONG') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `src` column in `gallery_images` is of type LONGTEXT.' };
+        }
+        return { success: false, message: 'Failed to save image to the database.' };
     }
 }
 
@@ -85,7 +101,7 @@ export async function deleteGalleryImage(id: number) {
         await db.execute('DELETE FROM gallery_images WHERE id = ?', [id]);
         
         revalidatePath('/');
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/admin/dashboard/content');
         return { success: true, message: 'Image deleted successfully.' };
 
     } catch (error) {
@@ -162,10 +178,18 @@ export async function deleteAmenity(id: number) {
 // --- Activities Actions ---
 const activitySchema = z.object({ title: z.string().min(1), description: z.string().min(1), icon: z.string().min(1), sort_order: z.coerce.number().default(0) });
 
-async function handleActivityImageUpload(file: File | undefined, existingImage: string | null | undefined): Promise<string | null> {
+async function handleActivityImageUpload(file: File | undefined, existingImage: string | null | undefined): Promise<string | null | { error: string }> {
     // If no new file is uploaded, keep the existing image.
     if (!file || file.size === 0) {
         return existingImage || null;
+    }
+
+    if (!(file instanceof File)) {
+        return { error: 'Invalid file format.' };
+    }
+    
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        return { error: `File is too large. Please upload an image under ${MAX_FILE_SIZE_MB}MB.` };
     }
     
     const bytes = await file.arrayBuffer();
@@ -182,7 +206,12 @@ export async function addActivity(formData: FormData) {
 
     try {
         const data = activitySchema.parse(rawData);
-        const imageSrc = await handleActivityImageUpload(imageFile, null);
+        const imageResult = await handleActivityImageUpload(imageFile, null);
+        
+        if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
+            return { success: false, message: imageResult.error };
+        }
+        const imageSrc = imageResult;
         
         const columns = [...Object.keys(data), 'image_src'].join(', ');
         const placeholders = [...Object.keys(data).map(() => '?'), '?'].join(', ');
@@ -193,8 +222,11 @@ export async function addActivity(formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to add to activities:`, error);
+        if (error.code === 'ER_DATA_TOO_LONG') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type LONGTEXT.' };
+        }
         return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
     }
 };
@@ -211,7 +243,12 @@ export async function updateActivity(id: number, formData: FormData) {
         const [existingRows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
         const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
         
-        const imageSrc = await handleActivityImageUpload(imageFile, existingImage);
+        const imageResult = await handleActivityImageUpload(imageFile, existingImage);
+        
+        if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
+            return { success: false, message: imageResult.error };
+        }
+        const imageSrc = imageResult;
         
         const setClauses = [...Object.keys(data).map(key => `${key} = ?`), 'image_src = ?'].join(', ');
         const values = [...Object.values(data), imageSrc, id];
@@ -221,8 +258,11 @@ export async function updateActivity(id: number, formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to update activity:`, error);
+        if (error.code === 'ER_DATA_TOO_LONG') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type LONGTEXT.' };
+        }
         return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
     }
 };
