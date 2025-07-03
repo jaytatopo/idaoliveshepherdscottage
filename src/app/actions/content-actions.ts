@@ -2,8 +2,6 @@
 
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { writeFile, unlink } from 'fs/promises';
-import { join } from 'path';
 import { z } from 'zod';
 
 // Helper function to update a single content entry
@@ -47,36 +45,24 @@ export async function uploadGalleryImage(formData: FormData) {
         return { success: false, message: 'Missing file or section.' };
     }
     
-    // For singleton sections, remove existing image before uploading a new one.
+    // For singleton sections, remove existing image record before uploading a new one.
     if (section === 'hero' || section === 'reviews') {
-        const [rows] = await db.query('SELECT id, src FROM gallery_images WHERE section = ?', [section]);
-        const images = rows as { id: number; src: string }[];
-
-        for (const image of images) {
-            try {
-                const filepath = join(process.cwd(), 'public', image.src);
-                await unlink(filepath).catch(err => console.error(`Failed to delete old file ${filepath}:`, err));
-                await db.execute('DELETE FROM gallery_images WHERE id = ?', [image.id]);
-            } catch (error) {
-                console.error(`Failed to cleanup existing image for section ${section}:`, error);
-                // Don't block the upload if cleanup fails, just log it.
-            }
+        try {
+            await db.execute('DELETE FROM gallery_images WHERE section = ?', [section]);
+        } catch (error) {
+            console.error(`Failed to cleanup existing image for section ${section}:`, error);
+            // Don't block the upload if cleanup fails, just log it.
         }
     }
     
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    const filename = `gallery_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-    const filepath = join(process.cwd(), 'public', filename);
+    const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
     
     try {
-        await writeFile(filepath, buffer);
-        const src = `/${filename}`;
-
         await db.execute(
             'INSERT INTO gallery_images (src, alt, section) VALUES (?, ?, ?)',
-            [src, alt || file.name, section]
+            [dataUri, alt || file.name, section]
         );
 
         revalidatePath('/');
@@ -96,15 +82,6 @@ export async function deleteGalleryImage(id: number) {
     }
 
     try {
-        const [rows] = await db.query('SELECT src FROM gallery_images WHERE id = ?', [id]);
-        const images = rows as { src: string }[];
-
-        if (images.length > 0) {
-            const src = images[0].src;
-            const filepath = join(process.cwd(), 'public', src);
-            await unlink(filepath).catch(err => console.error(`Failed to delete file ${filepath}:`, err));
-        }
-
         await db.execute('DELETE FROM gallery_images WHERE id = ?', [id]);
         
         revalidatePath('/');
@@ -191,23 +168,11 @@ async function handleActivityImageUpload(file: File | undefined, existingImage: 
         return existingImage || null;
     }
     
-    // A new file is uploaded, so delete the old image if it exists.
-    if (existingImage) {
-        try {
-            await unlink(join(process.cwd(), 'public', existingImage));
-        } catch (err) {
-            console.error(`Failed to delete old activity image ${existingImage}:`, err);
-        }
-    }
-    
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    const filename = `activity_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-    const filepath = join(process.cwd(), 'public', filename);
-    await writeFile(filepath, buffer);
+    const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
     
-    return `/${filename}`;
+    return dataUri;
 }
 
 export async function addActivity(formData: FormData) {
@@ -242,7 +207,7 @@ export async function updateActivity(id: number, formData: FormData) {
     try {
         const data = activitySchema.parse(rawData);
         
-        // Get the existing image path to delete it if a new one is uploaded.
+        // Get the existing image path to decide whether to keep it or replace it.
         const [existingRows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
         const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
         
@@ -264,17 +229,7 @@ export async function updateActivity(id: number, formData: FormData) {
 
 export async function deleteActivity(id: number) {
     try {
-        // First, get the image path to delete the file
-        const [rows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
-        const images = rows as { image_src: string | null }[];
-
-        if (images.length > 0 && images[0].image_src) {
-            const src = images[0].image_src;
-            const filepath = join(process.cwd(), 'public', src);
-            await unlink(filepath).catch(err => console.error(`Failed to delete activity image file ${filepath}:`, err));
-        }
-
-        // Then delete the database record
+        // Just delete the database record. The image data is stored in it.
         await db.execute(`DELETE FROM activities WHERE id = ?`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
