@@ -33,12 +33,12 @@ export default function Activities({ content, activities }: ActivitiesProps) {
                 <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 overflow-hidden group bg-background">
                     <div className="relative overflow-hidden">
                         <Image
-                            src={activity.image_src || '/Cottage.jpg'}
+                            src={'/Cottage.jpg'}
                             alt={activity.title}
                             width={300}
                             height={200}
                             className="aspect-video object-cover w-full transition-transform duration-300 group-hover:scale-105"
-                            {...(!activity.image_src && {"data-ai-hint": "nature activity"})}
+                            data-ai-hint="nature activity"
                         />
                          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-background p-3 rounded-full border-2 transition-transform duration-300 group-hover:scale-110">
                             <DynamicIcon name={activity.icon} className="w-6 h-6 text-primary" />

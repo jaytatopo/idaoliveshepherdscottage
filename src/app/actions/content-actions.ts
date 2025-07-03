@@ -168,30 +168,13 @@ export async function deleteAmenity(id: number) {
 // --- Activities Actions ---
 const activitySchema = z.object({ title: z.string().min(1), description: z.string().min(1), icon: z.string().min(1), sort_order: z.coerce.number().default(0) });
 
-async function handleActivityImageUpload(imageFile: File | null): Promise<string | null> {
-    if (!imageFile || imageFile.size === 0) return null;
-
-    const bytes = await imageFile.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const filename = `${Date.now()}_${imageFile.name.replace(/\s/g, '_')}`;
-    const filepath = join(process.cwd(), 'public', filename);
-    
-    await writeFile(filepath, buffer);
-    return `/${filename}`;
-}
-
 export async function addActivity(formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
-    const imageFile = formData.get('image') as File | null;
-
     try {
         const data = activitySchema.parse(rawData);
-        const imageSrc = await handleActivityImageUpload(imageFile);
-        
-        const columns = [...Object.keys(data), ...(imageSrc ? ['image_src'] : [])].join(', ');
-        const placeholders = [...Object.keys(data).map(() => '?'), ...(imageSrc ? ['?'] : [])].join(', ');
-        const values = [...Object.values(data), ...(imageSrc ? [imageSrc] : [])];
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
         
         await db.execute(`INSERT INTO activities (${columns}) VALUES (${placeholders})`, values);
 
@@ -206,33 +189,12 @@ export async function addActivity(formData: FormData) {
 
 export async function updateActivity(id: number, formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
-    const imageFile = formData.get('image') as File | null;
-    
     try {
         const data = activitySchema.parse(rawData);
-        const imageSrc = await handleActivityImageUpload(imageFile);
-
-        if (imageSrc) {
-            const [rows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
-            const existingImages = rows as { image_src: string | null }[];
-            if (existingImages.length > 0 && existingImages[0].image_src) {
-                const oldFilepath = join(process.cwd(), 'public', existingImages[0].image_src);
-                await unlink(oldFilepath).catch(err => console.error(`Failed to delete old activity image ${oldFilepath}:`, err));
-            }
-        }
-        
         const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
-        const values = [...Object.values(data)];
+        const values = [...Object.values(data), id];
 
-        let sql = `UPDATE activities SET ${setClauses}`;
-        if (imageSrc) {
-            sql += ', image_src = ?';
-            values.push(imageSrc);
-        }
-        sql += ' WHERE id = ?';
-        values.push(id);
-
-        await db.execute(sql, values);
+        await db.execute(`UPDATE activities SET ${setClauses} WHERE id = ?`, values);
 
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
@@ -245,14 +207,6 @@ export async function updateActivity(id: number, formData: FormData) {
 
 export async function deleteActivity(id: number) {
     try {
-        const [rows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
-        const images = rows as { image_src: string | null }[];
-
-        if (images.length > 0 && images[0].image_src) {
-            const filepath = join(process.cwd(), 'public', images[0].image_src);
-            await unlink(filepath).catch(err => console.error(`Failed to delete activity image file ${filepath}:`, err));
-        }
-
         await db.execute(`DELETE FROM activities WHERE id = ?`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
