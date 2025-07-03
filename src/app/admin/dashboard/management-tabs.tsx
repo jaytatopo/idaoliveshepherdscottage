@@ -159,7 +159,7 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
         : addActivity;
 
     return (
-        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4" encType="multipart/form-data">
+        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
             <div>
                 <Label htmlFor="title">Title</Label>
                 <Input id="title" name="title" defaultValue={activity?.title} required />
