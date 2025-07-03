@@ -1,4 +1,3 @@
-
 import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';

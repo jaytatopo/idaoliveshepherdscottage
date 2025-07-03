@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Upload, GripVertical, Trash2 } from "lucide-react";
+import { Upload, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { revalidatePath } from 'next/cache';
 import { updateContent, deleteGalleryImage, uploadGalleryImage } from "@/app/actions/content-actions";
@@ -28,13 +28,13 @@ export default async function DashboardPage() {
                     <h1 className="text-3xl font-bold font-serif">Admin Dashboard</h1>
                     <p className="text-muted-foreground">Manage your website content and view inquiries.</p>
                 </div>
-                <form action={async () => { 'use server'; revalidatePath('/'); revalidatePath('/admin/dashboard'); }}>
+                 <form action={async () => { 'use server'; revalidatePath('/'); revalidatePath('/admin/dashboard'); }}>
                     <Button>Publish Changes</Button>
                 </form>
             </header>
 
-            <Tabs defaultValue="inquiries">
-                <TabsList className="flex-wrap h-auto">
+            <Tabs defaultValue="inquiries" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 h-auto">
                     <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
                     <TabsTrigger value="general_text">General Text</TabsTrigger>
                     <TabsTrigger value="gallery">Gallery</TabsTrigger>

@@ -308,7 +308,7 @@ export function ReviewsTab({ reviews }: { reviews: Review[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
                     </TableBody>
@@ -324,6 +324,7 @@ function ReviewRow({ review }: { review: Review }) {
             <TableCell>{review.author}</TableCell>
             <TableCell className="max-w-sm truncate">"{review.quote}"</TableCell>
             <TableCell>{review.rating} / 5</TableCell>
+            <TableCell>{review.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>

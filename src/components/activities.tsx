@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Activity } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
@@ -33,7 +32,7 @@ export default function Activities({ content, activities }: ActivitiesProps) {
                 <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 overflow-hidden group bg-background">
                     <div className="relative overflow-hidden">
                         <Image
-                            src={activity.image_src || 'https://placehold.co/300x200.png'}
+                            src={activity.image_src || `https://placehold.co/300x200.png`}
                             alt={activity.title}
                             width={300}
                             height={200}
