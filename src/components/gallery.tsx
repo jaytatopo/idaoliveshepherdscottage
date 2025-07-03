@@ -39,50 +39,47 @@ export default function Gallery({ galleryImages }: GalleryProps) {
     }
   };
 
+  const imagesToShow = galleryImages.slice(0, galleryImages.length > 9 ? 8 : 9);
+
   return (
     <section id="gallery" className="py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:100ms]">
         <div className="container mx-auto px-4 md:px-6">
             <div className="text-center mb-12">
-                <h2 className="font-serif text-3xl md:text-4xl font-bold">Explore the Cottage</h2>
+                <h2 className="font-serif text-3xl md:text-4xl font-bold">Gallery</h2>
                 <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
                     Step inside and discover the comfort and charm of Ida Olive.
                 </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {galleryImages.slice(0, 9).map((img, index) => {
-                    if (index === 8 && galleryImages.length > 9) {
-                        return (
-                        <button
-                            key="view-more"
-                            onClick={() => handleOpen(8)}
-                            className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80"
-                        >
-                            <div className="text-center text-muted-foreground">
-                            <Plus className="h-8 w-8 mx-auto" />
-                            <span className="text-sm font-medium mt-1">
-                                +{galleryImages.length - 8} More
-                            </span>
-                            </div>
-                        </button>
-                        );
-                    }
-                    
-                    return (
-                        <button
-                        key={img.id}
-                        onClick={() => handleOpen(index)}
-                        className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                        >
-                        <Image
-                            src={img.src}
-                            alt={img.alt}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </button>
-                    );
-                })}
+                {imagesToShow.map((img, index) => (
+                    <button
+                    key={img.id}
+                    onClick={() => handleOpen(index)}
+                    className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    >
+                    <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                ))}
+                {galleryImages.length > 9 && (
+                    <button
+                        key="view-more"
+                        onClick={() => handleOpen(8)}
+                        className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80"
+                    >
+                        <div className="text-center text-muted-foreground">
+                        <Plus className="h-8 w-8 mx-auto" />
+                        <span className="text-sm font-medium mt-1">
+                            +{galleryImages.length - 8} More
+                        </span>
+                        </div>
+                    </button>
+                )}
             </div>
         </div>
 

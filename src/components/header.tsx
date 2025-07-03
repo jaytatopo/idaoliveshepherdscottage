@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -19,14 +18,44 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
+
     window.addEventListener('scroll', handleScroll);
+    // Initial check in case the page loads already scrolled.
+    handleScroll();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const headerClasses = `fixed top-0 z-50 w-full transition-all duration-300 ${
+    isScrolled ? 'bg-background/90 shadow-md backdrop-blur-sm' : 'bg-transparent'
+  }`;
+
+  const linkClasses = `text-lg font-serif font-bold transition-colors duration-300 ${
+    isScrolled ? 'text-primary' : 'text-white'
+  }`;
+
+  // Render a static placeholder on the server and for the initial client render to prevent hydration mismatches.
+  if (!isMounted) {
+    return (
+        <header className={headerClasses}>
+            <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+                <Link href="#home" className={linkClasses}>
+                    Ida Olive Shepherd’s Cottage
+                </Link>
+                {/* Placeholder for the mobile menu trigger to avoid layout shift */}
+                <div className="h-10 w-10 md:hidden" /> 
+            </div>
+        </header>
+    );
+  }
 
   const DesktopNav = () => (
     <>
@@ -84,18 +113,9 @@ export default function Header() {
   );
 
   return (
-    <header
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled ? 'bg-background/90 shadow-md backdrop-blur-sm' : 'bg-transparent'
-      }`}
-    >
+    <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Link
-          href="#home"
-          className={`text-lg font-serif font-bold transition-colors duration-300 ${
-            isScrolled ? 'text-primary' : 'text-white'
-          }`}
-        >
+        <Link href="#home" className={linkClasses}>
           Ida Olive Shepherd’s Cottage
         </Link>
 

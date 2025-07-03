@@ -16,7 +16,7 @@ export default async function Home() {
   const content = await getContent();
   const amenities = await getAmenities();
   const activities = await getActivities();
-  const galleryImages = await getGalleryImages('gallery');
+  const accommodationGalleryImages = await getGalleryImages('accommodation');
   const heroImage = (await getGalleryImages('hero'))[0];
   const reviewsImage = (await getGalleryImages('reviews'))[0];
   const reviews = await getReviews();
@@ -30,7 +30,7 @@ export default async function Home() {
           content={content.accommodation} 
           amenities={amenities}
         />
-        <Gallery galleryImages={galleryImages} />
+        <Gallery galleryImages={accommodationGalleryImages} />
         <Activities content={content.activities} activities={activities} />
         <Booking content={content.booking}/>
         <Reviews content={content.reviews} reviews={reviews} image={reviewsImage}/>
