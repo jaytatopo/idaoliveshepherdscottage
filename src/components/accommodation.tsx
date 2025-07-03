@@ -1,4 +1,10 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 
@@ -16,8 +22,27 @@ interface AccommodationProps {
 }
 
 export default function Accommodation({ content, amenities, galleryImages }: AccommodationProps) {
-  const mainImage = galleryImages[0];
-  const otherImages = galleryImages.slice(1, 5);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  const handleOpen = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const handleClose = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const handleNext = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex + 1) % galleryImages.length);
+    }
+  };
+
+  const handlePrev = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex - 1 + galleryImages.length) % galleryImages.length);
+    }
+  };
 
   return (
     <section id="accommodation" className="py-16 md:py-24 bg-background opacity-0 animate-fade-in-up">
@@ -29,57 +54,90 @@ export default function Accommodation({ content, amenities, galleryImages }: Acc
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto text-center leading-relaxed text-muted-foreground mb-12">
-           <p className="whitespace-pre-line">{content.main_text}</p>
-        </div>
-
-        {mainImage && (
-           <div className="mb-12 rounded-lg overflow-hidden shadow-xl">
-               <Image
-                   src={mainImage.src}
-                   alt={mainImage.alt}
-                   width={1200}
-                   height={800}
-                   className="w-full object-cover"
-                   priority
-               />
-           </div>
-        )}
-        
-        {otherImages.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                {otherImages.map((img) => (
-                    <div key={img.id} className="rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <Image
-                            src={img.src}
-                            alt={img.alt}
-                            width={400}
-                            height={300}
-                            className="aspect-video object-cover w-full h-full transform hover:scale-105 transition-transform duration-300"
-                        />
-                    </div>
-                ))}
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="space-y-6 lg:sticky lg:top-24">
+            <div className="space-y-4">
+                <h3 className="font-serif text-2xl font-semibold">The Heart of the Cottage</h3>
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {content.main_text}
+                </p>
             </div>
-        )}
-
-        <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-4">
                 <h3 className="font-serif text-2xl font-semibold">Amenities & Comforts</h3>
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                   {content.secondary_text}
+                    {content.secondary_text}
                 </p>
+                 <div className="grid grid-cols-2 gap-x-8 gap-y-6 pt-4">
+                    {amenities.map((item) => (
+                        <div key={item.id} className="flex items-center gap-3">
+                        <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
+                        <span className="font-medium">{item.text}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
-             <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                {amenities.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
-                    <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
-                    <span className="font-medium">{item.text}</span>
-                    </div>
-                ))}
-            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {galleryImages.map((img, index) => (
+              <button
+                key={img.id}
+                onClick={() => handleOpen(index)}
+                className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            ))}
+          </div>
         </div>
-
       </div>
+
+      <Dialog open={selectedImageIndex !== null} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+        <DialogContent className="max-w-5xl w-full p-0 bg-transparent border-0 !shadow-none !rounded-none">
+            <div className="relative aspect-video">
+                {selectedImageIndex !== null && (
+                    <Image
+                        src={galleryImages[selectedImageIndex].src}
+                        alt={galleryImages[selectedImageIndex].alt}
+                        fill
+                        className="object-contain"
+                    />
+                )}
+            </div>
+            <div className="absolute inset-0 flex items-center justify-between">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handlePrev}
+                    className="rounded-full h-12 w-12 bg-black/50 text-white hover:bg-black/75 hover:text-white -ml-16"
+                >
+                    <ChevronLeft className="h-8 w-8" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleNext}
+                    className="rounded-full h-12 w-12 bg-black/50 text-white hover:bg-black/75 hover:text-white -mr-16"
+                >
+                    <ChevronRight className="h-8 w-8" />
+                </Button>
+            </div>
+             <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
+                className="absolute top-0 right-0 rounded-full h-12 w-12 bg-black/50 text-white hover:bg-black/75 hover:text-white -mr-16"
+            >
+                <X className="h-8 w-8" />
+            </Button>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
