@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -85,9 +86,16 @@ export default function Booking({ content }: { content: BookingContent }) {
     return (
         <section 
             id="booking" 
-            className="py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms]"
+            className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
         >
-            <div className="container mx-auto px-4 md:px-6">
+            <Image
+              src="https://placehold.co/1920x1080.png"
+              alt="Faded background image of a booking calendar"
+              fill
+              className="object-cover opacity-5 z-0"
+              data-ai-hint="booking calendar"
+            />
+            <div className="relative z-10 container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
                     <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
