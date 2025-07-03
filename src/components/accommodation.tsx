@@ -15,10 +15,12 @@ const amenities = [
 ];
 
 const galleryImages = [
-  { src: '/accommodation-bedroom.jpg', alt: 'Cozy bedroom with a king-size bed', hint: 'cottage bedroom' },
-  { src: '/accommodation-living-room.jpg', alt: 'Open-plan living area with fireplace', hint: 'cottage living room' },
-  { src: '/accommodation-bathroom.jpg', alt: 'Bathroom with a view of the Karoo', hint: 'cottage bathroom' },
-  { src: '/accommodation-outdoor-shower.jpg', alt: 'Outdoor shower surrounded by nature', hint: 'outdoor shower nature' },
+  { src: '/Main Bedroom.jpg', alt: 'Cozy main bedroom with a king-size bed', hint: 'cottage bedroom' },
+  { src: '/Kitchen.jpg', alt: 'Well-equipped kitchen with a gas stove', hint: 'cottage kitchen' },
+  { src: '/Bathroom.jpg', alt: 'Bathroom with a bathtub and view', hint: 'cottage bathroom' },
+  { src: '/Outdoor Shower.jpg', alt: 'An invigorating outdoor shower experience', hint: 'outdoor shower' },
+  { src: '/Fire place.jpg', alt: 'Cozy indoor fireplace for cool nights', hint: 'cottage fireplace' },
+  { src: '/Stoep.jpg', alt: 'Relaxing stoep with a view', hint: 'cottage stoep' },
 ];
 
 export default function Accommodation() {
