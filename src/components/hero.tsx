@@ -21,8 +21,8 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
         priority
         data-ai-hint="cottage landscape"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-      <div className="relative z-10 flex h-full flex-col items-center justify-end text-center text-white pb-20 md:pb-32">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
         <div className="max-w-4xl p-6">
             <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg">
               {content.heading}
