@@ -1,14 +1,24 @@
-import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter } from "@/components/ui/sidebar";
+'use client';
+
+import { usePathname } from 'next/navigation';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LayoutDashboard, Newspaper, Image as ImageIcon, MessageSquareQuote, LogOut, Home } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { LayoutDashboard, LogOut, Home } from "lucide-react";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname();
+
+  // Do not show the sidebar on the login page itself.
+  // The login page is at the root of the /admin path.
+  if (pathname === '/admin') {
+    return <>{children}</>;
+  }
+  
+  // Show the sidebar for all other authenticated admin pages.
   return (
     <SidebarProvider>
         <Sidebar>
@@ -27,7 +37,7 @@ export default function AdminLayout({
             <SidebarContent>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/admin/dashboard" tooltip="Dashboard" isActive>
+                        <SidebarMenuButton href="/admin/dashboard" tooltip="Dashboard" isActive={pathname.startsWith('/admin/dashboard')}>
                             <LayoutDashboard />
                             <span>Dashboard</span>
                         </SidebarMenuButton>
