@@ -55,7 +55,7 @@ const InquiryNotificationEmail: React.FC<Readonly<InquiryEmailProps>> = ({
           </Row>
           <Row style={row}>
             <Column style={label}>Check-out:</Column>
-            <Column>{new Date(checkOut).toLocaleDate-String()}</Column>
+            <Column>{new Date(checkOut).toLocaleDateString()}</Column>
           </Row>
           <Row style={row}>
             <Column style={label}>Guests:</Column>

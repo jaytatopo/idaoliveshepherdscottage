@@ -48,7 +48,7 @@ export function InquiriesTab({ inquiries }: { inquiries: Inquiry[] }) {
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell">{inquiry.guests}</TableCell>
                                     <TableCell className="text-right">
-                                        <form action={async () => { 'use server'; await deleteInquiry(inquiry.id); }}>
+                                        <form action={deleteInquiry.bind(null, inquiry.id)}>
                                             <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                                         </form>
                                     </TableCell>
@@ -142,7 +142,7 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
                         <AmenityForm amenity={amenity} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={async () => { 'use server'; await deleteAmenity(amenity.id); }} className="inline-block">
+                <form action={deleteAmenity.bind(null, amenity.id)} className="inline-block">
                     <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                 </form>
             </TableCell>
@@ -228,7 +228,7 @@ function ActivityRow({ activity }: { activity: Activity }) {
                         <ActivityForm activity={activity} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={async () => { 'use server'; await deleteActivity(activity.id); }} className="inline-block">
+                <form action={deleteActivity.bind(null, activity.id)} className="inline-block">
                     <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                 </form>
             </TableCell>
@@ -312,7 +312,7 @@ function ReviewRow({ review }: { review: Review }) {
                         <ReviewForm review={review} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={async () => { 'use server'; await deleteReview(review.id); }} className="inline-block">
+                <form action={deleteReview.bind(null, review.id)} className="inline-block">
                     <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
                 </form>
             </TableCell>

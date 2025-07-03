@@ -1,7 +1,20 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
+import { Lato, Lora } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
+
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-lato',
+});
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-lora',
+});
 
 export const metadata: Metadata = {
   title: 'Ida Olive Shepherd’s Cottage, McGregor',
@@ -15,12 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="!scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-sans antialiased">
+      <body className={`${lato.variable} ${lora.variable} font-sans antialiased`}>
         {children}
         <Toaster />
         <CookieBanner />

@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Lato', 'sans-serif'],
-        serif: ['Lora', 'serif'],
+        sans: ['var(--font-lato)', 'sans-serif'],
+        serif: ['var(--font-lora)', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
