@@ -32,7 +32,7 @@ export default function Accommodation({ content, amenities, images }: Accommodat
         <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
                <Image
-                  src={image1?.src || "https://placehold.co/600x400.png"}
+                  src={image1?.src || "/images/accommodation-1.jpg"}
                   alt={image1?.alt || "Interior view of the cottage"}
                   fill
                   className="object-cover"
@@ -41,7 +41,7 @@ export default function Accommodation({ content, amenities, images }: Accommodat
             </div>
             <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
                <Image
-                  src={image2?.src || "https://placehold.co/600x400.png"}
+                  src={image2?.src || "/images/accommodation-2.jpg"}
                   alt={image2?.alt || "Cottage amenity details"}
                   fill
                   className="object-cover"

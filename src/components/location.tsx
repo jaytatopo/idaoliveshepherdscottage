@@ -15,7 +15,7 @@ export default function Location({ content }: { content: LocationContent }) {
   return (
     <section id="location" className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:800ms] overflow-hidden">
       <Image
-        src="https://placehold.co/1920x1080.png"
+        src="/images/location-bg.jpg"
         alt="Faded background image of a vintage map"
         fill
         className="object-cover opacity-5 z-0"

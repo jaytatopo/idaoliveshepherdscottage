@@ -43,7 +43,7 @@ export default function Gallery({ galleryImages }: GalleryProps) {
   return (
     <section id="gallery" className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:100ms] overflow-hidden">
         <Image
-          src="https://placehold.co/1920x1080.png"
+          src="/images/gallery-bg.jpg"
           alt="Abstract background texture"
           fill
           className="object-cover opacity-5 z-0"

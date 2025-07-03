@@ -96,7 +96,7 @@ export default function Booking({ content, phone }: BookingProps) {
             className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
         >
             <Image
-              src="https://placehold.co/1920x1080.png"
+              src="/images/booking-bg.jpg"
               alt="Faded background image of a booking calendar"
               fill
               className="object-cover opacity-5 z-0"

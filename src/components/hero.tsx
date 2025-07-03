@@ -13,7 +13,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
   return (
     <section id="home" className="relative h-screen w-full">
       <Image
-        src={image?.src || "https://placehold.co/1920x1080.png"}
+        src={image?.src || "/images/hero-bg.jpg"}
         alt={image?.alt || "Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"}
         fill
         className="object-cover"
