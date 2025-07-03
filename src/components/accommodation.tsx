@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
 import type { Amenity, GalleryImage } from '@/lib/content';
@@ -121,6 +121,14 @@ export default function Accommodation({ content, amenities, galleryImages }: Acc
 
       <Dialog open={selectedImageIndex !== null} onOpenChange={(isOpen) => !isOpen && handleClose()}>
         <DialogContent className="max-w-5xl w-full p-0 bg-transparent border-0 !shadow-none !rounded-none">
+            {selectedImageIndex !== null && (
+                <>
+                    <DialogTitle className="sr-only">Accommodation Gallery</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        {galleryImages[selectedImageIndex].alt}
+                    </DialogDescription>
+                </>
+            )}
             <div className="relative aspect-video">
                 {selectedImageIndex !== null && (
                     <Image
