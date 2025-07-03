@@ -47,6 +47,23 @@ export async function uploadGalleryImage(formData: FormData) {
         return { success: false, message: 'Missing file or section.' };
     }
     
+    // For singleton sections, remove existing image before uploading a new one.
+    if (section === 'hero' || section === 'reviews') {
+        const [rows] = await db.query('SELECT id, src FROM gallery_images WHERE section = ?', [section]);
+        const images = rows as { id: number; src: string }[];
+
+        for (const image of images) {
+            try {
+                const filepath = join(process.cwd(), 'public', image.src);
+                await unlink(filepath).catch(err => console.error(`Failed to delete old file ${filepath}:`, err));
+                await db.execute('DELETE FROM gallery_images WHERE id = ?', [image.id]);
+            } catch (error) {
+                console.error(`Failed to cleanup existing image for section ${section}:`, error);
+                // Don't block the upload if cleanup fails, just log it.
+            }
+        }
+    }
+    
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 

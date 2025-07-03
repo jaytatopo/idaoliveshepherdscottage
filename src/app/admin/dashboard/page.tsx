@@ -18,6 +18,8 @@ export default async function DashboardPage() {
     const activities = await getActivities();
     const reviews = await getReviews();
     const accommodationImages = await getGalleryImages('accommodation');
+    const heroImage = (await getGalleryImages('hero'))[0];
+    const reviewsImage = (await getGalleryImages('reviews'))[0];
 
     return (
         <div className="space-y-6">
@@ -35,7 +37,7 @@ export default async function DashboardPage() {
                 <TabsList className="flex-wrap h-auto">
                     <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
                     <TabsTrigger value="general_text">General Text</TabsTrigger>
-                    <TabsTrigger value="accommodation">Accommodation</TabsTrigger>
+                    <TabsTrigger value="gallery">Gallery</TabsTrigger>
                     <TabsTrigger value="amenities">Amenities</TabsTrigger>
                     <TabsTrigger value="activities">Activities</TabsTrigger>
                     <TabsTrigger value="reviews">Reviews</TabsTrigger>
@@ -152,7 +154,83 @@ export default async function DashboardPage() {
                     </form>
                 </TabsContent>
 
-                <TabsContent value="accommodation" className="mt-4 space-y-6">
+                <TabsContent value="gallery" className="mt-4 space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Hero Section Image</CardTitle>
+                            <CardDescription>The main background image for the homepage hero section. Only one image can be active.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {heroImage ? (
+                                <div className="mb-6 relative group w-full max-w-md">
+                                    <Image src={heroImage.src} alt={heroImage.alt} width={400} height={250} className="rounded-md object-cover aspect-video"/>
+                                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <form action={deleteGalleryImage.bind(null, heroImage.id)}>
+                                            <Button variant="destructive" size="icon" className="h-8 w-8"><Trash2/></Button>
+                                        </form>
+                                    </div>
+                                </div>
+                            ) : <p className="text-sm text-muted-foreground mb-4">No hero image has been uploaded.</p>}
+                            
+                            <form action={uploadGalleryImage}>
+                                <Card className="p-4 bg-muted/50 border-dashed">
+                                    <div className="flex flex-col items-center justify-center space-y-4">
+                                        <Upload className="h-8 w-8 text-muted-foreground"/>
+                                        <p className="text-sm font-medium">{heroImage ? 'Upload a new hero image to replace the current one.' : 'Upload a hero image.'}</p>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor="hero_image_upload">Select Image</Label>
+                                            <Input id="hero_image_upload" name="image" type="file" required/>
+                                        </div>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor="hero_alt_text">Image Description (Alt Text)</Label>
+                                            <Input id="hero_alt_text" name="alt" type="text" placeholder="e.g., Panoramic view of the cottage" required/>
+                                        </div>
+                                        <input type="hidden" name="section" value="hero" />
+                                        <Button type="submit" size="sm" className="mt-2">Upload Hero Image</Button>
+                                    </div>
+                                </Card>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Reviews Section Image</CardTitle>
+                            <CardDescription>The background image for the guest reviews section. Only one image can be active.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {reviewsImage ? (
+                                <div className="mb-6 relative group w-full max-w-md">
+                                    <Image src={reviewsImage.src} alt={reviewsImage.alt} width={400} height={250} className="rounded-md object-cover aspect-video"/>
+                                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <form action={deleteGalleryImage.bind(null, reviewsImage.id)}>
+                                            <Button variant="destructive" size="icon" className="h-8 w-8"><Trash2/></Button>
+                                        </form>
+                                    </div>
+                                </div>
+                            ) : <p className="text-sm text-muted-foreground mb-4">No reviews image has been uploaded.</p>}
+                            
+                            <form action={uploadGalleryImage}>
+                                <Card className="p-4 bg-muted/50 border-dashed">
+                                    <div className="flex flex-col items-center justify-center space-y-4">
+                                        <Upload className="h-8 w-8 text-muted-foreground"/>
+                                        <p className="text-sm font-medium">{reviewsImage ? 'Upload a new image to replace the current one.' : 'Upload a reviews image.'}</p>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor="reviews_image_upload">Select Image</Label>
+                                            <Input id="reviews_image_upload" name="image" type="file" required/>
+                                        </div>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor="reviews_alt_text">Image Description (Alt Text)</Label>
+                                            <Input id="reviews_alt_text" name="alt" type="text" placeholder="e.g., View from the stoep" required/>
+                                        </div>
+                                        <input type="hidden" name="section" value="reviews" />
+                                        <Button type="submit" size="sm" className="mt-2">Upload Reviews Image</Button>
+                                    </div>
+                                </Card>
+                            </form>
+                        </CardContent>
+                    </Card>
+
                     <Card>
                         <CardHeader>
                             <CardTitle>Accommodation Gallery</CardTitle>
@@ -175,6 +253,7 @@ export default async function DashboardPage() {
                                 <Card className="p-4 bg-muted/50 border-dashed">
                                     <div className="flex flex-col items-center justify-center space-y-4">
                                         <Upload className="h-8 w-8 text-muted-foreground"/>
+                                        <p className="text-sm font-medium">Upload a new image for the Accommodation Gallery.</p>
                                         <div className="grid w-full max-w-sm items-center gap-1.5">
                                             <Label htmlFor="accommodation_image_upload">Select Image</Label>
                                             <Input id="accommodation_image_upload" name="image" type="file" required/>
