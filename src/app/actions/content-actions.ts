@@ -67,7 +67,7 @@ export async function uploadGalleryImage(formData: FormData) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const filename = `${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+    const filename = `gallery_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
     const filepath = join(process.cwd(), 'public', filename);
     
     try {
@@ -185,13 +185,43 @@ export async function deleteAmenity(id: number) {
 // --- Activities Actions ---
 const activitySchema = z.object({ title: z.string().min(1), description: z.string().min(1), icon: z.string().min(1), sort_order: z.coerce.number().default(0) });
 
+async function handleActivityImageUpload(file: File | undefined, existingImage: string | null | undefined): Promise<string | null> {
+    // If no new file is uploaded, keep the existing image.
+    if (!file || file.size === 0) {
+        return existingImage || null;
+    }
+    
+    // A new file is uploaded, so delete the old image if it exists.
+    if (existingImage) {
+        try {
+            await unlink(join(process.cwd(), 'public', existingImage));
+        } catch (err) {
+            console.error(`Failed to delete old activity image ${existingImage}:`, err);
+        }
+    }
+    
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const filename = `activity_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+    const filepath = join(process.cwd(), 'public', filename);
+    await writeFile(filepath, buffer);
+    
+    return `/${filename}`;
+}
+
 export async function addActivity(formData: FormData) {
+    const imageFile = formData.get('image') as File | undefined;
     const rawData = Object.fromEntries(formData.entries());
+    delete rawData.image; // Exclude from Zod parsing
+
     try {
         const data = activitySchema.parse(rawData);
-        const columns = Object.keys(data).join(', ');
-        const placeholders = Object.keys(data).map(() => '?').join(', ');
-        const values = Object.values(data);
+        const imageSrc = await handleActivityImageUpload(imageFile, null);
+        
+        const columns = [...Object.keys(data), 'image_src'].join(', ');
+        const placeholders = [...Object.keys(data).map(() => '?'), '?'].join(', ');
+        const values = [...Object.values(data), imageSrc];
         
         await db.execute(`INSERT INTO activities (${columns}) VALUES (${placeholders})`, values);
 
@@ -205,11 +235,21 @@ export async function addActivity(formData: FormData) {
 };
 
 export async function updateActivity(id: number, formData: FormData) {
+    const imageFile = formData.get('image') as File | undefined;
     const rawData = Object.fromEntries(formData.entries());
+    delete rawData.image; // Exclude from Zod parsing
+
     try {
         const data = activitySchema.parse(rawData);
-        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
-        const values = [...Object.values(data), id];
+        
+        // Get the existing image path to delete it if a new one is uploaded.
+        const [existingRows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
+        const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
+        
+        const imageSrc = await handleActivityImageUpload(imageFile, existingImage);
+        
+        const setClauses = [...Object.keys(data).map(key => `${key} = ?`), 'image_src = ?'].join(', ');
+        const values = [...Object.values(data), imageSrc, id];
 
         await db.execute(`UPDATE activities SET ${setClauses} WHERE id = ?`, values);
 
@@ -224,6 +264,17 @@ export async function updateActivity(id: number, formData: FormData) {
 
 export async function deleteActivity(id: number) {
     try {
+        // First, get the image path to delete the file
+        const [rows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
+        const images = rows as { image_src: string | null }[];
+
+        if (images.length > 0 && images[0].image_src) {
+            const src = images[0].image_src;
+            const filepath = join(process.cwd(), 'public', src);
+            await unlink(filepath).catch(err => console.error(`Failed to delete activity image file ${filepath}:`, err));
+        }
+
+        // Then delete the database record
         await db.execute(`DELETE FROM activities WHERE id = ?`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -158,7 +159,7 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
         : addActivity;
 
     return (
-        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4">
+        <form action={async (formData) => { await action(formData); onDone(); }} className="space-y-4" encType="multipart/form-data">
             <div>
                 <Label htmlFor="title">Title</Label>
                 <Input id="title" name="title" defaultValue={activity?.title} required />
@@ -174,6 +175,17 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
              <div>
                 <Label htmlFor="sort_order">Sort Order</Label>
                 <Input id="sort_order" name="sort_order" type="number" defaultValue={activity?.sort_order ?? 0} required />
+            </div>
+            <div>
+                <Label htmlFor="image">Activity Image</Label>
+                {activity?.image_src && (
+                    <div className="my-2">
+                        <p className="text-sm text-muted-foreground mb-2">Current Image:</p>
+                        <Image src={activity.image_src} alt={activity.title} width={100} height={60} className="rounded-md object-cover" />
+                    </div>
+                )}
+                <Input id="image" name="image" type="file" accept="image/*" />
+                <p className="text-xs text-muted-foreground mt-1">{activity?.image_src ? 'Leave blank to keep the current image.' : 'Upload an image for this activity.'}</p>
             </div>
             <DialogFooter>
                 <Button type="submit">{activity ? 'Save Changes' : 'Add Activity'}</Button>
@@ -203,7 +215,7 @@ export function ActivitiesTab({ activities }: { activities: Activity[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Description</TableHead><TableHead>Icon</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Description</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {activities.map(item => <ActivityRow key={item.id} activity={item} />)}
                     </TableBody>
@@ -217,9 +229,17 @@ function ActivityRow({ activity }: { activity: Activity }) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     return (
         <TableRow>
+             <TableCell>
+                {activity.image_src ? (
+                     <Image src={activity.image_src} alt={activity.title} width={64} height={48} className="rounded-md object-cover" />
+                ) : (
+                    <div className="w-16 h-12 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">No Image</div>
+                )}
+            </TableCell>
             <TableCell>{activity.title}</TableCell>
             <TableCell className="max-w-sm truncate">{activity.description}</TableCell>
             <TableCell>{activity.icon}</TableCell>
+            <TableCell>{activity.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>

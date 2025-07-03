@@ -13,6 +13,7 @@ export interface Activity {
     icon: string;
     title: string;
     description: string;
+    image_src: string | null;
     sort_order: number;
 }
 
@@ -56,12 +57,12 @@ type WebsiteContent = {
 function shapeContent(rows: any[]): WebsiteContent {
     const content: WebsiteContent = {};
     const defaultContent = {
-        hero: { heading: 'Ida Olive Shepherd’s Cottage', subheading: 'A serene, off-the-grid escape for nature lovers.' },
-        accommodation: { heading: 'The Accommodation', subheading: 'Explore the comfort and charm of our cottage.', main_text: 'Default main text about the cottage.', secondary_text: 'Default amenities text.' },
-        activities: { heading: 'Things to Do', subheading: 'Discover local attractions and activities.' },
-        booking: { heading: 'Rates & Booking', subheading: 'Check availability or send us an enquiry.' },
-        reviews: { heading: 'Guest Reviews', subheading: 'Hear what our guests have to say.' },
-        location: { heading: 'Our Location', subheading: 'Find your way to our peaceful retreat.', address: 'McGregor, Western Cape, South Africa', email: 'reservations@idaolive.co.za', phone: '+27 12 345 6789' },
+        hero: { heading: 'Your Serene, Off-Grid Karoo Escape', subheading: 'Discover tranquility at Ida Olive Shepherd’s Cottage, a nature lover’s haven on a working dairy goat farm.' },
+        accommodation: { heading: 'A Cozy, Off-Grid Retreat', subheading: 'Experience the charm of shepherd’s cottage living, thoughtfully equipped for a comfortable and memorable stay in nature.', main_text: `Ida Olive Shepherd’s Cottage is a self-catering sanctuary on the remote Giddy Goat Farm. Surrounded by the endangered Robertson Succulent Karoo, large glass sliding doors and windows seamlessly connect you to the natural beauty outside, where indigenous vegetation and wildlife thrive.`, secondary_text: 'Completely off the grid, the cottage has no electricity. The open-plan lounge and kitchen feature a gas stove and refrigerator, while an indoor fireplace keeps the space warm on cooler nights. Solar lamps, candles, and fairy lights provide a magical ambiance.' },
+        activities: { heading: 'Reconnect with Nature & Adventure', subheading: `From serene on-site activities to exciting local excursions, there's something for every nature enthusiast.` },
+        booking: { heading: 'Rates & Availability', subheading: 'Ready for your peaceful escape? Check our availability or send us an enquiry.' },
+        reviews: { heading: 'What Our Guests Say', subheading: 'Heartfelt words from those who have experienced the magic of Ida Olive.' },
+        location: { heading: 'Find Your Way to Paradise', subheading: `We're nestled in the heart of the Karoo, just a few kilometers outside the charming village of McGregor.`, address: 'Giddy Goat Farm, 6km outside McGregor, Western Cape, South Africa', email: 'reservations@idaolivecottagemcgregor.co.za', phone: '+27 12 345 6789' },
     };
 
     for (const row of rows) {
@@ -114,7 +115,7 @@ export async function getAmenities(): Promise<Amenity[]> {
 export async function getActivities(): Promise<Activity[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, icon, title, description, sort_order FROM activities ORDER BY sort_order ASC');
+        const [rows] = await db.query('SELECT id, icon, title, description, image_src, sort_order FROM activities ORDER BY sort_order ASC');
         return rows as Activity[];
     } catch (error) {
         console.error("Failed to fetch activities:", error);
