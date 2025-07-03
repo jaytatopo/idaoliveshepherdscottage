@@ -16,15 +16,28 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { saveInquiry } from '@/app/actions/save-inquiry';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Calendar } from './ui/calendar';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phone: z.string().optional(),
-  checkIn: z.string().min(1, { message: 'Please select a check-in date.' }),
-  checkOut: z.string().min(1, { message: 'Please select a check-out date.' }),
+  checkIn: z.date({
+    required_error: "A check-in date is required.",
+  }),
+  checkOut: z.date({
+    required_error: "A check-out date is required.",
+  }),
   guests: z.coerce.number().min(1, { message: 'Must have at least 1 guest.' }).max(4, { message: 'Cannot exceed 4 guests.' }),
+}).refine((data) => data.checkOut > data.checkIn, {
+  message: "Check-out date must be after check-in date.",
+  path: ["checkOut"],
 });
+
 
 interface BookingContent {
     heading: string;
@@ -39,14 +52,20 @@ export default function Booking({ content }: { content: BookingContent }) {
             name: '',
             email: '',
             phone: '',
-            checkIn: '',
-            checkOut: '',
+            checkIn: undefined,
+            checkOut: undefined,
             guests: 2,
         },
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const result = await saveInquiry(values);
+        const formattedValues = {
+            ...values,
+            checkIn: format(values.checkIn, 'yyyy-MM-dd'),
+            checkOut: format(values.checkOut, 'yyyy-MM-dd'),
+        };
+
+        const result = await saveInquiry(formattedValues);
 
         if (result.success) {
             toast({
@@ -138,12 +157,76 @@ export default function Booking({ content }: { content: BookingContent }) {
                                             )} />
                                         </div>
                                         <div className="grid md:grid-cols-2 gap-6">
-                                             <FormField control={form.control} name="checkIn" render={({ field }) => (
-                                                <FormItem><FormLabel>Check-in Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
-                                            )} />
-                                             <FormField control={form.control} name="checkOut" render={({ field }) => (
-                                                <FormItem><FormLabel>Check-out Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
-                                            )} />
+                                             <FormField
+                                                control={form.control}
+                                                name="checkIn"
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-col">
+                                                        <FormLabel>Check-in Date</FormLabel>
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <FormControl>
+                                                                    <Button
+                                                                        variant={"outline"}
+                                                                        className={cn(
+                                                                            "w-full justify-start text-left font-normal",
+                                                                            !field.value && "text-muted-foreground"
+                                                                        )}
+                                                                    >
+                                                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                                                    </Button>
+                                                                </FormControl>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    selected={field.value}
+                                                                    onSelect={field.onChange}
+                                                                    disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                             <FormField
+                                                control={form.control}
+                                                name="checkOut"
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-col">
+                                                        <FormLabel>Check-out Date</FormLabel>
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <FormControl>
+                                                                    <Button
+                                                                        variant={"outline"}
+                                                                        className={cn(
+                                                                            "w-full justify-start text-left font-normal",
+                                                                            !field.value && "text-muted-foreground"
+                                                                        )}
+                                                                    >
+                                                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                                                    </Button>
+                                                                </FormControl>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    selected={field.value}
+                                                                    onSelect={field.onChange}
+                                                                    disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
                                         </div>
                                          <FormField control={form.control} name="guests" render={({ field }) => (
                                             <FormItem><FormLabel>Number of Guests</FormLabel><FormControl><Input type="number" min="1" max="4" placeholder="2" {...field} /></FormControl><FormMessage /></FormItem>
