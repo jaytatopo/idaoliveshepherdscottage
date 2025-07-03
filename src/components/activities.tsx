@@ -27,8 +27,14 @@ const activityImageMap: { [key: string]: { src: string; hint: string } } = {
 
 export default function Activities({ content, activities }: ActivitiesProps) {
   return (
-    <section id="activities" className="py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:200ms]">
-      <div className="container mx-auto px-4 md:px-6">
+    <section 
+      id="activities" 
+      className="py-16 md:py-24 opacity-0 animate-fade-in-up [animation-delay:200ms] relative bg-cover bg-center bg-fixed"
+      style={{backgroundImage: "url('/Farm Road.jpg')"}}
+      data-ai-hint="farm road"
+    >
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
+      <div className="container relative mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -39,7 +45,7 @@ export default function Activities({ content, activities }: ActivitiesProps) {
           {activities.map((activity) => {
             const imageInfo = activityImageMap[activity.icon] || { src: '/Cottage.jpg', hint: 'activity' };
             return (
-                <Card key={activity.id} className="flex flex-col text-center hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                <Card key={activity.id} className="flex flex-col text-center hover:shadow-lg transition-shadow duration-300 overflow-hidden bg-background/80 backdrop-blur-md">
                     <div className="relative">
                         <Image
                             src={imageInfo.src}
