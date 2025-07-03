@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,33 +37,43 @@ export default function AdminLayout({
             <SidebarContent>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/admin/dashboard" tooltip="Dashboard" isActive={pathname === '/admin/dashboard'}>
-                            <LayoutDashboard />
-                            <span>Dashboard</span>
+                        <SidebarMenuButton asChild tooltip="Dashboard" isActive={pathname === '/admin/dashboard'}>
+                            <Link href="/admin/dashboard">
+                                <LayoutDashboard />
+                                <span>Dashboard</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
-                        <SidebarMenuButton href="/admin/dashboard/content" tooltip="Content" isActive={pathname === '/admin/dashboard/content'}>
-                            <FileText />
-                            <span>Content</span>
+                        <SidebarMenuButton asChild tooltip="Content" isActive={pathname === '/admin/dashboard/content'}>
+                            <Link href="/admin/dashboard/content">
+                                <FileText />
+                                <span>Content</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/admin/dashboard/amenities" tooltip="Amenities" isActive={pathname === '/admin/dashboard/amenities'}>
-                            <List />
-                            <span>Amenities</span>
+                        <SidebarMenuButton asChild tooltip="Amenities" isActive={pathname === '/admin/dashboard/amenities'}>
+                            <Link href="/admin/dashboard/amenities">
+                                <List />
+                                <span>Amenities</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
-                        <SidebarMenuButton href="/admin/dashboard/activities" tooltip="Activities" isActive={pathname === '/admin/dashboard/activities'}>
-                            <Mountain />
-                            <span>Activities</span>
+                        <SidebarMenuButton asChild tooltip="Activities" isActive={pathname === '/admin/dashboard/activities'}>
+                            <Link href="/admin/dashboard/activities">
+                                <Mountain />
+                                <span>Activities</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
-                        <SidebarMenuButton href="/admin/dashboard/reviews" tooltip="Reviews" isActive={pathname === '/admin/dashboard/reviews'}>
-                            <Star />
-                            <span>Reviews</span>
+                        <SidebarMenuButton asChild tooltip="Reviews" isActive={pathname === '/admin/dashboard/reviews'}>
+                            <Link href="/admin/dashboard/reviews">
+                                <Star />
+                                <span>Reviews</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -70,15 +81,19 @@ export default function AdminLayout({
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                         <SidebarMenuButton href="/" tooltip="Public Site">
-                            <Home />
-                            <span>Back to Site</span>
+                         <SidebarMenuButton asChild tooltip="Public Site">
+                            <Link href="/">
+                                <Home />
+                                <span>Back to Site</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                         <SidebarMenuButton href="/admin" tooltip="Logout">
-                            <LogOut />
-                            <span>Logout</span>
+                         <SidebarMenuButton asChild tooltip="Logout">
+                            <Link href="/admin">
+                                <LogOut />
+                                <span>Logout</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
