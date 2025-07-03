@@ -31,7 +31,7 @@ export default function CookieBanner() {
                 <Cookie className="h-6 w-6 text-primary shrink-0"/>
                 <p>
                     We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.
-                    <Link href="#" className="underline ml-1 hover:text-primary">
+                    <Link href="/privacy-policy" className="underline ml-1 hover:text-primary">
                         Learn more
                     </Link>
                 </p>

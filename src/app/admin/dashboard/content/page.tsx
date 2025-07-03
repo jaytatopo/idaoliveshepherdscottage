@@ -126,6 +126,16 @@ export default async function ContentPage() {
                                     <Input id="location_phone" name="location_phone" defaultValue={content.location?.phone} />
                                 </div>
                             </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="location_facebook_url">Facebook URL</Label>
+                                    <Input id="location_facebook_url" name="location_facebook_url" type="url" defaultValue={content.location?.facebook_url} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="location_instagram_url">Instagram URL</Label>
+                                    <Input id="location_instagram_url" name="location_instagram_url" type="url" defaultValue={content.location?.instagram_url} />
+                                </div>
+                            </div>
                         </div>
                         <Button type="submit">Save All Text Changes</Button>
                     </CardContent>

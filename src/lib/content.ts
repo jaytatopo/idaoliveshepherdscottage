@@ -62,7 +62,7 @@ function shapeContent(rows: any[]): WebsiteContent {
         activities: { heading: 'Reconnect with Nature & Adventure', subheading: `From serene on-site activities to exciting local excursions, there's something for every nature enthusiast.` },
         booking: { heading: 'Rates & Availability', subheading: 'Ready for your peaceful escape? Check our availability or send us an enquiry.' },
         reviews: { heading: 'What Our Guests Say', subheading: 'Heartfelt words from those who have experienced the magic of Ida Olive.' },
-        location: { heading: 'Find Your Way to Paradise', subheading: `We're nestled in the heart of the Karoo, just a few kilometers outside the charming village of McGregor.`, address: 'Giddy Goat Farm, 6km outside McGregor, Western Cape, South Africa', email: 'reservations@idaolivecottagemcgregor.co.za', phone: '+27 12 345 6789' },
+        location: { heading: 'Find Your Way to Paradise', subheading: `We're nestled in the heart of the Karoo, just a few kilometers outside the charming village of McGregor.`, address: 'Giddy Goat Farm, 6km outside McGregor, Western Cape, South Africa', email: 'reservations@idaolivecottagemcgregor.co.za', phone: '+27 12 345 6789', facebook_url: '', instagram_url: '' },
     };
 
     for (const row of rows) {
