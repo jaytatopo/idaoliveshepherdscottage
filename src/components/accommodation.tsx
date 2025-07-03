@@ -32,20 +32,26 @@ export default function Accommodation({ content, amenities }: AccommodationProps
               </p>
           </div>
           <div className="space-y-4">
-              <h3 className="font-serif text-2xl font-semibold">Amenities & Comforts</h3>
+              <h3 className="font-serif text-2xl font-semibold">Comforts & Details</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.secondary_text}
               </p>
-               <div className="grid grid-cols-2 gap-x-8 gap-y-6 pt-4">
-                  {amenities.map((item) => (
-                      <div key={item.id} className="flex items-center gap-3">
-                      <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
-                      <span className="font-medium">{item.text}</span>
-                      </div>
-                  ))}
-              </div>
           </div>
         </div>
+        
+        {amenities.length > 0 && (
+            <div className="mt-16 pt-12 border-t">
+                <h3 className="font-serif text-2xl font-semibold text-center mb-8">What We Offer</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-6 max-w-4xl mx-auto">
+                    {amenities.map((item) => (
+                        <div key={item.id} className="flex items-center gap-3">
+                        <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
+                        <span className="font-medium">{item.text}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )}
       </div>
     </section>
   );

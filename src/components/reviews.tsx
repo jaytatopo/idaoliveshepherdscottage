@@ -12,7 +12,7 @@ interface ReviewsContent {
 interface ReviewsProps {
   content: ReviewsContent;
   reviews: Review[];
-  image?: GalleryImage;
+  images: GalleryImage[];
 }
 
 const renderStars = (rating: number) => {
@@ -33,7 +33,10 @@ const renderStars = (rating: number) => {
   return stars;
 };
 
-export default function Reviews({ content, reviews, image }: ReviewsProps) {
+export default function Reviews({ content, reviews, images }: ReviewsProps) {
+  const reviewsToShow = reviews.slice(0, 2);
+  const imagesToShow = images.slice(0, 2);
+
   return (
     <section 
         id="reviews" 
@@ -47,33 +50,43 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
           </p>
         </div>
         
-        <div className="grid lg:grid-cols-2 lg:gap-16 items-center">
-            <div className="relative h-96 rounded-lg overflow-hidden shadow-xl mb-8 lg:mb-0">
-                 <Image
-                    src={image?.src || "https://placehold.co/600x450.png"}
-                    alt={image?.alt || "Peaceful view from the cottage stoep"}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-xl bg-muted">
+                <Image
+                    src={imagesToShow[0]?.src || "https://placehold.co/600x450.png"}
+                    alt={imagesToShow[0]?.alt || "A view of the cottage"}
                     fill
                     className="object-cover"
-                    data-ai-hint="cottage stoep"
+                    data-ai-hint="cottage ambiance"
                 />
             </div>
-            <div className="grid grid-cols-1 gap-8">
-              {reviews.slice(0, 2).map((testimonial) => (
-                <Card key={testimonial.id} className="flex flex-col bg-background">
-                  <CardContent className="p-6 flex-grow">
-                    <div className="flex mb-2">
-                      {renderStars(testimonial.rating)}
-                    </div>
-                    <blockquote className="text-muted-foreground italic">
-                      "{testimonial.quote}"
-                    </blockquote>
-                  </CardContent>
-                  <div className="p-6 pt-0 text-right">
-                    <p className="font-semibold font-serif">- {testimonial.author}</p>
-                  </div>
-                </Card>
-              ))}
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-xl bg-muted">
+                <Image
+                    src={imagesToShow[1]?.src || "https://placehold.co/600x450.png"}
+                    alt={imagesToShow[1]?.alt || "Another view of the cottage"}
+                    fill
+                    className="object-cover"
+                    data-ai-hint="cottage interior"
+                />
             </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {reviewsToShow.map((testimonial) => (
+            <Card key={testimonial.id} className="flex flex-col bg-background">
+              <CardContent className="p-6 flex-grow">
+                <div className="flex mb-2">
+                  {renderStars(testimonial.rating)}
+                </div>
+                <blockquote className="text-muted-foreground italic">
+                  "{testimonial.quote}"
+                </blockquote>
+              </CardContent>
+              <div className="p-6 pt-0 text-right">
+                <p className="font-semibold font-serif">- {testimonial.author}</p>
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
