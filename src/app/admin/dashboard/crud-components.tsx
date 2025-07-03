@@ -8,68 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import { format } from 'date-fns';
-import type { Inquiry, Activity, Amenity, Review } from '@/lib/content';
+import type { Activity, Amenity, Review } from '@/lib/content';
 import {
-    deleteInquiry,
     addAmenity, updateAmenity, deleteAmenity,
     addActivity, updateActivity, deleteActivity,
     addReview, updateReview, deleteReview,
 } from '@/app/actions/content-actions';
 
-// INQUIRIES TAB
-export function InquiriesTab({ inquiries }: { inquiries: Inquiry[] }) {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Recent Inquiries</CardTitle>
-                <CardDescription>Here are the latest messages from your visitors.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                 <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead className="hidden sm:table-cell">Dates</TableHead>
-                            <TableHead className="hidden md:table-cell">Guests</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {inquiries.length > 0 ? (
-                            inquiries.map((inquiry) => (
-                                <TableRow key={inquiry.id}>
-                                    <TableCell className="font-medium">{inquiry.name}</TableCell>
-                                    <TableCell>{inquiry.email}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">
-                                        {format(new Date(inquiry.check_in), "PP")} - {format(new Date(inquiry.check_out), "PP")}
-                                    </TableCell>
-                                    <TableCell className="hidden md:table-cell">{inquiry.guests}</TableCell>
-                                    <TableCell className="text-right">
-                                        <form action={deleteInquiry.bind(null, inquiry.id)}>
-                                            <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
-                                        </form>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={5} className="text-center h-24">
-                                    No inquiries found.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-    );
-}
 
-// AMENITIES TAB
+// AMENITIES
 function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => void }) {
     const action = amenity 
         ? updateAmenity.bind(null, amenity.id) 
@@ -96,38 +45,7 @@ function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => voi
         </form>
     );
 }
-export function AmenitiesTab({ amenities }: { amenities: Amenity[] }) {
-    const [isAddOpen, setIsAddOpen] = useState(false);
-    return (
-        <Card>
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <div>
-                        <CardTitle>Manage Amenities</CardTitle>
-                        <CardDescription>Add, edit, or remove cottage amenities.</CardDescription>
-                    </div>
-                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Amenity</Button></DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Add New Amenity</DialogTitle>
-                            </DialogHeader>
-                            <AmenityForm onDone={() => setIsAddOpen(false)} />
-                        </DialogContent>
-                    </Dialog>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader><TableRow><TableHead>Text</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-                    <TableBody>
-                        {amenities.map(item => <AmenityRow key={item.id} amenity={item} />)}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-    );
-}
+
 function AmenityRow({ amenity }: { amenity: Amenity }) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     return (
@@ -151,8 +69,38 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
     );
 }
 
+export function AmenitiesClientPage({ amenities }: { amenities: Amenity[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Manage Amenities</CardTitle>
+                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Amenity</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Add New Amenity</DialogTitle>
+                            </DialogHeader>
+                            <AmenityForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Text</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {amenities.map(item => <AmenityRow key={item.id} amenity={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
 
-// ACTIVITIES TAB
+
+// ACTIVITIES
 function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () => void }) {
     const action = activity 
         ? updateActivity.bind(null, activity.id) 
@@ -194,37 +142,6 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
     );
 }
 
-export function ActivitiesTab({ activities }: { activities: Activity[] }) {
-    const [isAddOpen, setIsAddOpen] = useState(false);
-    return (
-        <Card>
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <div>
-                        <CardTitle>Manage Activities</CardTitle>
-                        <CardDescription>Add, edit, or remove nearby activities.</CardDescription>
-                    </div>
-                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Activity</Button></DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader><DialogTitle>Add New Activity</DialogTitle></DialogHeader>
-                            <ActivityForm onDone={() => setIsAddOpen(false)} />
-                        </DialogContent>
-                    </Dialog>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Description</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-                    <TableBody>
-                        {activities.map(item => <ActivityRow key={item.id} activity={item} />)}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-    );
-}
-
 function ActivityRow({ activity }: { activity: Activity }) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     return (
@@ -256,8 +173,36 @@ function ActivityRow({ activity }: { activity: Activity }) {
     );
 }
 
+export function ActivitiesClientPage({ activities }: { activities: Activity[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Manage Activities</CardTitle>
+                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Activity</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Add New Activity</DialogTitle></DialogHeader>
+                            <ActivityForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Description</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {activities.map(item => <ActivityRow key={item.id} activity={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
 
-// REVIEWS TAB
+
+// REVIEWS
 function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void }) {
     const action = review
         ? updateReview.bind(null, review.id)
@@ -287,36 +232,7 @@ function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void })
         </form>
     );
 }
-export function ReviewsTab({ reviews }: { reviews: Review[] }) {
-    const [isAddOpen, setIsAddOpen] = useState(false);
-    return (
-        <Card>
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <div>
-                        <CardTitle>Manage Reviews</CardTitle>
-                        <CardDescription>Add, edit, or remove guest testimonials.</CardDescription>
-                    </div>
-                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Review</Button></DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader><DialogTitle>Add New Review</DialogTitle></DialogHeader>
-                            <ReviewForm onDone={() => setIsAddOpen(false)} />
-                        </DialogContent>
-                    </Dialog>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
-                    <TableBody>
-                        {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-    );
-}
+
 function ReviewRow({ review }: { review: Review }) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     return (
@@ -338,5 +254,33 @@ function ReviewRow({ review }: { review: Review }) {
                 </form>
             </TableCell>
         </TableRow>
+    );
+}
+
+export function ReviewsClientPage({ reviews }: { reviews: Review[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Manage Reviews</CardTitle>
+                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Review</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Add New Review</DialogTitle></DialogHeader>
+                            <ReviewForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
     );
 }
