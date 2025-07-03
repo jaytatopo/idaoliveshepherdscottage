@@ -37,7 +37,7 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
   return (
     <section 
         id="reviews" 
-        className="py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:600ms]"
+        className="py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms]"
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
@@ -50,7 +50,7 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
         <div className="grid lg:grid-cols-2 lg:gap-16 items-center">
             <div className="relative h-96 rounded-lg overflow-hidden shadow-xl mb-8 lg:mb-0">
                  <Image
-                    src={image?.src || "/Stoep 1.jpg"}
+                    src={image?.src || "https://placehold.co/600x450.png"}
                     alt={image?.alt || "Peaceful view from the cottage stoep"}
                     fill
                     className="object-cover"
@@ -59,7 +59,7 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
             </div>
             <div className="grid grid-cols-1 gap-8">
               {reviews.slice(0, 2).map((testimonial) => (
-                <Card key={testimonial.id} className="flex flex-col">
+                <Card key={testimonial.id} className="flex flex-col bg-background">
                   <CardContent className="p-6 flex-grow">
                     <div className="flex mb-2">
                       {renderStars(testimonial.rating)}
