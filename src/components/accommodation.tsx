@@ -29,8 +29,8 @@ export default function Accommodation({ content, amenities, images }: Accommodat
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          <div className="space-y-8">
+        <div className="space-y-16">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             {image1 && (
               <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-xl">
                  <Image
@@ -49,9 +49,16 @@ export default function Accommodation({ content, amenities, images }: Accommodat
               </p>
             </div>
           </div>
-          <div className="space-y-8">
+          
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+             <div className="space-y-4 md:order-2">
+              <h3 className="font-serif text-2xl font-semibold">Comforts & Details</h3>
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {content.secondary_text}
+              </p>
+            </div>
             {image2 && (
-                <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-xl">
+                <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-xl md:order-1">
                     <Image
                       src={image2.src}
                       alt={image2.alt}
@@ -61,12 +68,6 @@ export default function Accommodation({ content, amenities, images }: Accommodat
                     />
                 </div>
             )}
-            <div className="space-y-4">
-              <h3 className="font-serif text-2xl font-semibold">Comforts & Details</h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {content.secondary_text}
-              </p>
-            </div>
           </div>
         </div>
         
