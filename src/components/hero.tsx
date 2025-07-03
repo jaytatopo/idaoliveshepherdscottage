@@ -36,7 +36,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
                   </Button>
               </Link>
               <Link href="#gallery" passHref>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-foreground">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-primary hover:bg-white hover:text-foreground">
                     Explore the Gallery
                   </Button>
               </Link>
