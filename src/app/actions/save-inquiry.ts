@@ -11,9 +11,10 @@ const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phone: z.string().optional(),
-  checkIn: z.string().min(1, { message: 'Please select a check-in date.' }),
-  checkOut: z.string().min(1, { message: 'Please select a check-out date.' }),
+  checkIn: z.string().optional(),
+  checkOut: z.string().optional(),
   guests: z.coerce.number().min(1, { message: 'Must have at least 1 guest.' }).max(4, { message: 'Cannot exceed 4 guests.' }),
+  message: z.string().min(10, { message: 'Please provide a message of at least 10 characters.' }),
 });
 
 type Inquiry = z.infer<typeof formSchema>;
@@ -24,16 +25,17 @@ export async function saveInquiry(inquiry: Inquiry) {
 
     // Save to database
     const sql = `
-      INSERT INTO inquiries (name, email, phone, check_in, check_out, guests)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO inquiries (name, email, phone, check_in, check_out, guests, message)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
       validatedInquiry.name,
       validatedInquiry.email,
-      validatedInquiry.phone,
-      validatedInquiry.checkIn,
-      validatedInquiry.checkOut,
+      validatedInquiry.phone || null,
+      validatedInquiry.checkIn || null,
+      validatedInquiry.checkOut || null,
       validatedInquiry.guests,
+      validatedInquiry.message,
     ];
 
     await db.execute(sql, values);

@@ -15,9 +15,10 @@ interface InquiryEmailProps {
   name: string;
   email: string;
   phone?: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn?: string;
+  checkOut?: string;
   guests: number;
+  message: string;
 }
 
 const InquiryNotificationEmail: React.FC<Readonly<InquiryEmailProps>> = ({
@@ -26,7 +27,8 @@ const InquiryNotificationEmail: React.FC<Readonly<InquiryEmailProps>> = ({
   phone,
   checkIn,
   checkOut,
-  guests
+  guests,
+  message
 }) => (
   <Html>
     <Head />
@@ -49,17 +51,25 @@ const InquiryNotificationEmail: React.FC<Readonly<InquiryEmailProps>> = ({
               <Column>{phone}</Column>
             </Row>
           )}
-          <Row style={row}>
-            <Column style={label}>Check-in:</Column>
-            <Column>{new Date(checkIn).toLocaleDateString()}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Check-out:</Column>
-            <Column>{new Date(checkOut).toLocaleDateString()}</Column>
-          </Row>
+          {checkIn && (
+            <Row style={row}>
+              <Column style={label}>Check-in:</Column>
+              <Column>{new Date(checkIn).toLocaleDateString()}</Column>
+            </Row>
+          )}
+          {checkOut && (
+            <Row style={row}>
+              <Column style={label}>Check-out:</Column>
+              <Column>{new Date(checkOut).toLocaleDateString()}</Column>
+            </Row>
+          )}
           <Row style={row}>
             <Column style={label}>Guests:</Column>
             <Column>{guests}</Column>
+          </Row>
+           <Row style={row}>
+            <Column style={label}>Message:</Column>
+            <Column>{message}</Column>
           </Row>
         </Section>
         <Text style={paragraph}>Please respond to them as soon as possible.</Text>

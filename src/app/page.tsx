@@ -19,6 +19,7 @@ export default async function Home() {
   const accommodationGalleryImages = await getGalleryImages('accommodation');
   const heroImage = (await getGalleryImages('hero'))[0];
   const reviews = await getReviews();
+  const phone = content.location?.phone;
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -28,11 +29,11 @@ export default async function Home() {
         <Accommodation 
           content={content.accommodation} 
           amenities={amenities}
-          images={accommodationGalleryImages}
+          images={accommodationGalleryImages.slice(0, 2)}
         />
         <Gallery galleryImages={accommodationGalleryImages} />
         <Activities content={content.activities} activities={activities} />
-        <Booking content={content.booking}/>
+        <Booking content={content.booking} phone={phone} />
         <Reviews content={content.reviews} reviews={reviews} />
         <Location content={content.location}/>
       </main>

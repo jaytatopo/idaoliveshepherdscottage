@@ -30,6 +30,7 @@ export default async function DashboardPage() {
                                 <TableHead>Email</TableHead>
                                 <TableHead className="hidden sm:table-cell">Dates</TableHead>
                                 <TableHead className="hidden md:table-cell">Guests</TableHead>
+                                <TableHead className="hidden lg:table-cell">Message</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -40,9 +41,15 @@ export default async function DashboardPage() {
                                         <TableCell className="font-medium">{inquiry.name}</TableCell>
                                         <TableCell>{inquiry.email}</TableCell>
                                         <TableCell className="hidden sm:table-cell">
-                                            {format(new Date(inquiry.check_in), "PP")} - {format(new Date(inquiry.check_out), "PP")}
+                                            {inquiry.check_in && inquiry.check_out 
+                                                ? `${format(new Date(inquiry.check_in), "PP")} - ${format(new Date(inquiry.check_out), "PP")}`
+                                                : 'N/A'
+                                            }
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">{inquiry.guests}</TableCell>
+                                        <TableCell className="hidden lg:table-cell max-w-[250px] truncate">
+                                            {inquiry.message}
+                                        </TableCell>
                                         <TableCell className="text-right">
                                             <form action={deleteInquiry.bind(null, inquiry.id)}>
                                                 <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
@@ -52,7 +59,7 @@ export default async function DashboardPage() {
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center h-24">
+                                    <TableCell colSpan={6} className="text-center h-24">
                                         No inquiries found.
                                     </TableCell>
                                 </TableRow>

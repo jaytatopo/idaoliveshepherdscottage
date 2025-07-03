@@ -38,9 +38,10 @@ export interface Inquiry {
     name: string;
     email: string;
     phone: string | null;
-    check_in: string;
-    check_out: string;
+    check_in: string | null;
+    check_out: string | null;
     guests: number;
+    message: string;
     created_at: string;
 }
 
