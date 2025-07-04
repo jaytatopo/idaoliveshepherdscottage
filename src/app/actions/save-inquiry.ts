@@ -43,7 +43,9 @@ export async function saveInquiry(inquiry: Inquiry) {
     // Send email notification
     if (process.env.RESEND_API_KEY) {
         await resend.emails.send({
-            from: 'onboarding@resend.dev', // Replace with your verified domain, e.g., 'noreply@yourdomain.com'
+            // IMPORTANT: You must have a domain verified in your Resend account to send emails.
+            // Replace 'yourdomain.com' with your actual verified domain.
+            from: 'noreply@yourdomain.com',
             to: 'reservations@idaolivecottagemcgregor.co.za',
             subject: 'New Inquiry for Ida Olive Cottage',
             react: InquiryNotificationEmail(validatedInquiry),
@@ -53,11 +55,17 @@ export async function saveInquiry(inquiry: Inquiry) {
     }
 
     return { success: true, message: "Enquiry sent successfully!" };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Action Error:', error);
     if (error instanceof z.ZodError) {
          return { success: false, message: 'Invalid form data.' };
     }
+    
+    // Provide a more specific error message if it's from Resend
+    if (error.name === 'validation_error' || error.message?.includes('resend')) {
+        return { success: false, message: `Email sending failed. Please check your Resend configuration and verified domains. Error: ${error.message}` };
+    }
+
     return { success: false, message: 'Failed to send enquiry. Please try again later.' };
   }
 }
