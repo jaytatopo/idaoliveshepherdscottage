@@ -27,7 +27,7 @@ export default async function ImagesPage() {
             </header>
             
             <Tabs defaultValue="gallery" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2">
                     <TabsTrigger value="gallery">Accommodation Gallery</TabsTrigger>
                     <TabsTrigger value="page_images">Other Page Images</TabsTrigger>
                 </TabsList>

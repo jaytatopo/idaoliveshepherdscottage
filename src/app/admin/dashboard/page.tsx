@@ -29,8 +29,8 @@ export default async function DashboardPage() {
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead className="hidden sm:table-cell">Guests</TableHead>
-                                <TableHead className="hidden lg:table-cell">Message</TableHead>
-                                <TableHead className="hidden md:table-cell">Received</TableHead>
+                                <TableHead className="hidden md:table-cell">Message</TableHead>
+                                <TableHead className="hidden sm:table-cell">Received</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -41,10 +41,10 @@ export default async function DashboardPage() {
                                         <TableCell className="font-medium">{inquiry.name}</TableCell>
                                         <TableCell>{inquiry.email}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{inquiry.guests}</TableCell>
-                                        <TableCell className="hidden lg:table-cell max-w-[250px] truncate">
+                                        <TableCell className="hidden md:table-cell max-w-[250px] truncate">
                                             {inquiry.message}
                                         </TableCell>
-                                        <TableCell className="hidden md:table-cell">
+                                        <TableCell className="hidden sm:table-cell">
                                             {format(new Date(inquiry.created_at), "PP")}
                                         </TableCell>
                                         <TableCell className="text-right">

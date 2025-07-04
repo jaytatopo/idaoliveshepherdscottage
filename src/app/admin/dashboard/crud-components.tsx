@@ -95,8 +95,8 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
     return (
         <TableRow>
             <TableCell>{amenity.text}</TableCell>
-            <TableCell>{amenity.icon}</TableCell>
-            <TableCell>{amenity.sort_order}</TableCell>
+            <TableCell className="hidden sm:table-cell">{amenity.icon}</TableCell>
+            <TableCell className="hidden md:table-cell">{amenity.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
@@ -133,7 +133,12 @@ export function AmenitiesClientPage({ amenities }: { amenities: Amenity[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Text</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow>
+                        <TableHead>Text</TableHead>
+                        <TableHead className="hidden sm:table-cell">Icon</TableHead>
+                        <TableHead className="hidden md:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
                     <TableBody>
                         {amenities.map(item => <AmenityRow key={item.id} amenity={item} />)}
                     </TableBody>
@@ -228,9 +233,9 @@ function ActivityRow({ activity }: { activity: Activity }) {
                 )}
             </TableCell>
             <TableCell>{activity.title}</TableCell>
-            <TableCell className="max-w-sm truncate">{activity.description}</TableCell>
-            <TableCell>{activity.icon}</TableCell>
-            <TableCell>{activity.sort_order}</TableCell>
+            <TableCell className="hidden md:table-cell max-w-sm truncate">{activity.description}</TableCell>
+            <TableCell className="hidden sm:table-cell">{activity.icon}</TableCell>
+            <TableCell className="hidden lg:table-cell">{activity.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
@@ -265,7 +270,14 @@ export function ActivitiesClientPage({ activities }: { activities: Activity[] })
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Image</TableHead><TableHead>Title</TableHead><TableHead>Description</TableHead><TableHead>Icon</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow>
+                        <TableHead>Image</TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead className="hidden md:table-cell">Description</TableHead>
+                        <TableHead className="hidden sm:table-cell">Icon</TableHead>
+                        <TableHead className="hidden lg:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
                     <TableBody>
                         {activities.map(item => <ActivityRow key={item.id} activity={item} />)}
                     </TableBody>
@@ -346,10 +358,10 @@ function ReviewRow({ review }: { review: Review }) {
     return (
         <TableRow>
             <TableCell>{review.author}</TableCell>
-            <TableCell className="max-w-sm truncate">"{review.quote}"</TableCell>
-            <TableCell>{review.source}</TableCell>
+            <TableCell className="hidden md:table-cell max-w-sm truncate">"{review.quote}"</TableCell>
+            <TableCell className="hidden sm:table-cell">{review.source}</TableCell>
             <TableCell>{review.rating} / 5</TableCell>
-            <TableCell>{review.sort_order}</TableCell>
+            <TableCell className="hidden lg:table-cell">{review.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
@@ -384,7 +396,14 @@ export function ReviewsClientPage({ reviews }: { reviews: Review[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Source</TableHead><TableHead>Rating</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow>
+                        <TableHead>Author</TableHead>
+                        <TableHead className="hidden md:table-cell">Quote</TableHead>
+                        <TableHead className="hidden sm:table-cell">Source</TableHead>
+                        <TableHead>Rating</TableHead>
+                        <TableHead className="hidden lg:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
                     <TableBody>
                         {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
                     </TableBody>
@@ -459,9 +478,9 @@ function FacilityRow({ facility }: { facility: Facility }) {
     return (
         <TableRow>
             <TableCell>{facility.category}</TableCell>
-            <TableCell>{facility.icon}</TableCell>
-            <TableCell className="max-w-sm truncate">{facility.items}</TableCell>
-            <TableCell>{facility.sort_order}</TableCell>
+            <TableCell className="hidden sm:table-cell">{facility.icon}</TableCell>
+            <TableCell className="hidden md:table-cell max-w-sm truncate">{facility.items}</TableCell>
+            <TableCell className="hidden lg:table-cell">{facility.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
@@ -487,7 +506,13 @@ export function FacilitiesClientPage({ facilities }: { facilities: Facility[] })
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Category</TableHead><TableHead>Icon</TableHead><TableHead>Items</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow>
+                        <TableHead>Category</TableHead>
+                        <TableHead className="hidden sm:table-cell">Icon</TableHead>
+                        <TableHead className="hidden md:table-cell">Items</TableHead>
+                        <TableHead className="hidden lg:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
                     <TableBody>{facilities.map(item => <FacilityRow key={item.id} facility={item} />)}</TableBody>
                 </Table>
             </CardContent>
@@ -556,8 +581,8 @@ function FaqRow({ faq }: { faq: FAQ }) {
     return (
         <TableRow>
             <TableCell className="font-medium">{faq.question}</TableCell>
-            <TableCell className="max-w-sm truncate">{faq.answer}</TableCell>
-            <TableCell>{faq.sort_order}</TableCell>
+            <TableCell className="hidden md:table-cell max-w-sm truncate">{faq.answer}</TableCell>
+            <TableCell className="hidden lg:table-cell">{faq.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
@@ -583,7 +608,12 @@ export function FaqsClientPage({ faqs }: { faqs: FAQ[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Question</TableHead><TableHead>Answer</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow>
+                        <TableHead>Question</TableHead>
+                        <TableHead className="hidden md:table-cell">Answer</TableHead>
+                        <TableHead className="hidden lg:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
                     <TableBody>{faqs.map(item => <FaqRow key={item.id} faq={item} />)}</TableBody>
                 </Table>
             </CardContent>
