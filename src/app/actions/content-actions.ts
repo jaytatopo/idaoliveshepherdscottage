@@ -20,7 +20,7 @@ async function updateSingleContent(section: string, key: string, value: string) 
 }
 
 // Action to update text content from a form
-export async function updateContent(formData: FormData) {
+export async function updateContent(prevState: any, formData: FormData) {
     const updates = [];
     for (const [key, value] of formData.entries()) {
         const keyParts = key.split('_');
