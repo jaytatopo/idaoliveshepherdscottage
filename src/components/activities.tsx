@@ -50,29 +50,27 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
                 style={{ animationDelay: `${300 + index * 100}ms` }}
                 onClick={() => setSelectedActivity(activity)}
               >
-                <Card className="flex flex-col text-center h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="aspect-video w-full transition-transform duration-500 group-hover:scale-105 relative bg-muted">
-                            {activity.image_src ? (
-                                <Image
-                                    src={activity.image_src}
-                                    alt={activity.title}
-                                    fill
-                                    className="object-cover"
-                                    data-ai-hint="nature activity"
-                                />
-                            ) : (
-                                <div className="flex items-center justify-center h-full">
-                                    <DynamicIcon name={activity.icon} className="w-12 h-12 text-muted-foreground/50" />
-                                </div>
-                            )}
-                        </div>
-                         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-background p-3 rounded-full border-2 transition-transform duration-300 group-hover:scale-110">
-                            <DynamicIcon name={activity.icon} className="w-6 h-6 text-primary" />
-                        </div>
+                <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden">
+                    <div className="relative aspect-video w-full overflow-hidden">
+                      {activity.image_src ? (
+                          <Image
+                              src={activity.image_src}
+                              alt={activity.title}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              data-ai-hint="nature activity"
+                          />
+                      ) : (
+                          <div className="flex items-center justify-center h-full bg-muted">
+                              <DynamicIcon name={activity.icon} className="w-12 h-12 text-muted-foreground/50" />
+                          </div>
+                      )}
                     </div>
-                    <CardHeader className="items-center flex-grow pt-12">
-                        <CardTitle className="font-serif text-xl">{activity.title}</CardTitle>
+                    <CardHeader className="flex-grow">
+                        <CardTitle className="font-serif text-xl flex items-center gap-2">
+                          <DynamicIcon name={activity.icon} className="w-6 h-6 text-primary shrink-0" />
+                          <span>{activity.title}</span>
+                        </CardTitle>
                         <CardDescription className="pt-2 text-sm line-clamp-3">{activity.description}</CardDescription>
                     </CardHeader>
                 </Card>
