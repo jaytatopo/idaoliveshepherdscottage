@@ -2,7 +2,6 @@ import type { Facility, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Leaf } from 'lucide-react';
 
 interface FacilitiesContent {
   heading: string;
@@ -19,7 +18,7 @@ export default function Facilities({ content, facilities, imageBg }: FacilitiesP
   if (!facilities || facilities.length === 0) return null;
 
   return (
-    <section id="facilities" className="relative py-16 md:py-24 bg-background">
+    <section id="facilities" className="relative py-12 md:py-20 bg-background">
       {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
@@ -31,10 +30,8 @@ export default function Facilities({ content, facilities, imageBg }: FacilitiesP
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up flex items-center justify-center gap-3">
-            <Leaf className="w-7 h-7 text-primary/80" />
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">
             {content.heading}
-            <Leaf className="w-7 h-7 text-primary/80 scale-x-[-1]" />
           </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}

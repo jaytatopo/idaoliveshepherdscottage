@@ -2,7 +2,6 @@ import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { Leaf } from 'lucide-react';
 
 interface CTAContent {
   heading: string;
@@ -20,7 +19,7 @@ export default function CallToAction({ content, imageBg }: CTAProps) {
   if (!content.heading) return null;
 
   return (
-    <section id="cta" className="relative py-16 md:py-24 bg-background">
+    <section id="cta" className="relative py-12 md:py-20 bg-background">
       {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
@@ -32,10 +31,8 @@ export default function CallToAction({ content, imageBg }: CTAProps) {
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="bg-card/70 backdrop-blur-sm rounded-lg p-8 md:p-12 text-center shadow-lg">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up flex items-center justify-center gap-3">
-                <Leaf className="w-7 h-7 text-primary/80" />
+            <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">
                 {content.heading}
-                <Leaf className="w-7 h-7 text-primary/80 scale-x-[-1]" />
             </h2>
             <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
                 {content.subheading}
