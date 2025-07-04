@@ -114,8 +114,8 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                     </p>
                 </div>
 
-                <div className="grid lg:grid-cols-5 gap-12">
-                    <div className="lg:col-span-3 space-y-8">
+                <div className="grid lg:grid-cols-3 gap-12">
+                    <div className="lg:col-span-2">
                         <Card className="bg-background/80 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="font-serif">Live Availability</CardTitle>
@@ -124,7 +124,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="aspect-[4/3] bg-muted rounded-b-lg p-2">
+                                <div className="h-[700px] bg-muted rounded-b-lg p-2">
                                      <iframe 
                                         src="https://book.nightsbridge.com/32988"
                                         className="w-full h-full border-0 rounded-md"
@@ -134,20 +134,9 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                 <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-background/80 backdrop-blur-sm">
-                            <CardHeader>
-                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800 / night</span></div>
-                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200 / night</span></div>
-                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500 / night</span></div>
-                                <p className="text-sm text-muted-foreground pt-2">Rates are for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
-                            </CardContent>
-                        </Card>
                     </div>
 
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-1 space-y-8">
                         <Card className="bg-background/80 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
@@ -217,6 +206,17 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                         </a>
                                     </Button>
                                 )}
+                            </CardContent>
+                        </Card>
+                        <Card className="bg-background/80 backdrop-blur-sm">
+                            <CardHeader>
+                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800 / night</span></div>
+                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200 / night</span></div>
+                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500 / night</span></div>
+                                <p className="text-sm text-muted-foreground pt-2">Rates are for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
                     </div>
