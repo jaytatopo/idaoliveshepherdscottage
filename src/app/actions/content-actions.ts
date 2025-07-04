@@ -23,9 +23,14 @@ async function updateSingleContent(section: string, key: string, value: string) 
 export async function updateContent(prevState: any, formData: FormData) {
     const updates = [];
     for (const [key, value] of formData.entries()) {
-        const keyParts = key.split('_');
-        const section = keyParts.shift(); // The section is the first part
-        const content_key = keyParts.join('_'); // The rest of the parts form the key
+        const firstUnderscoreIndex = key.indexOf('_');
+        // Ensure there's an underscore to split by. If not, it's not a field we can parse.
+        if (firstUnderscoreIndex === -1) {
+            continue;
+        }
+
+        const section = key.substring(0, firstUnderscoreIndex);
+        const content_key = key.substring(firstUnderscoreIndex + 1);
 
         if (section && content_key && value !== null) {
             // Normalize newlines to prevent \r\n issues from different OSes
