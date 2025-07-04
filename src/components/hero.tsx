@@ -27,11 +27,11 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
       )}
       <div className={cn(
         "absolute inset-0",
-        image && image.src ? "bg-gradient-to-t from-black/60 to-transparent" : "bg-gradient-to-t from-primary/30 to-transparent"
+        image && image.src ? "bg-gradient-to-t from-stone-900/70 via-stone-900/30 to-transparent" : "bg-gradient-to-t from-primary/30 to-transparent"
       )} />
       <div className={cn(
         "relative z-10 flex h-full flex-col items-center justify-center text-center",
-        image && image.src ? "text-white" : "text-primary-foreground"
+        "text-primary-foreground"
       )}>
         <div className="max-w-4xl p-6">
             <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg opacity-0 animate-fade-in [animation-delay:200ms]">
@@ -48,7 +48,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
                   </Button>
               </Link>
               <Link href="#gallery" passHref>
-                  <Button size="lg" variant="ghost" className="w-full sm:w-auto hover:bg-white/20 text-white backdrop-blur-sm transform hover:scale-105 transition-transform">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm transform hover:scale-105 transition-transform">
                     <Camera />
                     Explore the Gallery
                   </Button>

@@ -102,7 +102,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
 
                 <div className="grid lg:grid-cols-3 gap-8 items-start">
                     <div className="lg:col-span-2 space-y-8 opacity-0 animate-fade-in-up [animation-delay:300ms]">
-                        <Card className="bg-background/80 backdrop-blur-sm">
+                        <Card className="bg-card/80 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="font-serif">Live Availability & Secure Booking</CardTitle>
                                 <CardDescription>
@@ -124,7 +124,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
 
                     <div className="lg:col-span-1 space-y-8">
                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
-                             <Card className="bg-background/80 backdrop-blur-sm">
+                             <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                                 <CardDescription>Per night for the cottage (sleeps 4). Min 2-night stay.</CardDescription>
@@ -140,7 +140,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                         </div>
                         
                         <div className="opacity-0 animate-fade-in-up [animation-delay:500ms]">
-                            <Card className="bg-background/80 backdrop-blur-sm">
+                            <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                     <CardDescription>Have a question? Fill out the form below.</CardDescription>
@@ -173,7 +173,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                         <div className="relative flex justify-center text-xs uppercase"> <span className="bg-card px-2 text-muted-foreground"> Or </span> </div>
                                     </div>
                                     {phone && (
-                                        <Button variant="outline" asChild className="w-full bg-[#25D366] text-white hover:bg-[#25D366]/90 hover:text-white">
+                                        <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                                             <a href={`https://wa.me/${phone?.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="mr-2 h-5 w-5"><path d="M16.75 13.96c-.25-.12-1.47-.72-1.7-.81-.23-.09-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.28.18-.52.06-.25-.12-1.03-.38-1.96-1.21-.72-.64-1.21-1.43-1.38-1.68-.17-.25-.02-.38.1-.51.11-.11.25-.28.37-.42.13-.14.17-.25.25-.41.09-.17.04-.31-.02-.42-.06-.12-.56-1.34-.76-1.84s-.4-.42-.55-.42h-.48c-.17 0-.45.06-.68.31-.23.25-.87 1.03-.87 2.5s.89 2.9,1.01 3.1c.12.21,1.74,2.65,4.22,3.72.59.26,1.05.41,1.41.52.59.17,1.13.14,1.54.09.46-.06,1.47-.6,1.68-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28zM12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10z"/></svg>
                                                 Chat on WhatsApp
@@ -187,7 +187,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                 </div>
 
                 <div className="mt-12 max-w-4xl mx-auto opacity-0 animate-fade-in-up [animation-delay:600ms]">
-                    <Card className="bg-background/80 backdrop-blur-sm">
+                    <Card className="bg-card/80 backdrop-blur-sm">
                         <CardHeader>
                         <CardTitle className="font-serif text-center">Good to Know</CardTitle>
                         <CardDescription className="text-center">Important information about your stay at Ida Olive.</CardDescription>

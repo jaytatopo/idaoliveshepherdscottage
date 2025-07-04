@@ -36,7 +36,7 @@ export default function Header() {
   }`;
 
   const linkClasses = `text-lg font-serif font-bold transition-colors duration-300 ${
-    isScrolled ? 'text-primary' : 'text-white'
+    isScrolled ? 'text-primary' : 'text-primary-foreground'
   }`;
 
   const DesktopNav = () => (
@@ -48,7 +48,7 @@ export default function Header() {
             className={`transition-colors duration-300 ${
               isScrolled
                 ? 'text-foreground hover:text-primary'
-                : 'text-white hover:text-white/80'
+                : 'text-primary-foreground hover:text-primary-foreground/80'
             }`}
           >
             {link.label}
@@ -60,8 +60,8 @@ export default function Header() {
           variant={isScrolled ? 'default' : 'outline'}
           className={`transition-all duration-300 ${
             isScrolled
-              ? 'bg-accent hover:bg-accent/90 text-accent-foreground border-transparent'
-              : 'border-white text-white hover:bg-white/10 hover:text-white bg-transparent'
+              ? 'bg-accent hover:bg-accent/90 text-accent-foreground'
+              : 'border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10'
           }`}
         >
           Book Now
@@ -113,7 +113,7 @@ export default function Header() {
               className={`transition-colors duration-300 ${
                 isScrolled
                   ? 'text-foreground'
-                  : 'text-white hover:bg-white/10 hover:text-white'
+                  : 'text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground'
               }`}
             >
               <Menu className="h-6 w-6" />

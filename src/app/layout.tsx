@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
-import { Lato, Lora } from 'next/font/google';
+import { Inter, Lora } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
 
-const lato = Lato({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-lato',
+  variable: '--font-inter',
 });
 
 const lora = Lora({
@@ -28,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="!scroll-smooth">
-      <body className={`${lato.variable} ${lora.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         {children}
         <Toaster />
         <CookieBanner />
