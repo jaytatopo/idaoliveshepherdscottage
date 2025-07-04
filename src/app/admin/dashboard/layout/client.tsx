@@ -10,21 +10,105 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { updatePageLayout } from '@/app/actions/content-actions';
 import { GripVertical } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+
+// A sortable row component that uses dnd-kit hooks
+function SortableTableRow({ section, onVisibilityChange, onSortOrderChange }: { section: PageSection, onVisibilityChange: (id: number, visible: boolean) => void, onSortOrderChange: (id: number, order: number) => void }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: section.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.8 : 1,
+        zIndex: isDragging ? 1 : 0,
+        position: 'relative' as 'relative',
+    };
+
+    return (
+        <TableRow ref={setNodeRef} style={style} {...attributes} data-state={isDragging ? 'dragging' : undefined}>
+            <TableCell className="cursor-grab p-2" {...listeners}>
+                <GripVertical className="text-muted-foreground" />
+            </TableCell>
+            <TableCell className="font-medium">{section.title}</TableCell>
+            <TableCell>
+                <Input
+                    type="number"
+                    value={section.sort_order}
+                    onChange={(e) => onSortOrderChange(section.id, parseInt(e.target.value, 10))}
+                    className="w-20"
+                />
+            </TableCell>
+            <TableCell>
+                <Switch
+                    checked={section.is_visible}
+                    onCheckedChange={(checked) => onVisibilityChange(section.id, checked)}
+                />
+            </TableCell>
+        </TableRow>
+    );
+}
 
 export function LayoutClientPage({ sections: initialSections }: { sections: PageSection[] }) {
-    const [sections, setSections] = useState<PageSection[]>(initialSections);
+    const [sections, setSections] = useState<PageSection[]>(initialSections.sort((a, b) => a.sort_order - b.sort_order));
     const [isSaving, setIsSaving] = useState(false);
     const { toast } = useToast();
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     const handleSortChange = (id: number, newSortOrder: number) => {
         setSections(prev =>
             prev.map(s => (s.id === id ? { ...s, sort_order: newSortOrder } : s))
-              .sort((a, b) => a.sort_order - b.sort_order)
         );
     };
 
     const handleVisibilityChange = (id: number, newVisibility: boolean) => {
         setSections(prev => prev.map(s => (s.id === id ? { ...s, is_visible: newVisibility } : s)));
+    };
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (over && active.id !== over.id) {
+            setSections((currentSections) => {
+                const oldIndex = currentSections.findIndex((s) => s.id === active.id);
+                const newIndex = currentSections.findIndex((s) => s.id === over.id);
+                const reorderedSections = arrayMove(currentSections, oldIndex, newIndex);
+                
+                // Update sort_order based on new array index to ensure data consistency
+                return reorderedSections.map((section, index) => ({
+                    ...section,
+                    sort_order: (index + 1) * 10,
+                }));
+            });
+        }
     };
 
     const handleSave = async () => {
@@ -42,10 +126,10 @@ export function LayoutClientPage({ sections: initialSections }: { sections: Page
         <Card>
             <CardHeader>
                 <CardTitle>Manage Sections</CardTitle>
-                <CardDescription>Drag to reorder, set visibility, and adjust sort order. Click "Save Layout" to apply changes.</CardDescription>
+                <CardDescription>Drag to reorder, toggle visibility, or manually set a sort order. Click "Save Layout" to apply changes.</CardDescription>
             </CardHeader>
             <CardContent>
-                <form action={() => handleSave()}>
+                <form action={handleSave}>
                     <div className="rounded-md border">
                         <Table>
                             <TableHeader>
@@ -56,30 +140,28 @@ export function LayoutClientPage({ sections: initialSections }: { sections: Page
                                     <TableHead className="w-[100px]">Visible</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            <TableBody>
-                                {sections.map(section => (
-                                    <TableRow key={section.id}>
-                                        <TableCell className="cursor-grab">
-                                            <GripVertical className="text-muted-foreground" />
-                                        </TableCell>
-                                        <TableCell className="font-medium">{section.title}</TableCell>
-                                        <TableCell>
-                                            <Input
-                                                type="number"
-                                                value={section.sort_order}
-                                                onChange={(e) => handleSortChange(section.id, parseInt(e.target.value, 10))}
-                                                className="w-20"
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                            >
+                                <SortableContext
+                                    items={sections.map(s => s.id)}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    <TableBody>
+                                        {sections.map(section => (
+                                            <SortableTableRow
+                                                key={section.id}
+                                                section={section}
+                                                onSortOrderChange={handleSortChange}
+                                                onVisibilityChange={handleVisibilityChange}
                                             />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Switch
-                                                checked={section.is_visible}
-                                                onCheckedChange={(checked) => handleVisibilityChange(section.id, checked)}
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
+                                        ))}
+                                    </TableBody>
+                                </SortableContext>
+                            </DndContext>
                         </Table>
                     </div>
                     <Button type="submit" className="mt-6" disabled={isSaving}>
