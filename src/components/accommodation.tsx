@@ -22,7 +22,7 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
   const image2 = images?.[1];
 
   return (
-    <section id="accommodation" className="relative py-12 md:py-16 bg-background">
+    <section id="accommodation" className="relative py-10 md:py-12 bg-background">
       {imageBg && (
         <Image
           src={imageBg.src}

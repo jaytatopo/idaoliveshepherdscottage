@@ -66,7 +66,7 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
   return (
     <section 
         id="reviews" 
-        className="relative py-12 md:py-16 bg-card overflow-hidden"
+        className="relative py-10 md:py-12 bg-card overflow-hidden"
     >
       {imageBg && (
         <Image

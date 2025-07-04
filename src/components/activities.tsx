@@ -18,7 +18,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
   return (
     <section 
       id="activities" 
-      className="relative py-12 md:py-16 bg-card"
+      className="relative py-10 md:py-12 bg-card"
     >
       {imageBg && (
         <Image
