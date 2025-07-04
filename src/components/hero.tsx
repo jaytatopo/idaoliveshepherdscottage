@@ -13,7 +13,7 @@ interface HeroContent {
 export default function Hero({ content, image }: { content: HeroContent, image?: GalleryImage }) {
   return (
     <section id="home" className="relative h-screen w-full bg-secondary">
-      {image && (
+      {image ? (
           <Image
             src={image.src}
             alt={image.alt}
@@ -22,6 +22,8 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
             priority
             data-ai-hint="cottage landscape"
           />
+      ) : (
+        <div className="absolute inset-0 bg-primary/20" />
       )}
       <div className={cn(
         "absolute inset-0",
@@ -45,7 +47,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
                   </Button>
               </Link>
               <Link href="#gallery" passHref>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-primary-foreground hover:bg-white hover:text-primary">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white bg-transparent text-white hover:bg-white hover:text-primary">
                     Explore the Gallery
                   </Button>
               </Link>
