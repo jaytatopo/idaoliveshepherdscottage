@@ -174,8 +174,8 @@ function shapeContent(rows: any[]): WebsiteContent {
 export async function getContent(): Promise<WebsiteContent> {
     noStore(); // Opt out of caching for this function
     try {
-        const [rows] = await db.query('SELECT section, content_key, content_value FROM page_content');
-        return shapeContent(rows as any[]);
+        const { rows } = await db.query('SELECT section, content_key, content_value FROM page_content');
+        return shapeContent(rows);
     } catch (error) {
         console.error("Failed to fetch page content, serving default content:", error);
         // Return a default structure that prevents the page from crashing.
@@ -186,7 +186,7 @@ export async function getContent(): Promise<WebsiteContent> {
 export async function getAmenities(): Promise<Amenity[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, icon, text, sort_order FROM amenities ORDER BY sort_order ASC');
+        const { rows } = await db.query('SELECT id, icon, text, sort_order FROM amenities ORDER BY sort_order ASC');
         return rows as Amenity[];
     } catch (error) {
         console.error("Failed to fetch amenities:", error);
@@ -197,7 +197,7 @@ export async function getAmenities(): Promise<Amenity[]> {
 export async function getFacilities(): Promise<Facility[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, icon, category, items, sort_order FROM facilities ORDER BY sort_order ASC');
+        const { rows } = await db.query('SELECT id, icon, category, items, sort_order FROM facilities ORDER BY sort_order ASC');
         return rows as Facility[];
     } catch (error) {
         console.error("Failed to fetch facilities:", error);
@@ -208,7 +208,7 @@ export async function getFacilities(): Promise<Facility[]> {
 export async function getFaqs(): Promise<FAQ[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, question, answer, sort_order FROM faq ORDER BY sort_order ASC');
+        const { rows } = await db.query('SELECT id, question, answer, sort_order FROM faq ORDER BY sort_order ASC');
         return rows as FAQ[];
     } catch (error) {
         console.error("Failed to fetch FAQs:", error);
@@ -219,7 +219,7 @@ export async function getFaqs(): Promise<FAQ[]> {
 export async function getActivities(): Promise<Activity[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, icon, title, description, image_src, sort_order FROM activities ORDER BY sort_order ASC');
+        const { rows } = await db.query('SELECT id, icon, title, description, image_src, sort_order FROM activities ORDER BY sort_order ASC');
         return rows as Activity[];
     } catch (error) {
         console.error("Failed to fetch activities:", error);
@@ -230,7 +230,7 @@ export async function getActivities(): Promise<Activity[]> {
 export async function getGalleryImages(section: string): Promise<GalleryImage[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, src, alt, section, sort_order FROM gallery_images WHERE section = ? ORDER BY sort_order ASC', [section]);
+        const { rows } = await db.query('SELECT id, src, alt, section, sort_order FROM gallery_images WHERE section = $1 ORDER BY sort_order ASC', [section]);
         return rows as GalleryImage[];
     } catch (error) {
         console.error(`Failed to fetch gallery images for section "${section}":`, error);
@@ -241,7 +241,7 @@ export async function getGalleryImages(section: string): Promise<GalleryImage[]>
 export async function getReviews(): Promise<Review[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, quote, author, rating, source, sort_order FROM reviews ORDER BY sort_order ASC');
+        const { rows } = await db.query('SELECT id, quote, author, rating, source, sort_order FROM reviews ORDER BY sort_order ASC');
         return rows as Review[];
     } catch (error) {
         console.error("Failed to fetch reviews:", error);
@@ -252,7 +252,7 @@ export async function getReviews(): Promise<Review[]> {
 export async function getInquiries(): Promise<Inquiry[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT 50');
+        const { rows } = await db.query('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT 50');
         return rows as Inquiry[];
     } catch (error) {
         console.error("Failed to fetch inquiries:", error);
@@ -263,8 +263,8 @@ export async function getInquiries(): Promise<Inquiry[]> {
 export async function getPageSections(): Promise<PageSection[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT * FROM page_sections WHERE is_visible = TRUE ORDER BY sort_order ASC');
-        if ((rows as any[]).length === 0) throw new Error("No sections found");
+        const { rows } = await db.query('SELECT * FROM page_sections WHERE is_visible = TRUE ORDER BY sort_order ASC');
+        if (rows.length === 0) throw new Error("No sections found");
         return rows as PageSection[];
     } catch (error) {
         console.error("Failed to fetch page sections, returning default order:", error);
@@ -286,8 +286,8 @@ export async function getPageSections(): Promise<PageSection[]> {
 export async function getAllPageSections(): Promise<PageSection[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT * FROM page_sections ORDER BY sort_order ASC');
-        if ((rows as any[]).length === 0) {
+        const { rows } = await db.query('SELECT * FROM page_sections ORDER BY sort_order ASC');
+        if (rows.length === 0) {
              // Fallback to a default order if table is empty
             return getPageSections();
         }

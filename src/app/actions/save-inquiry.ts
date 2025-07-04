@@ -11,15 +11,11 @@ const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phone: z.string().optional(),
-  guests: z.coerce.number().min(1, { message: 'Must have at least 1 guest.' }).max(4, { message: 'Cannot exceed 4 guests.' }),
   message: z.string().min(10, { message: 'Please provide a message of at least 10 characters.' }),
-  // Note: checkIn and checkOut are not included here as the enquiry form does not submit them.
-  // They are part of the main `Inquiry` type for other potential uses.
 });
 
 type InquiryFormData = z.infer<typeof formSchema> & {
-    checkIn?: string;
-    checkOut?: string;
+    guests: number; // Keep this for the email
 };
 
 
@@ -31,13 +27,13 @@ export async function saveInquiry(inquiry: InquiryFormData) {
     try {
         const sql = `
           INSERT INTO inquiries (name, email, phone, guests, message)
-          VALUES (?, ?, ?, ?, ?)
+          VALUES ($1, $2, $3, $4, $5)
         `;
         const values = [
           validatedInquiry.name,
           validatedInquiry.email,
           validatedInquiry.phone || null,
-          validatedInquiry.guests,
+          inquiry.guests, // guests is not on the zod schema, take it from original input
           validatedInquiry.message,
         ];
         await db.execute(sql, values);
@@ -49,16 +45,19 @@ export async function saveInquiry(inquiry: InquiryFormData) {
     // Send email notification
     if (process.env.RESEND_API_KEY) {
         try {
+            // NOTE: For Resend to work, you MUST use a verified domain in the `from` field.
+            // The `onboarding@resend.dev` address is a temporary sandbox for testing.
+            // Replace `yourdomain.com` with your actual, verified domain before going live.
             await resend.emails.send({
-                from: 'Ida Olive Cottage <noreply@idaolivecottagemcgregor.co.za>',
-                to: 'reservations@idaolivecottagemcgregor.co.za', // <-- For production, change to a verified domain.
+                from: 'Ida Olive Cottage <onboarding@resend.dev>', // <-- Replace with your verified domain
+                to: 'reservations@idaolivecottagemcgregor.co.za', 
                 subject: 'New Web Inquiry for Ida Olive Cottage',
-                react: InquiryNotificationEmail(validatedInquiry),
+                react: InquiryNotificationEmail(inquiry), // Pass the full inquiry with guests
             });
         } catch (emailError: any) {
              console.error('Email Error:', emailError);
              // The inquiry was saved, but email failed. Return a specific error.
-             return { success: false, message: `Your inquiry was saved, but the notification email failed to send. Error: ${emailError.message}` };
+             return { success: false, message: `Your inquiry was saved, but the notification email failed to send. Check Resend configuration. Error: ${emailError.message}` };
         }
     } else {
         console.warn('RESEND_API_KEY is not set. Skipping email notification.');

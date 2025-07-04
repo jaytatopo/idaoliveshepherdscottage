@@ -2,6 +2,28 @@
 
 This is a [Next.js](https://nextjs.org/) application for the Ida Olive Shepherd's Cottage website, complete with a dynamic content management system (CMS) for the admin.
 
+This project is configured to use Vercel Postgres (powered by Neon) for the database.
+
+## Deploying to Production with Vercel
+
+[Vercel](https://vercel.com) provides the easiest and most powerful deployment experience for Next.js.
+
+1.  **Push to Git:** Push your code to a GitHub, GitLab, or Bitbucket repository.
+2.  **Import Project:** Sign up for a Vercel account and import your Git repository.
+3.  **Set Up Postgres Database:**
+    *   In your Vercel project dashboard, go to the **Storage** tab.
+    *   Select **Postgres** and create a new database.
+    *   After creation, connect it to your project. Vercel will automatically add the `POSTGRES_URL` environment variable.
+4.  **Set Up Database Schema:**
+    *   In your Neon project dashboard (you can get there from Vercel's storage tab), navigate to the **SQL Editor**.
+    *   Copy the entire content of the `sql/schema.sql` file from this repository.
+    *   Paste the script into the SQL Editor and click **Run**. This will create all the necessary tables and populate them with default content.
+5.  **Add Resend API Key:**
+    *   In your Vercel project's **Settings -> Environment Variables**, add a new variable:
+        *   **Name:** `RESEND_API_KEY`
+        *   **Value:** Your API key from [Resend](https://resend.com).
+6.  **Deploy:** Vercel will automatically build and deploy your site. Any future pushes to your repository will trigger a new deployment.
+
 ## Running the Project Locally
 
 1.  **Install Dependencies:**
@@ -10,13 +32,12 @@ This is a [Next.js](https://nextjs.org/) application for the Ida Olive Shepherd'
     ```
 
 2.  **Set Up Environment Variables:**
-    Create a `.env` file in the root of the project and add your database credentials and other secret keys.
+    *   Create a `.env.local` file in the root of the project.
+    *   Get your PostgreSQL connection string from Neon (it should be in the "Connection Details" on your Neon project dashboard).
+    *   Add the environment variables to your `.env.local` file:
     ```
-    DB_HOST=...
-    DB_USER=...
-    DB_PASSWORD=...
-    DB_DATABASE=...
-    RESEND_API_KEY=...
+    POSTGRES_URL="your_neon_connection_string"
+    RESEND_API_KEY="your_resend_api_key"
     ```
 
 3.  **Run the Development Server:**
@@ -24,19 +45,3 @@ This is a [Next.js](https://nextjs.org/) application for the Ida Olive Shepherd'
     npm run dev
     ```
     The application will be available at [http://localhost:3000](http://localhost:3000). The admin portal is at `/admin`.
-
-## Deploying to Production (Serverless Hosting)
-
-This application is designed to be deployed to a **serverless hosting provider** that supports Node.js. Hosting on a platform without Node.js support will not work due to the app's dynamic, server-side features (like the admin panel and database).
-
-**Recommended Host: Vercel**
-
-[Vercel](https://vercel.com) is the creator of Next.js and provides the easiest and most powerful deployment experience.
-
-1.  Push your code to a GitHub, GitLab, or Bitbucket repository.
-2.  Sign up for a Vercel account (they have a generous free tier).
-3.  Import your Git repository into Vercel.
-4.  Configure the Environment Variables (see step 2 above) in the Vercel project settings.
-5.  Vercel will automatically build and deploy your site.
-
-Every time you push a change to your repository, Vercel will automatically redeploy the application.

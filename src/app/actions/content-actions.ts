@@ -11,10 +11,11 @@ const MAX_FILE_SIZE_MB = 3;
 async function updateSingleContent(section: string, key: string, value: string) {
     const sql = `
         INSERT INTO page_content (section, content_key, content_value)
-        VALUES (?, ?, ?)
-        ON DUPLICATE KEY UPDATE content_value = ?
+        VALUES ($1, $2, $3)
+        ON CONFLICT (section, content_key) 
+        DO UPDATE SET content_value = $3
     `;
-    await db.execute(sql, [section, key, value, value]);
+    await db.execute(sql, [section, key, value]);
 }
 
 // Action to update text content from a form
@@ -77,7 +78,7 @@ export async function uploadGalleryImage(formData: FormData) {
     // For singleton sections, remove existing image record before uploading a new one.
     if (singletonSections.includes(section)) {
         try {
-            await db.execute('DELETE FROM gallery_images WHERE section = ?', [section]);
+            await db.execute('DELETE FROM gallery_images WHERE section = $1', [section]);
         } catch (error) {
             console.error(`Failed to cleanup existing image for section ${section}:`, error);
             // Don't block the upload if cleanup fails, just log it.
@@ -90,7 +91,7 @@ export async function uploadGalleryImage(formData: FormData) {
         const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
 
         await db.execute(
-            'INSERT INTO gallery_images (src, alt, section) VALUES (?, ?, ?)',
+            'INSERT INTO gallery_images (src, alt, section) VALUES ($1, $2, $3)',
             [dataUri, alt || file.name, section]
         );
 
@@ -100,9 +101,9 @@ export async function uploadGalleryImage(formData: FormData) {
 
     } catch (error: any) {
         console.error('Failed to upload image:', error);
-        // Check for a common MySQL error when data is too long for the column
-        if (error.code === 'ER_DATA_TOO_LONG') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `src` column in `gallery_images` is of type LONGTEXT.' };
+        // Check for a common Postgres error when data is too long for the column
+        if (error.code === '22001') { // data_too_long
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `src` column in `gallery_images` is of type TEXT.' };
         }
         return { success: false, message: 'Failed to save image to the database.' };
     }
@@ -115,7 +116,7 @@ export async function deleteGalleryImage(id: number) {
     }
 
     try {
-        await db.execute('DELETE FROM gallery_images WHERE id = ?', [id]);
+        await db.execute('DELETE FROM gallery_images WHERE id = $1', [id]);
         
         revalidatePath('/');
         revalidatePath('/admin/dashboard/content');
@@ -131,7 +132,7 @@ export async function deleteGalleryImage(id: number) {
 export async function deleteInquiry(id: number) {
     if (!id) return { success: false, message: 'Missing inquiry ID.' };
     try {
-        await db.execute('DELETE FROM inquiries WHERE id = ?', [id]);
+        await db.execute('DELETE FROM inquiries WHERE id = $1', [id]);
         revalidatePath('/admin/dashboard');
         return { success: true, message: 'Inquiry deleted successfully.' };
     } catch (error) {
@@ -149,7 +150,7 @@ export async function addAmenity(formData: FormData) {
     try {
         const data = amenitySchema.parse(rawData);
         const columns = Object.keys(data).join(', ');
-        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const placeholders = Object.keys(data).map((_, i) => `$${i + 1}`).join(', ');
         const values = Object.values(data);
         
         await db.execute(`INSERT INTO amenities (${columns}) VALUES (${placeholders})`, values);
@@ -166,10 +167,10 @@ export async function updateAmenity(id: number, formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
     try {
         const data = amenitySchema.parse(rawData);
-        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const setClauses = Object.keys(data).map((key, i) => `${key} = $${i + 1}`).join(', ');
         const values = [...Object.values(data), id];
 
-        await db.execute(`UPDATE amenities SET ${setClauses} WHERE id = ?`, values);
+        await db.execute(`UPDATE amenities SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
@@ -181,7 +182,7 @@ export async function updateAmenity(id: number, formData: FormData) {
 
 export async function deleteAmenity(id: number) {
     try {
-        await db.execute(`DELETE FROM amenities WHERE id = ?`, [id]);
+        await db.execute(`DELETE FROM amenities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
@@ -231,7 +232,7 @@ export async function addActivity(formData: FormData) {
         const imageSrc = imageResult;
         
         const columns = [...Object.keys(data), 'image_src'].join(', ');
-        const placeholders = [...Object.keys(data).map(() => '?'), '?'].join(', ');
+        const placeholders = [...Object.keys(data).map((_, i) => `$${i + 1}`), `$${Object.keys(data).length + 1}`].join(', ');
         const values = [...Object.values(data), imageSrc];
         
         await db.execute(`INSERT INTO activities (${columns}) VALUES (${placeholders})`, values);
@@ -241,8 +242,8 @@ export async function addActivity(formData: FormData) {
         return { success: true };
     } catch (error: any) {
         console.error(`Failed to add to activities:`, error);
-        if (error.code === 'ER_DATA_TOO_LONG') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type LONGTEXT.' };
+        if (error.code === '22001') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type TEXT.' };
         }
         return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
     }
@@ -257,7 +258,7 @@ export async function updateActivity(id: number, formData: FormData) {
         const data = activitySchema.parse(rawData);
         
         // Get the existing image path to decide whether to keep it or replace it.
-        const [existingRows] = await db.query('SELECT image_src FROM activities WHERE id = ?', [id]);
+        const { rows: existingRows } = await db.query('SELECT image_src FROM activities WHERE id = $1', [id]);
         const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
         
         const imageResult = await handleActivityImageUpload(imageFile, existingImage);
@@ -267,18 +268,18 @@ export async function updateActivity(id: number, formData: FormData) {
         }
         const imageSrc = imageResult;
         
-        const setClauses = [...Object.keys(data).map(key => `${key} = ?`), 'image_src = ?'].join(', ');
+        const setClauses = [...Object.keys(data).map((key, i) => `${key} = $${i + 1}`), `image_src = $${Object.keys(data).length + 1}`].join(', ');
         const values = [...Object.values(data), imageSrc, id];
 
-        await db.execute(`UPDATE activities SET ${setClauses} WHERE id = ?`, values);
+        await db.execute(`UPDATE activities SET ${setClauses} WHERE id = $${values.length}`, values);
 
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
     } catch (error: any) {
         console.error(`Failed to update activity:`, error);
-        if (error.code === 'ER_DATA_TOO_LONG') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type LONGTEXT.' };
+        if (error.code === '22001') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type TEXT.' };
         }
         return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
     }
@@ -287,7 +288,7 @@ export async function updateActivity(id: number, formData: FormData) {
 export async function deleteActivity(id: number) {
     try {
         // Just delete the database record. The image data is stored in it.
-        await db.execute(`DELETE FROM activities WHERE id = ?`, [id]);
+        await db.execute(`DELETE FROM activities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
@@ -312,7 +313,7 @@ export async function addReview(formData: FormData) {
     try {
         const data = reviewSchema.parse(rawData);
         const columns = Object.keys(data).join(', ');
-        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const placeholders = Object.keys(data).map((_, i) => `$${i + 1}`).join(', ');
         const values = Object.values(data);
         
         await db.execute(`INSERT INTO reviews (${columns}) VALUES (${placeholders})`, values);
@@ -329,10 +330,10 @@ export async function updateReview(id: number, formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
     try {
         const data = reviewSchema.parse(rawData);
-        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const setClauses = Object.keys(data).map((key, i) => `${key} = $${i + 1}`).join(', ');
         const values = [...Object.values(data), id];
 
-        await db.execute(`UPDATE reviews SET ${setClauses} WHERE id = ?`, values);
+        await db.execute(`UPDATE reviews SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
@@ -344,7 +345,7 @@ export async function updateReview(id: number, formData: FormData) {
 
 export async function deleteReview(id: number) {
     try {
-        await db.execute(`DELETE FROM reviews WHERE id = ?`, [id]);
+        await db.execute(`DELETE FROM reviews WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
@@ -367,7 +368,7 @@ export async function addFacility(formData: FormData) {
     try {
         const data = facilitySchema.parse(rawData);
         const columns = Object.keys(data).join(', ');
-        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const placeholders = Object.keys(data).map((_, i) => `$${i + 1}`).join(', ');
         const values = Object.values(data);
         await db.execute(`INSERT INTO facilities (${columns}) VALUES (${placeholders})`, values);
         revalidatePath('/');
@@ -382,9 +383,9 @@ export async function updateFacility(id: number, formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
     try {
         const data = facilitySchema.parse(rawData);
-        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const setClauses = Object.keys(data).map((key, i) => `${key} = $${i + 1}`).join(', ');
         const values = [...Object.values(data), id];
-        await db.execute(`UPDATE facilities SET ${setClauses} WHERE id = ?`, values);
+        await db.execute(`UPDATE facilities SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
         return { success: true };
@@ -395,7 +396,7 @@ export async function updateFacility(id: number, formData: FormData) {
 
 export async function deleteFacility(id: number) {
     try {
-        await db.execute(`DELETE FROM facilities WHERE id = ?`, [id]);
+        await db.execute(`DELETE FROM facilities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
         return { success: true };
@@ -417,7 +418,7 @@ export async function addFaq(formData: FormData) {
     try {
         const data = faqSchema.parse(rawData);
         const columns = Object.keys(data).join(', ');
-        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const placeholders = Object.keys(data).map((_, i) => `$${i + 1}`).join(', ');
         const values = Object.values(data);
         await db.execute(`INSERT INTO faq (${columns}) VALUES (${placeholders})`, values);
         revalidatePath('/');
@@ -432,9 +433,9 @@ export async function updateFaq(id: number, formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
     try {
         const data = faqSchema.parse(rawData);
-        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const setClauses = Object.keys(data).map((key, i) => `${key} = $${i + 1}`).join(', ');
         const values = [...Object.values(data), id];
-        await db.execute(`UPDATE faq SET ${setClauses} WHERE id = ?`, values);
+        await db.execute(`UPDATE faq SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
         return { success: true };
@@ -445,7 +446,7 @@ export async function updateFaq(id: number, formData: FormData) {
 
 export async function deleteFaq(id: number) {
     try {
-        await db.execute(`DELETE FROM faq WHERE id = ?`, [id]);
+        await db.execute(`DELETE FROM faq WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
         return { success: true };
@@ -460,7 +461,7 @@ export async function updatePageLayout(sections: PageSection[]) {
     try {
         const queries = sections.map(section => 
             db.execute(
-                'UPDATE page_sections SET sort_order = ?, is_visible = ? WHERE id = ?',
+                'UPDATE page_sections SET sort_order = $1, is_visible = $2 WHERE id = $3',
                 [section.sort_order, section.is_visible, section.id]
             )
         );
