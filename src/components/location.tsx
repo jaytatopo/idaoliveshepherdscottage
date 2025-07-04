@@ -25,7 +25,7 @@ export default function Location({ content, imageBg }: LocationProps) {
                 src={imageBg.src}
                 alt={imageBg.alt}
                 fill
-                className="object-cover opacity-5 z-0"
+                className="object-cover opacity-10 z-0"
                 data-ai-hint="map location"
             />
         )}

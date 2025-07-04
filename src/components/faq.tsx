@@ -30,7 +30,7 @@ export default function Faq({ content, faqs, imageBg }: FaqProps) {
           src={imageBg.src}
           alt={imageBg.alt}
           fill
-          className="object-cover opacity-5 z-0"
+          className="object-cover opacity-10 z-0"
           data-ai-hint="question marks pattern"
         />
       )}

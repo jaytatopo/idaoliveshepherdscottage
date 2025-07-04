@@ -73,7 +73,7 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
           src={imageBg.src}
           alt={imageBg.alt}
           fill
-          className="object-cover opacity-5 z-0"
+          className="object-cover opacity-10 z-0"
           data-ai-hint="cozy setting"
         />
       )}
