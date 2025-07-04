@@ -27,7 +27,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
       )}
       <div className={cn(
         "absolute inset-0",
-        image && image.src ? "bg-gradient-to-t from-stone-900/70 via-stone-900/30 to-transparent" : "bg-gradient-to-t from-primary/30 to-transparent"
+        "bg-gradient-to-t from-black/60 to-transparent"
       )} />
       <div className={cn(
         "relative z-10 flex h-full flex-col items-center justify-center text-center",
@@ -48,7 +48,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
                   </Button>
               </Link>
               <Link href="#gallery" passHref>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm transform hover:scale-105 transition-transform">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground text-primary-foreground bg-transparent hover:bg-primary-foreground/10 backdrop-blur-sm transform hover:scale-105 transition-transform">
                     <Camera />
                     Explore the Gallery
                   </Button>
@@ -56,7 +56,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
             </div>
         </div>
         <Link href="#accommodation" className="absolute bottom-10 animate-bounce">
-            <ArrowDown className="h-8 w-8 text-white/80"/>
+            <ArrowDown className="h-8 w-8 text-primary-foreground/80"/>
             <span className="sr-only">Scroll down</span>
         </Link>
       </div>
