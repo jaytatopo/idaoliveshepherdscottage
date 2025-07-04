@@ -42,12 +42,17 @@ export async function saveInquiry(inquiry: Inquiry) {
 
     // Send email notification
     if (process.env.RESEND_API_KEY) {
+        // IMPORTANT: For email sending to work, you must:
+        // 1. Have a RESEND_API_KEY in your .env file.
+        // 2. Verify a domain with Resend to use a custom `from` address.
+        // 3. Update the 'to' address below to your personal email.
+        //
+        // For initial testing without a custom domain, you can use the default
+        // "onboarding@resend.dev" from address and send TO your own email.
         await resend.emails.send({
-            // IMPORTANT: You must have a domain verified in your Resend account to send emails.
-            // Replace 'yourdomain.com' with your actual verified domain.
-            from: 'noreply@yourdomain.com',
-            to: 'reservations@idaolivecottagemcgregor.co.za',
-            subject: 'New Inquiry for Ida Olive Cottage',
+            from: 'Ida Olive Cottage <onboarding@resend.dev>',
+            to: 'your-personal-email@example.com', // <-- CHANGE THIS to your email for testing
+            subject: 'New Web Inquiry for Ida Olive Cottage',
             react: InquiryNotificationEmail(validatedInquiry),
         });
     } else {
@@ -66,6 +71,6 @@ export async function saveInquiry(inquiry: Inquiry) {
         return { success: false, message: `Email sending failed. Please check your Resend configuration and verified domains. Error: ${error.message}` };
     }
 
-    return { success: false, message: 'Failed to send enquiry. Please try again later.' };
+    return { success: false, message: 'An unexpected error occurred. Please check the server logs for more details.' };
   }
 }
