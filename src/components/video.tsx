@@ -22,7 +22,7 @@ export default function Video({ content, imageBg }: VideoProps) {
           src={imageBg.src}
           alt={imageBg.alt}
           fill
-          className="object-cover opacity-20 z-0"
+          className="object-cover opacity-[0.18] z-0"
           data-ai-hint="video pattern"
         />
       )}
