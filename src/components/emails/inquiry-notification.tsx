@@ -53,6 +53,8 @@ const InquiryNotificationEmail: React.FC<Readonly<InquiryEmailProps>> = ({
           </Row>
            <Row style={row}>
             <Column style={label}>Message:</Column>
+          </Row>
+           <Row style={row}>
             <Column>{message}</Column>
           </Row>
         </Section>

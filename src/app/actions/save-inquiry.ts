@@ -50,7 +50,7 @@ export async function saveInquiry(inquiry: InquiryFormData) {
     if (process.env.RESEND_API_KEY) {
         try {
             await resend.emails.send({
-                from: 'Ida Olive Cottage <onboarding@resend.dev>',
+                from: 'Ida Olive Cottage <noreply@idaolivecottagemcgregor.co.za>',
                 to: 'reservations@idaolivecottagemcgregor.co.za', // <-- For production, change to a verified domain.
                 subject: 'New Web Inquiry for Ida Olive Cottage',
                 react: InquiryNotificationEmail(validatedInquiry),
