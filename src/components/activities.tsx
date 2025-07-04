@@ -64,10 +64,16 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
                                     data-ai-hint="nature activity"
                                 />
                             </div>
-                            <CardHeader className="flex-grow">
-                                <CardTitle className="font-serif text-xl flex items-start gap-3">
-                                <DynamicIcon name={activity.icon} className="w-6 h-6 text-primary shrink-0 mt-1" />
-                                <span>{activity.title}</span>
+                            
+                            <div className="relative flex justify-center -mt-7">
+                                <span className="bg-background p-3 rounded-full border-4 border-card shadow-lg z-10">
+                                    <DynamicIcon name={activity.icon} className="w-8 h-8 text-primary" />
+                                </span>
+                            </div>
+
+                            <CardHeader className="flex-grow pt-4 text-center">
+                                <CardTitle className="font-serif text-xl">
+                                    {activity.title}
                                 </CardTitle>
                                 <CardDescription className="pt-2 text-sm line-clamp-3">{activity.description}</CardDescription>
                             </CardHeader>
