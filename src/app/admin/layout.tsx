@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter, SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon } from "lucide-react";
+import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -132,6 +132,14 @@ export default function AdminLayout({
             </SidebarFooter>
         </Sidebar>
         <SidebarInset>
+            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 md:hidden">
+              <SidebarTrigger>
+                 <Menu />
+              </SidebarTrigger>
+              <h1 className="text-lg font-semibold text-primary font-serif">
+                  Admin Panel
+              </h1>
+            </header>
             <div className="p-4 md:p-6 lg:p-8">
                  {children}
             </div>
