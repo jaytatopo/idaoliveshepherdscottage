@@ -282,7 +282,13 @@ export async function deleteActivity(id: number) {
 
 
 // --- Reviews Actions ---
-const reviewSchema = z.object({ quote: z.string().min(1), author: z.string().min(1), rating: z.coerce.number().min(1).max(5), sort_order: z.coerce.number().default(0) });
+const reviewSchema = z.object({
+    quote: z.string().min(1),
+    author: z.string().min(1),
+    rating: z.coerce.number().min(1).max(5),
+    source: z.string().optional(),
+    sort_order: z.coerce.number().default(0)
+});
 
 export async function addReview(formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());

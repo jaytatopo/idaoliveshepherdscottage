@@ -1,16 +1,19 @@
+'use client';
 
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, StarHalf } from 'lucide-react';
 import type { Review, GalleryImage } from '@/lib/content';
 import Image from 'next/image';
-
-interface ReviewsContent {
-  heading: string;
-  subheading: string;
-}
+import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { ScrollArea } from './ui/scroll-area';
 
 interface ReviewsProps {
-  content: ReviewsContent;
+  content: {
+    heading: string;
+    subheading: string;
+  };
   reviews: Review[];
   image?: GalleryImage;
 }
@@ -33,8 +36,26 @@ const renderStars = (rating: number) => {
   return stars;
 };
 
+// Reusable ReviewCard component
+const ReviewCard = ({ review }: { review: Review }) => (
+    <Card className="flex flex-col bg-background/80 backdrop-blur-sm shadow-md h-full">
+        <CardContent className="p-6 flex-grow flex flex-col">
+            <div className="flex mb-2">{renderStars(review.rating)}</div>
+            <blockquote className="text-muted-foreground italic flex-grow">
+                "{review.quote}"
+            </blockquote>
+        </CardContent>
+        <div className="p-6 pt-0 text-right">
+            <p className="font-semibold font-serif">- {review.author}</p>
+            {review.source && <p className="text-xs text-muted-foreground">Source: {review.source}</p>}
+        </div>
+    </Card>
+);
+
+
 export default function Reviews({ content, reviews, image }: ReviewsProps) {
-  const reviewsToShow = reviews.slice(0, 4);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const reviewsToShow = reviews.slice(0, 2);
 
   return (
     <section 
@@ -58,21 +79,31 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {reviewsToShow.map((testimonial) => (
-            <Card key={testimonial.id} className="flex flex-col bg-background/80 backdrop-blur-sm">
-              <CardContent className="p-6 flex-grow">
-                <div className="flex mb-2">
-                  {renderStars(testimonial.rating)}
-                </div>
-                <blockquote className="text-muted-foreground italic">
-                  "{testimonial.quote}"
-                </blockquote>
-              </CardContent>
-              <div className="p-6 pt-0 text-right">
-                <p className="font-semibold font-serif">- {testimonial.author}</p>
-              </div>
-            </Card>
+            <ReviewCard key={testimonial.id} review={testimonial} />
           ))}
         </div>
+
+        {reviews.length > 2 && (
+          <div className="text-center mt-12">
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button>Show All {reviews.length} Reviews</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-2xl h-[80vh] flex flex-col">
+                <DialogHeader>
+                  <DialogTitle className="font-serif text-2xl">All Guest Reviews</DialogTitle>
+                </DialogHeader>
+                <ScrollArea className="flex-grow pr-6 -mr-6">
+                  <div className="space-y-6">
+                    {reviews.map((testimonial) => (
+                      <ReviewCard key={`modal-${testimonial.id}`} review={testimonial} />
+                    ))}
+                  </div>
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -287,6 +287,10 @@ function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void })
                 <Input id="rating" name="rating" type="number" min="1" max="5" step="0.5" defaultValue={review?.rating} required />
             </div>
             <div>
+                <Label htmlFor="source">Source (Optional)</Label>
+                <Input id="source" name="source" defaultValue={review?.source || ''} placeholder="e.g., Google, Airbnb" />
+            </div>
+            <div>
                 <Label htmlFor="sort_order">Sort Order</Label>
                 <Input id="sort_order" name="sort_order" type="number" defaultValue={review?.sort_order ?? 0} required />
             </div>
@@ -316,6 +320,7 @@ function ReviewRow({ review }: { review: Review }) {
             <TableCell>{review.author}</TableCell>
             <TableCell className="max-w-sm truncate">"{review.quote}"</TableCell>
             <TableCell>{review.rating} / 5</TableCell>
+            <TableCell>{review.source || 'N/A'}</TableCell>
             <TableCell>{review.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
@@ -351,7 +356,7 @@ export function ReviewsClientPage({ reviews }: { reviews: Review[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead>Source</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
                     </TableBody>

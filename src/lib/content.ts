@@ -30,6 +30,7 @@ export interface Review {
     quote: string;
     author: string;
     rating: number;
+    source: string | null;
     sort_order: number;
 }
 
@@ -138,7 +139,7 @@ export async function getGalleryImages(section: string): Promise<GalleryImage[]>
 export async function getReviews(): Promise<Review[]> {
     noStore();
     try {
-        const [rows] = await db.query('SELECT id, quote, author, rating, sort_order FROM reviews ORDER BY sort_order ASC');
+        const [rows] = await db.query('SELECT id, quote, author, rating, source, sort_order FROM reviews ORDER BY sort_order ASC');
         return rows as Review[];
     } catch (error) {
         console.error("Failed to fetch reviews:", error);
