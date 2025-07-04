@@ -19,8 +19,9 @@ import { useToast } from '@/hooks/use-toast';
 import { saveInquiry } from '@/app/actions/save-inquiry';
 import { Textarea } from './ui/textarea';
 import type { GalleryImage } from '@/lib/content';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
-// Simplified schema for general inquiries
+
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -51,12 +52,10 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
         },
     });
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        // The backend action requires a `guests` number, so we add a default.
-        // checkIn and checkOut will be undefined, which is handled by the action.
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         const result = await saveInquiry({
             ...values,
-            guests: 1, 
+            guests: 1, // Default value
         });
 
         if (result.success) {
@@ -72,7 +71,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                 description: result.message,
             });
         }
-    }
+    };
 
     return (
         <section 
@@ -97,7 +96,6 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                 </div>
 
                 <div className="grid lg:grid-cols-3 gap-8 items-start">
-                    {/* Main Column: Live Availability */}
                     <div className="lg:col-span-2 space-y-8 opacity-0 animate-fade-in-up [animation-delay:300ms]">
                         <Card className="bg-background/80 backdrop-blur-sm">
                             <CardHeader>
@@ -119,13 +117,12 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                         </Card>
                     </div>
 
-                    {/* Sidebar Column: Rates & Enquiry */}
                     <div className="lg:col-span-1 space-y-8">
                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
-                            <Card className="bg-background/80 backdrop-blur-sm">
+                             <Card className="bg-background/80 backdrop-blur-sm">
                                 <CardHeader>
-                                    <CardTitle className="font-serif">Seasonal Rates</CardTitle>
-                                    <CardDescription>Per night for the cottage (sleeps 4). Min 2-night stay.</CardDescription>
+                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
+                                <CardDescription>Per night for the cottage (sleeps 4). Min 2-night stay.</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <ul className="space-y-2 text-sm">
@@ -181,6 +178,50 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                             </Card>
                         </div>
                     </div>
+                </div>
+
+                <div className="mt-12 max-w-4xl mx-auto opacity-0 animate-fade-in-up [animation-delay:600ms]">
+                    <Card className="bg-background/80 backdrop-blur-sm">
+                        <CardHeader>
+                        <CardTitle className="font-serif text-center">Good to Know</CardTitle>
+                        <CardDescription className="text-center">Important information about your stay at Ida Olive.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                        <Accordion type="single" collapsible className="w-full">
+                            <AccordionItem value="item-1">
+                            <AccordionTrigger>House Rules</AccordionTrigger>
+                            <AccordionContent>
+                                <ul className="list-disc list-inside space-y-2 text-sm">
+                                <li>Strictly for adults only. No children or infants.</li>
+                                <li>No pets allowed.</li>
+                                <li>No parties or events.</li>
+                                <li>Smoking is not permitted on the property.</li>
+                                </ul>
+                            </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="item-2">
+                            <AccordionTrigger>Check-in & Check-out</AccordionTrigger>
+                            <AccordionContent>
+                                <ul className="list-disc list-inside space-y-2 text-sm">
+                                <li>Check-in is from 14:00. Closing times vary by booking site (17:00-20:00). Please confirm your arrival time.</li>
+                                <li>Check-out is between 10:00 and 11:00.</li>
+                                <li>Daily cleaning is not included but can be arranged for longer stays.</li>
+                                </ul>
+                            </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="item-3">
+                            <AccordionTrigger>Practical Info</AccordionTrigger>
+                            <AccordionContent>
+                                <ul className="list-disc list-inside space-y-2 text-sm">
+                                <li>Guests are advised to bring their own drinking water.</li>
+                                <li>We are off-grid: there is no Wi-Fi and limited mobile signal.</li>
+                                <li>Please bring cash for any on-site extras like farm produce.</li>
+                                </ul>
+                            </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </section>

@@ -1,7 +1,8 @@
 import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
-import { Card } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { BedDouble, Bath, Users, Wind, UtensilsCrossed, Sun, Car } from 'lucide-react';
 
 interface AccommodationContent {
   heading: string;
@@ -16,6 +17,48 @@ interface AccommodationProps {
   images: GalleryImage[];
   imageBg?: GalleryImage;
 }
+
+const features = [
+    {
+      category: 'Power & Tech',
+      icon: 'ZapOff',
+      items: [
+        'Completely off-grid (no mains electricity).',
+        'Lighting: Solar lamps, candles, and fairy lights create a magical ambiance.',
+        'Charging: A mini solar panel is available for phones and USB fans.',
+        'Connectivity: No Wi-Fi. Limited mobile signal in specific spots.'
+      ]
+    },
+    {
+      category: 'Kitchen & Living',
+      icon: 'UtensilsCrossed',
+      items: [
+        'Fully-equipped open-plan kitchen.',
+        'Gas stove and gas refrigerator.',
+        'All necessary kitchenware and cleaning products provided.',
+        'Cozy lounge with an indoor, wood-burning fireplace.'
+      ]
+    },
+    {
+      category: 'Outdoor Living',
+      icon: 'Sun',
+      items: [
+        'Private plunge pool to cool off.',
+        'Shaded patio (stoep) with outdoor dining area.',
+        'Boma-style braai area for cooking under the stars.',
+        'Convenient gas braai on the verandah.'
+      ]
+    },
+    {
+      category: 'Parking & Access',
+      icon: 'Car',
+      items: [
+        'Free, secure private parking available on-site.',
+        'Accessed via a gravel road, suitable for most vehicles.',
+        'The cottage is located on a remote, working farm.'
+      ]
+    }
+  ];
 
 export default function Accommodation({ content, amenities, images, imageBg }: AccommodationProps) {
   const image1 = images?.[0];
@@ -64,23 +107,59 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
                   />
               </div>
             )}
-            {/* If only one image, show a placeholder for the second slot to maintain layout */}
             {(image1 && !image2) && <Card className="hidden md:block bg-muted/50"/>}
           </div>
         )}
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12 text-center">
+            <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:300ms]">
+                <Users className="w-10 h-10 text-primary mb-3"/>
+                <h4 className="font-serif font-semibold text-lg">Sleeps 4 Adults</h4>
+                <p className="text-sm text-muted-foreground">Max capacity, ideal for 2</p>
+            </Card>
+            <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:400ms]">
+                <BedDouble className="w-10 h-10 text-primary mb-3"/>
+                <h4 className="font-serif font-semibold text-lg">2 Bedrooms</h4>
+                <p className="text-sm text-muted-foreground">1 King Bed, 1 Queen Bed</p>
+            </Card>
+             <Card className="p-6 flex flex-col items-center justify-center sm:col-span-2 md:col-span-1 opacity-0 animate-fade-in-up [animation-delay:500ms]">
+                <Bath className="w-10 h-10 text-primary mb-3"/>
+                <h4 className="font-serif font-semibold text-lg">Full Bathroom</h4>
+                <p className="text-sm text-muted-foreground">Bath, indoor & outdoor showers</p>
+            </Card>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-4 opacity-0 animate-fade-in-up [animation-delay:500ms]">
-              <h3 className="font-serif text-2xl font-semibold">The Heart of the Cottage</h3>
+              <h3 className="font-serif text-2xl font-semibold">The Vibe</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.main_text}
               </p>
             </div>
             <div className="space-y-4 opacity-0 animate-fade-in-up [animation-delay:600ms]">
-              <h3 className="font-serif text-2xl font-semibold">Comforts & Details</h3>
+              <h3 className="font-serif text-2xl font-semibold">The Space</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.secondary_text}
               </p>
+            </div>
+        </div>
+
+        <div className="mt-16 pt-12 border-t">
+            <h3 className="font-serif text-2xl font-semibold text-center mb-8 opacity-0 animate-fade-in-up [animation-delay:700ms]">Facilities & Amenities</h3>
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {features.map((feature, index) => (
+                <Card key={index} className="opacity-0 animate-fade-in-up" style={{ animationDelay: `${800 + index * 100}ms` }}>
+                    <CardHeader className="flex flex-row items-center gap-4">
+                    <DynamicIcon name={feature.icon} className="w-8 h-8 text-primary shrink-0" />
+                    <CardTitle className="font-serif text-xl">{feature.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                    <ul className="list-disc list-inside space-y-2 text-muted-foreground text-sm">
+                        {feature.items.map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
+                    </CardContent>
+                </Card>
+                ))}
             </div>
         </div>
         

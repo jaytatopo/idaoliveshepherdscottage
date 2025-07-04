@@ -59,12 +59,37 @@ type WebsiteContent = {
 function shapeContent(rows: any[]): WebsiteContent {
     const content: WebsiteContent = {};
     const defaultContent = {
-        hero: { heading: 'Your Serene, Off-Grid Karoo Escape', subheading: 'Discover tranquility at Ida Olive Shepherd’s Cottage, a nature lover’s haven on a working dairy goat farm.' },
-        accommodation: { heading: 'A Cozy, Off-Grid Retreat', subheading: 'Experience the charm of shepherd’s cottage living, thoughtfully equipped for a comfortable and memorable stay in nature.', main_text: `Ida Olive Shepherd’s Cottage is a self-catering sanctuary on the remote Giddy Goat Farm. Surrounded by the endangered Robertson Succulent Karoo, large glass sliding doors and windows seamlessly connect you to the natural beauty outside, where indigenous vegetation and wildlife thrive.`, secondary_text: 'Completely off the grid, the cottage has no electricity. The open-plan lounge and kitchen feature a gas stove and refrigerator, while an indoor fireplace keeps the space warm on cooler nights. Solar lamps, candles, and fairy lights provide a magical ambiance.' },
-        activities: { heading: 'Reconnect with Nature & Adventure', subheading: `From serene on-site activities to exciting local excursions, there's something for every nature enthusiast.` },
-        booking: { heading: 'Rates & Availability', subheading: 'Ready for your peaceful escape? Check our availability or send us an enquiry.' },
-        reviews: { heading: 'What Our Guests Say', subheading: 'Heartfelt words from those who have experienced the magic of Ida Olive.' },
-        location: { heading: 'Find Your Way to Paradise', subheading: `We're nestled in the heart of the Karoo, just a few kilometers outside the charming village of McGregor.`, address: 'Giddy Goat Farm, 6km outside McGregor, Western Cape, South Africa', email: 'reservations@idaolivecottagemcgregor.co.za', phone: '+27 12 345 6789', facebook_url: '', instagram_url: '' },
+        hero: { 
+            heading: 'Ida Olive Shepherd’s Cottage', 
+            subheading: 'A rustic, off-the-grid, self-catering retreat for adults seeking a peaceful and romantic Karoo escape.' 
+        },
+        accommodation: { 
+            heading: 'The Cottage: Rustic Luxe Meets Off-Grid Charm', 
+            subheading: 'Experience the authentic Karoo in a beautifully restored shepherd\'s cottage, blending original character with modern comforts.',
+            main_text: `Ida Olive Shepherd's Cottage is a sanctuary on the Giddy Goat Farm—a working dairy goat farm and wildlife sanctuary. It features beautifully restored stone and timber architecture, offering a unique "rustic-luxe" feel.\n\nThe property is completely off-grid, making it ideal for nature lovers wanting to disconnect and reconnect with the serene surroundings of the endangered Robertson Succulent Karoo.`,
+            secondary_text: 'The cottage accommodates a maximum of 4 adults, perfect for a romantic getaway or a quiet retreat with friends. It includes two bedrooms (one king, one queen) and a main bathroom with a bath, walk-in indoor shower, and a separate outdoor shower for a truly immersive nature experience.' 
+        },
+        activities: { 
+            heading: 'Explore & Experience', 
+            subheading: `Enjoy on-site hiking, birdwatching, and unique "goat experiences." The lack of light pollution makes for exceptional stargazing. Nearby, explore McGregor's wineries, restaurants, and the Vrolijkheid Nature Reserve.` 
+        },
+        booking: { 
+            heading: 'Rates & Availability', 
+            subheading: 'Ready for your peaceful escape? Check availability below or send us an enquiry.'
+        },
+        reviews: { 
+            heading: 'What Our Guests Say', 
+            subheading: 'Heartfelt words from those who have experienced the magic of Ida Olive.' 
+        },
+        location: { 
+            heading: 'Find Your Way to Paradise', 
+            subheading: `We're nestled in a remote wildlife sanctuary on Rheeboks Kraal Farm, just 6km outside the historic village of McGregor. Access is via a gravel road.`, 
+            address: 'Rheeboks Kraal Farm, McGregor, 6708, Western Cape', 
+            email: 'reservations@idaolivecottagemcgregor.co.za', 
+            phone: '+27 12 345 6789', 
+            facebook_url: '', 
+            instagram_url: '' 
+        },
     };
 
     for (const row of rows) {
