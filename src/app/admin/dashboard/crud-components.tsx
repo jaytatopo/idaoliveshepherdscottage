@@ -278,12 +278,12 @@ function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void })
                 <Input id="author" name="author" defaultValue={review?.author} required />
             </div>
             <div>
-                <Label htmlFor="rating">Rating (1-5)</Label>
-                <Input id="rating" name="rating" type="number" min="1" max="5" step="0.5" defaultValue={review?.rating} required />
+                <Label htmlFor="source">Source (e.g. Airbnb, Google)</Label>
+                <Input id="source" name="source" defaultValue={review?.source ?? ''} placeholder="Airbnb" />
             </div>
             <div>
-                <Label htmlFor="source">Source (Optional)</Label>
-                <Input id="source" name="source" defaultValue={review?.source || ''} placeholder="e.g., Google, Airbnb" />
+                <Label htmlFor="rating">Rating (1-5)</Label>
+                <Input id="rating" name="rating" type="number" min="1" max="5" step="0.5" defaultValue={review?.rating} required />
             </div>
             <div>
                 <Label htmlFor="sort_order">Sort Order</Label>
@@ -314,8 +314,8 @@ function ReviewRow({ review }: { review: Review }) {
         <TableRow>
             <TableCell>{review.author}</TableCell>
             <TableCell className="max-w-sm truncate">"{review.quote}"</TableCell>
+            <TableCell>{review.source}</TableCell>
             <TableCell>{review.rating} / 5</TableCell>
-            <TableCell>{review.source || 'N/A'}</TableCell>
             <TableCell>{review.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
@@ -351,7 +351,7 @@ export function ReviewsClientPage({ reviews }: { reviews: Review[] }) {
             </CardHeader>
             <CardContent>
                 <Table>
-                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Rating</TableHead><TableHead>Source</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Author</TableHead><TableHead>Quote</TableHead><TableHead>Source</TableHead><TableHead>Rating</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
                     <TableBody>
                         {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
                     </TableBody>

@@ -47,7 +47,9 @@ const ReviewCard = ({ review }: { review: Review }) => (
         </CardContent>
         <div className="p-6 pt-0 text-right">
             <p className="font-semibold font-serif">- {review.author}</p>
-            {review.source && <p className="text-xs text-muted-foreground">Source: {review.source}</p>}
+            {review.source && (
+                <p className="text-xs text-muted-foreground">From {review.source}</p>
+            )}
         </div>
     </Card>
 );

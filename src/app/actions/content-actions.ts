@@ -285,8 +285,8 @@ export async function deleteActivity(id: number) {
 const reviewSchema = z.object({
     quote: z.string().min(1),
     author: z.string().min(1),
-    rating: z.coerce.number().min(1).max(5),
     source: z.string().optional(),
+    rating: z.coerce.number().min(1).max(5),
     sort_order: z.coerce.number().default(0)
 });
 
