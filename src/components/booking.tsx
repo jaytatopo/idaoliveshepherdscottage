@@ -114,7 +114,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                     </p>
                 </div>
 
-                <div className="space-y-12">
+                <div className="space-y-8">
                      <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:300ms]">
                         <CardHeader>
                             <CardTitle className="font-serif">Live Availability</CardTitle>
@@ -134,24 +134,26 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms] lg:col-span-1">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                        <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms] lg:col-span-1">
                             <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2">
-                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800</span></div>
-                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200</span></div>
-                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500</span></div>
+                            <CardContent className="flex flex-col flex-grow justify-between">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800</span></div>
+                                    <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200</span></div>
+                                    <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500</span></div>
+                                </div>
                                 <p className="text-sm text-muted-foreground pt-2">Rates are per night for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms] lg:col-span-4">
+                        <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms] lg:col-span-4">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Have a question? Fill out the form below and our team will get back to you promptly.</CardDescription>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="flex-grow">
                                 <Form {...form}>
                                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                                         <FormField control={form.control} name="name" render={({ field }) => (
