@@ -134,26 +134,26 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms] lg:col-span-1">
+                    <div className="space-y-8">
+                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms]">
                             <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
+                                <CardDescription>Rates are per night for the entire cottage (sleeps 4). Minimum 2-night stay.</CardDescription>
                             </CardHeader>
-                            <CardContent className="flex flex-col flex-grow justify-between">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800</span></div>
-                                    <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200</span></div>
-                                    <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500</span></div>
+                            <CardContent>
+                                <div className="flex flex-col sm:flex-row items-center justify-around gap-x-8 gap-y-2 text-center font-medium">
+                                    <span>Mid-Season: <span className="font-semibold text-primary">R1800</span></span>
+                                    <span>High-Season: <span className="font-semibold text-primary">R2200</span></span>
+                                    <span>Peak-Season: <span className="font-semibold text-primary">R2500</span></span>
                                 </div>
-                                <p className="text-sm text-muted-foreground pt-2">Rates are per night for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
-                        <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms] lg:col-span-2">
+                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms]">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Have a question? Fill out the form below and our team will get back to you promptly.</CardDescription>
                             </CardHeader>
-                            <CardContent className="flex-grow">
+                            <CardContent>
                                 <Form {...form}>
                                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                                         <FormField control={form.control} name="name" render={({ field }) => (
@@ -167,7 +167,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                                 <FormItem><FormLabel>Phone (Optional)</FormLabel><FormControl><Input placeholder="+27 12 345 6789" {...field} /></FormControl><FormMessage /></FormItem>
                                             )} />
                                         </div>
-                                        <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                              <FormField control={form.control} name="checkIn" render={({ field }) => (
                                                 <FormItem className="flex flex-col"><FormLabel>Check-in (Optional)</FormLabel>
                                                     <Popover><PopoverTrigger asChild>
@@ -192,10 +192,10 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                                     </PopoverContent></Popover><FormMessage />
                                                 </FormItem>
                                             )} />
+                                             <FormField control={form.control} name="guests" render={({ field }) => (
+                                                <FormItem><FormLabel>Guests</FormLabel><FormControl><Input type="number" min="1" max="4" placeholder="2" {...field} /></FormControl><FormMessage /></FormItem>
+                                            )} />
                                         </div>
-                                         <FormField control={form.control} name="guests" render={({ field }) => (
-                                            <FormItem><FormLabel>Number of Guests</FormLabel><FormControl><Input type="number" min="1" max="4" placeholder="2" {...field} /></FormControl><FormMessage /></FormItem>
-                                        )} />
                                         <FormField control={form.control} name="message" render={({ field }) => (
                                             <FormItem><FormLabel>Your Message</FormLabel><FormControl><Textarea placeholder="Tell us about your query..." {...field} /></FormControl><FormMessage /></FormItem>
                                         )} />
