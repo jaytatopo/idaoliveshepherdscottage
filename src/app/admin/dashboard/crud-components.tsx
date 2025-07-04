@@ -163,6 +163,7 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
                 <div>
                     <Label htmlFor="icon">Icon Name</Label>
                     <Input id="icon" name="icon" defaultValue={activity?.icon} placeholder="e.g., Mountain, Wine" required />
+                    <p className="text-xs text-muted-foreground mt-1">Use any icon name from <a href="https://lucide.dev/icons/" target="_blank" rel="noopener noreferrer" className="underline">lucide.dev</a>.</p>
                 </div>
                  <div>
                     <Label htmlFor="sort_order">Sort Order</Label>

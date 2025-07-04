@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, Trash2, Loader } from "lucide-react";
+import { Upload } from "lucide-react";
 import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
+import { DeleteActionButton } from "./delete-action-button";
 
 type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'amenities_bg' | 'facilities_bg' | 'activities_bg' | 'booking_bg' | 'location_bg' | 'host_profile' | 'host_bg' | 'faq_bg' | 'cta_bg' | 'video_bg';
 
@@ -37,15 +38,6 @@ function SubmitButton({ isSingleton, hasImage }: { isSingleton: boolean; hasImag
     );
 }
 
-function DeleteButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button type="submit" variant="destructive" size="icon" className="h-8 w-8" disabled={pending}>
-            {pending ? <Loader className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-        </Button>
-    )
-}
-
 export function ImageUploadSection({ section, title, description, images, isSingleton }: ImageUploadSectionProps) {
     const { toast } = useToast();
 
@@ -59,16 +51,6 @@ export function ImageUploadSection({ section, title, description, images, isSing
                 title: 'Upload Failed',
                 description: result.message,
             });
-        }
-    }
-
-    async function handleDelete(id: number) {
-        if (!confirm('Are you sure you want to delete this image?')) return;
-        const result = await deleteGalleryImage(id);
-        if (result.success) {
-            toast({ title: 'Success!', description: result.message });
-        } else {
-            toast({ variant: 'destructive', title: 'Delete Failed', description: result.message });
         }
     }
 
@@ -86,9 +68,12 @@ export function ImageUploadSection({ section, title, description, images, isSing
                         {firstImage && firstImage.src ? (
                             <div className="relative group w-full max-w-sm">
                                 <Image src={firstImage.src} alt={firstImage.alt} width={300} height={180} className="rounded-md object-cover aspect-video"/>
-                                <form action={() => handleDelete(firstImage.id)} className="absolute top-2 right-2">
-                                    <DeleteButton />
-                                </form>
+                                <div className="absolute top-2 right-2">
+                                     <DeleteActionButton
+                                        itemName={firstImage.alt || 'this image'}
+                                        deleteAction={deleteGalleryImage.bind(null, firstImage.id)}
+                                    />
+                                </div>
                             </div>
                         ) : <p className="text-sm text-muted-foreground">No image has been uploaded for this section.</p>}
                         
@@ -114,9 +99,12 @@ export function ImageUploadSection({ section, title, description, images, isSing
                                 {images.map(image => (
                                     <div key={image.id} className="relative group">
                                         <Image src={image.src} alt={image.alt} width={300} height={200} className="rounded-md object-cover aspect-video"/>
-                                        <form action={() => handleDelete(image.id)} className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                             <DeleteButton />
-                                        </form>
+                                        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                             <DeleteActionButton
+                                                itemName={image.alt || 'this image'}
+                                                deleteAction={deleteGalleryImage.bind(null, image.id)}
+                                            />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
