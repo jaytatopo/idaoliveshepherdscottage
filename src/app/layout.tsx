@@ -31,10 +31,10 @@ export default function RootLayout({
     <html lang="en" className="!scroll-smooth">
       <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         {children}
-        <Toaster />
-        <CookieBanner />
         <Analytics />
         <SpeedInsights />
+        <Toaster />
+        <CookieBanner />
       </body>
     </html>
   );
