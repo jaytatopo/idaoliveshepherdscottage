@@ -67,7 +67,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
           </div>
         )}
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
             <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:300ms] bg-background/70">
                 <Users className="w-10 h-10 text-primary mb-3"/>
                 <h4 className="font-serif font-semibold text-lg">Sleeps 4 Adults</h4>
@@ -78,7 +78,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
                 <h4 className="font-serif font-semibold text-lg">2 Bedrooms</h4>
                 <p className="text-sm text-muted-foreground">1 King Bed, 1 Queen Bed</p>
             </Card>
-             <Card className="p-6 flex flex-col items-center justify-center sm:col-span-2 md:col-span-1 opacity-0 animate-fade-in-up [animation-delay:500ms] bg-background/70">
+             <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:500ms] bg-background/70">
                 <Bath className="w-10 h-10 text-primary mb-3"/>
                 <h4 className="font-serif font-semibold text-lg">Full Bathroom</h4>
                 <p className="text-sm text-muted-foreground">Bath, indoor & outdoor showers</p>
