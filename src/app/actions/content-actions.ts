@@ -33,9 +33,9 @@ export async function updateContent(formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true, message: 'Content updated successfully.' };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to update content:', error);
-        return { success: false, message: 'Failed to update content.' };
+        return { success: false, message: `Failed to update content. Details: ${error.message}` };
     }
 }
 
@@ -103,9 +103,9 @@ export async function uploadGalleryImage(formData: FormData) {
         console.error('Failed to upload image:', error);
         // Check for a common Postgres error when data is too long for the column
         if (error.code === '22001') { // data_too_long
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `src` column in `gallery_images` is of type TEXT.' };
+             return { success: false, message: 'Image is too large for database storage. The schema might be incorrect; please ensure the `src` column in `gallery_images` is of type TEXT.' };
         }
-        return { success: false, message: 'Failed to save image to the database.' };
+        return { success: false, message: `Failed to save image to the database. Details: ${error.message}` };
     }
 }
 
@@ -122,9 +122,9 @@ export async function deleteGalleryImage(id: number) {
         revalidatePath('/admin/dashboard/content');
         return { success: true, message: 'Image deleted successfully.' };
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to delete image:', error);
-        return { success: false, message: 'Failed to delete image.' };
+        return { success: false, message: `Failed to delete image. Details: ${error.message}` };
     }
 }
 
@@ -135,9 +135,9 @@ export async function deleteInquiry(id: number) {
         await db.execute('DELETE FROM inquiries WHERE id = $1', [id]);
         revalidatePath('/admin/dashboard');
         return { success: true, message: 'Inquiry deleted successfully.' };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to delete inquiry:', error);
-        return { success: false, message: 'Failed to delete inquiry.' };
+        return { success: false, message: `Failed to delete inquiry. Details: ${error.message}` };
     }
 }
 
@@ -157,9 +157,9 @@ export async function addAmenity(formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to add to amenities:`, error);
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
@@ -174,9 +174,9 @@ export async function updateAmenity(id: number, formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to update amenity:`, error);
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
@@ -186,9 +186,9 @@ export async function deleteAmenity(id: number) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to delete from amenities:`, error);
-        return { success: false, message: 'Database error.' };
+        return { success: false, message: `Database error: ${error.message}` };
     }
 };
 
@@ -245,7 +245,7 @@ export async function addActivity(formData: FormData) {
         if (error.code === '22001') {
              return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type TEXT.' };
         }
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
@@ -281,7 +281,7 @@ export async function updateActivity(id: number, formData: FormData) {
         if (error.code === '22001') {
              return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type TEXT.' };
         }
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
@@ -292,9 +292,9 @@ export async function deleteActivity(id: number) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to delete from activities:`, error);
-        return { success: false, message: 'Database error.' };
+        return { success: false, message: `Database error: ${error.message}` };
     }
 };
 
@@ -320,9 +320,9 @@ export async function addReview(formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to add to reviews:`, error);
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
@@ -337,9 +337,9 @@ export async function updateReview(id: number, formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to update review:`, error);
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
@@ -349,9 +349,9 @@ export async function deleteReview(id: number) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Failed to delete from reviews:`, error);
-        return { success: false, message: 'Database error.' };
+        return { success: false, message: `Database error: ${error.message}` };
     }
 };
 
@@ -374,8 +374,8 @@ export async function addFacility(formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
         return { success: true };
-    } catch (error) {
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    } catch (error: any) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 }
 
@@ -389,8 +389,8 @@ export async function updateFacility(id: number, formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
         return { success: true };
-    } catch (error) {
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    } catch (error: any) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 }
 
@@ -400,8 +400,8 @@ export async function deleteFacility(id: number) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
         return { success: true };
-    } catch (error) {
-        return { success: false, message: 'Database error.' };
+    } catch (error: any) {
+        return { success: false, message: `Database error: ${error.message}` };
     }
 }
 
@@ -424,8 +424,8 @@ export async function addFaq(formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
         return { success: true };
-    } catch (error) {
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    } catch (error: any) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 }
 
@@ -439,8 +439,8 @@ export async function updateFaq(id: number, formData: FormData) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
         return { success: true };
-    } catch (error) {
-        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    } catch (error: any) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 }
 
@@ -450,8 +450,8 @@ export async function deleteFaq(id: number) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
         return { success: true };
-    } catch (error) {
-        return { success: false, message: 'Database error.' };
+    } catch (error: any) {
+        return { success: false, message: `Database error: ${error.message}` };
     }
 }
 
@@ -469,8 +469,8 @@ export async function updatePageLayout(sections: PageSection[]) {
         revalidatePath('/');
         revalidatePath('/admin/dashboard/layout');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to update page layout:', error);
-        return { success: false, message: 'Database error while updating layout.' };
+        return { success: false, message: `Database error while updating layout. Details: ${error.message}` };
     }
 }
