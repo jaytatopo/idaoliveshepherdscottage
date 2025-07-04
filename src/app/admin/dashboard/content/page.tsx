@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { updateContent } from "@/app/actions/content-actions";
 import { getContent, getGalleryImages } from '@/lib/content';
 import { ImageUploadSection } from "../content-image-forms";
+import { ContentSubmitButton } from "./content-submit-button";
 
 export default async function ContentPage() {
     const content = await getContent();
@@ -271,7 +272,7 @@ export default async function ContentPage() {
                     </Card>
                 </div>
 
-                <Button type="submit" className="mt-8">Save All Text Changes</Button>
+                <ContentSubmitButton />
             </form>
 
             <Card className="mt-8">
