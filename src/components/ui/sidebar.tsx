@@ -32,7 +32,7 @@ type SidebarContext = {
   setOpen: (open: boolean) => void
   openMobile: boolean
   setOpenMobile: (open: boolean) => void
-  isMobile: boolean
+  isMobile: boolean | undefined
   toggleSidebar: () => void
 }
 
@@ -177,6 +177,25 @@ const Sidebar = React.forwardRef<
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
+    if (isMobile === undefined) {
+      // During SSR and the initial client render, we don't know the screen size.
+      // We render a placeholder that takes up the same space as the desktop sidebar
+      // to prevent layout shifts and hydration errors. This is hidden on mobile anyway.
+      return (
+        <div
+          className={cn(
+            "group peer hidden md:block text-sidebar-foreground"
+          )}
+        >
+          <div
+            className={cn(
+              "relative h-svh w-[--sidebar-width] bg-transparent"
+            )}
+          />
+        </div>
+      );
+    }
+    
     if (collapsible === "none") {
       return (
         <div
@@ -583,7 +602,7 @@ const SidebarMenuButton = React.forwardRef<
         <TooltipContent
           side="right"
           align="center"
-          hidden={state !== "collapsed" || isMobile}
+          hidden={state !== "collapsed" || !!isMobile}
           {...tooltip}
         />
       </Tooltip>
