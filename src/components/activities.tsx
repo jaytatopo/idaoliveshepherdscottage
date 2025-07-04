@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/ca
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { Activity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
+import { Image as ImageIcon } from 'lucide-react';
 
 interface ActivitiesContent {
   heading: string;
@@ -54,41 +55,35 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
                 onClick={() => setSelectedActivity(activity)}
               >
                 <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden group">
-                    {activity.image_src ? (
-                        <>
-                            <div className="relative aspect-video w-full overflow-hidden">
-                                <Image
-                                    src={activity.image_src}
-                                    alt={activity.title}
-                                    fill
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                    data-ai-hint="nature activity"
-                                />
+                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                        {activity.image_src ? (
+                            <Image
+                                src={activity.image_src}
+                                alt={activity.title}
+                                fill
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                data-ai-hint="nature activity"
+                            />
+                        ) : (
+                             <div className="flex items-center justify-center h-full">
+                                <ImageIcon className="w-16 h-16 text-muted-foreground/30" />
                             </div>
-                            
-                            <div className="relative flex justify-center -mt-7">
-                                <span className="bg-background p-3 rounded-full border-4 border-card shadow-lg z-10">
-                                    <DynamicIcon name={activity.icon} className="w-8 h-8 text-primary" />
-                                </span>
-                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="relative flex justify-center -mt-7">
+                        <span className="bg-background p-3 rounded-full border-4 border-card shadow-lg z-10">
+                            <DynamicIcon name={activity.icon} className="w-8 h-8 text-primary" />
+                        </span>
+                    </div>
 
-                            <CardHeader className="flex-grow pt-4 text-center">
-                                <CardTitle className="font-serif text-xl">
-                                    {activity.title}
-                                </CardTitle>
-                                <CardDescription className="pt-2 text-sm line-clamp-3">{activity.description}</CardDescription>
-                            </CardHeader>
-                        </>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center text-center p-6 h-full">
-                            <DynamicIcon name={activity.icon} className="w-12 h-12 text-primary mb-4" />
-                            <CardTitle className="font-serif text-xl mb-2">
-                                {activity.title}
-                            </CardTitle>
-                            <CardDescription className="text-sm line-clamp-4">{activity.description}</CardDescription>
-                        </div>
-                    )}
+                    <CardHeader className="flex-grow pt-4 text-center">
+                        <CardTitle className="font-serif text-xl">
+                            {activity.title}
+                        </CardTitle>
+                        <CardDescription className="pt-2 text-sm line-clamp-3">{activity.description}</CardDescription>
+                    </CardHeader>
                 </Card>
               </div>
           ))}
