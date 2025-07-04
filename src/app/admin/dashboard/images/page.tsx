@@ -41,8 +41,6 @@ export default async function ImagesPage() {
                         <CardContent>
                             <ImageUploadSection 
                                 section="accommodation"
-                                title=""
-                                description=""
                                 images={accommodationGalleryImages}
                                 isSingleton={false}
                             />
@@ -51,105 +49,177 @@ export default async function ImagesPage() {
                 </TabsContent>
 
                 <TabsContent value="page_images" className="mt-6">
-                     <Card>
-                        <CardHeader>
-                            <CardTitle>Other Page Images</CardTitle>
-                            <CardDescription>Manage profile pictures and background images for various sections.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid md:grid-cols-2 gap-6">
-                            <ImageUploadSection 
-                                section="host_profile"
-                                title="Host Profile Picture"
-                                description="The picture for the 'Meet Your Hosts' section."
-                                images={hostProfileImage}
-                                isSingleton={true}
-                            />
-                            <ImageUploadSection 
-                                section="hero"
-                                title="Hero Section Background"
-                                description="The main background image for the homepage hero section."
-                                images={heroImage}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="accommodation_bg"
-                                title="Accommodation Section Background"
-                                description="Optional background image for the accommodation section."
-                                images={accommodationBg}
-                                isSingleton={true}
-                            />
-                            <ImageUploadSection 
-                                section="amenities_bg"
-                                title="Amenities Section Background"
-                                description="Optional background image for the amenities section."
-                                images={amenitiesBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="facilities_bg"
-                                title="Facilities Section Background"
-                                description="Optional background image for the facilities & amenities section."
-                                images={facilitiesBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="activities_bg"
-                                title="Activities Section Background"
-                                description="Optional background image for the activities section."
-                                images={activitiesBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="reviews"
-                                title="Reviews Section Background"
-                                description="Optional background image for the guest reviews section."
-                                images={reviewsImage}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="booking_bg"
-                                title="Booking Section Background"
-                                description="Optional background image for the booking section."
-                                images={bookingBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="location_bg"
-                                title="Location Section Background"
-                                description="Optional background image for the location section."
-                                images={locationBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="faq_bg"
-                                title="FAQ Section Background"
-                                description="Optional background image for the FAQ section."
-                                images={faqBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="host_bg"
-                                title="Host Profile Section Background"
-                                description="Optional background for the host profile section."
-                                images={hostBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="cta_bg"
-                                title="Call to Action Section Background"
-                                description="Optional background for the CTA section."
-                                images={ctaBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="video_bg"
-                                title="Video Section Background"
-                                description="Optional background for the video section."
-                                images={videoBg}
-                                isSingleton={true}
-                            />
-                        </CardContent>
-                    </Card>
+                     <div className="grid md:grid-cols-2 gap-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Host Profile Picture</CardTitle>
+                                <CardDescription>The picture for the 'Meet Your Hosts' section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="host_profile"
+                                    images={hostProfileImage}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Hero Section Background</CardTitle>
+                                <CardDescription>The main background image for the homepage hero section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="hero"
+                                    images={heroImage}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Accommodation Section Background</CardTitle>
+                                <CardDescription>Optional background image for the accommodation section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="accommodation_bg"
+                                    images={accommodationBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Amenities Section Background</CardTitle>
+                                <CardDescription>Optional background image for the amenities section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="amenities_bg"
+                                    images={amenitiesBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Facilities Section Background</CardTitle>
+                                <CardDescription>Optional background image for the facilities & amenities section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="facilities_bg"
+                                    images={facilitiesBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Activities Section Background</CardTitle>
+                                <CardDescription>Optional background image for the activities section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="activities_bg"
+                                    images={activitiesBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Reviews Section Background</CardTitle>
+                                <CardDescription>Optional background image for the guest reviews section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="reviews"
+                                    images={reviewsImage}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Booking Section Background</CardTitle>
+                                <CardDescription>Optional background image for the booking section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="booking_bg"
+                                    images={bookingBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Location Section Background</CardTitle>
+                                <CardDescription>Optional background image for the location section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="location_bg"
+                                    images={locationBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>FAQ Section Background</CardTitle>
+                                <CardDescription>Optional background image for the FAQ section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="faq_bg"
+                                    images={faqBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Host Profile Section Background</CardTitle>
+                                <CardDescription>Optional background for the host profile section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="host_bg"
+                                    images={hostBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Call to Action Section Background</CardTitle>
+                                <CardDescription>Optional background for the CTA section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="cta_bg"
+                                    images={ctaBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Video Section Background</CardTitle>
+                                <CardDescription>Optional background for the video section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="video_bg"
+                                    images={videoBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
             </Tabs>
         </div>
