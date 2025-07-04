@@ -1,7 +1,17 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 
 export default function PrivacyPolicyPage() {
+    const [lastUpdated, setLastUpdated] = useState('');
+
+    useEffect(() => {
+        setLastUpdated(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+    }, []);
+
+
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <Header />
@@ -9,7 +19,8 @@ export default function PrivacyPolicyPage() {
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="max-w-3xl mx-auto space-y-6">
                         <h1 className="font-serif text-4xl md:text-5xl font-bold">Privacy Policy</h1>
-                        <p className="text-lg text-muted-foreground">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        
+                        <p className="text-lg text-muted-foreground">Last updated: {lastUpdated || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                         
                         <div className="prose prose-lg dark:prose-invert max-w-none">
                             <p>This is a placeholder for your privacy policy. A privacy policy is a statement or a legal document that discloses some or all of the ways a party gathers, uses, discloses, and manages a customer or client's data. It fulfills a legal requirement to protect a customer or client's privacy.</p>
