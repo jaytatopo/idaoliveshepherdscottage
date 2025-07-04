@@ -8,7 +8,7 @@ import Reviews from '@/components/reviews';
 import Location from '@/components/location';
 import Gallery from '@/components/gallery';
 import Footer from '@/components/footer';
-import { getContent, getAmenities, getActivities, getGalleryImages, getReviews } from '@/lib/content';
+import { getContent, getAmenities, getActivities, getGalleryImages, getReviews as fetchReviews } from '@/lib/content';
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -18,7 +18,8 @@ export default async function Home() {
   const activities = await getActivities();
   const accommodationGalleryImages = await getGalleryImages('accommodation');
   const heroImage = (await getGalleryImages('hero'))[0];
-  const reviews = await getReviews();
+  const reviewsData = await fetchReviews();
+  const reviewsImage = (await getGalleryImages('reviews'))[0];
   const phone = content.location?.phone;
 
   return (
@@ -34,7 +35,7 @@ export default async function Home() {
         <Gallery galleryImages={accommodationGalleryImages} />
         <Activities content={content.activities} activities={activities} />
         <Booking content={content.booking} phone={phone} />
-        <Reviews content={content.reviews} reviews={reviews} />
+        <Reviews content={content.reviews} reviews={reviewsData} image={reviewsImage} />
         <Location content={content.location}/>
       </main>
       <Footer />

@@ -1,7 +1,8 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, StarHalf } from 'lucide-react';
-import type { Review } from '@/lib/content';
+import type { Review, GalleryImage } from '@/lib/content';
+import Image from 'next/image';
 
 interface ReviewsContent {
   heading: string;
@@ -11,6 +12,7 @@ interface ReviewsContent {
 interface ReviewsProps {
   content: ReviewsContent;
   reviews: Review[];
+  image?: GalleryImage;
 }
 
 const renderStars = (rating: number) => {
@@ -31,15 +33,22 @@ const renderStars = (rating: number) => {
   return stars;
 };
 
-export default function Reviews({ content, reviews }: ReviewsProps) {
-  const reviewsToShow = reviews.slice(0, 2);
+export default function Reviews({ content, reviews, image }: ReviewsProps) {
+  const reviewsToShow = reviews.slice(0, 4);
 
   return (
     <section 
         id="reviews" 
-        className="py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms]"
+        className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms] overflow-hidden"
     >
-      <div className="container mx-auto px-4 md:px-6">
+      <Image
+        src={image?.src || "/images/reviews-bg.jpg"}
+        alt={image?.alt || "Faded background of a cozy setting"}
+        fill
+        className="object-cover opacity-5 z-0"
+        data-ai-hint="cozy setting"
+      />
+      <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -47,9 +56,9 @@ export default function Reviews({ content, reviews }: ReviewsProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {reviewsToShow.map((testimonial) => (
-            <Card key={testimonial.id} className="flex flex-col bg-background">
+            <Card key={testimonial.id} className="flex flex-col bg-background/80 backdrop-blur-sm">
               <CardContent className="p-6 flex-grow">
                 <div className="flex mb-2">
                   {renderStars(testimonial.rating)}
