@@ -134,7 +134,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms] lg:col-span-1">
                             <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
@@ -148,7 +148,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                 <p className="text-sm text-muted-foreground pt-2">Rates are per night for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
-                        <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms] lg:col-span-4">
+                        <Card className="h-full flex flex-col bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms] lg:col-span-2">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Have a question? Fill out the form below and our team will get back to you promptly.</CardDescription>
