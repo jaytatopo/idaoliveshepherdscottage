@@ -2,13 +2,17 @@ import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { BedDouble, Bath, Users, Wind, UtensilsCrossed, Sun, Car } from 'lucide-react';
+import { BedDouble, Bath, Users } from 'lucide-react';
 
 interface AccommodationContent {
   heading: string;
   subheading: string;
   main_text: string;
   secondary_text: string;
+  power_tech_items?: string;
+  kitchen_living_items?: string;
+  outdoor_living_items?: string;
+  parking_access_items?: string;
 }
 
 interface AccommodationProps {
@@ -18,51 +22,32 @@ interface AccommodationProps {
   imageBg?: GalleryImage;
 }
 
-const features = [
+export default function Accommodation({ content, amenities, images, imageBg }: AccommodationProps) {
+  const image1 = images?.[0];
+  const image2 = images?.[1];
+
+  const features = [
     {
       category: 'Power & Tech',
       icon: 'ZapOff',
-      items: [
-        'Completely off-grid (no mains electricity).',
-        'Lighting: Solar lamps, candles, and fairy lights create a magical ambiance.',
-        'Charging: A mini solar panel is available for phones and USB fans.',
-        'Connectivity: No Wi-Fi. Limited mobile signal in specific spots.'
-      ]
+      items: content.power_tech_items?.split('\n').filter(Boolean) || []
     },
     {
       category: 'Kitchen & Living',
       icon: 'UtensilsCrossed',
-      items: [
-        'Fully-equipped open-plan kitchen.',
-        'Gas stove and gas refrigerator.',
-        'All necessary kitchenware and cleaning products provided.',
-        'Cozy lounge with an indoor, wood-burning fireplace.'
-      ]
+      items: content.kitchen_living_items?.split('\n').filter(Boolean) || []
     },
     {
       category: 'Outdoor Living',
       icon: 'Sun',
-      items: [
-        'Private plunge pool to cool off.',
-        'Shaded patio (stoep) with outdoor dining area.',
-        'Boma-style braai area for cooking under the stars.',
-        'Convenient gas braai on the verandah.'
-      ]
+      items: content.outdoor_living_items?.split('\n').filter(Boolean) || []
     },
     {
       category: 'Parking & Access',
       icon: 'Car',
-      items: [
-        'Free, secure private parking available on-site.',
-        'Accessed via a gravel road, suitable for most vehicles.',
-        'The cottage is located on a remote, working farm.'
-      ]
+      items: content.parking_access_items?.split('\n').filter(Boolean) || []
     }
   ];
-
-export default function Accommodation({ content, amenities, images, imageBg }: AccommodationProps) {
-  const image1 = images?.[0];
-  const image2 = images?.[1];
 
   return (
     <section id="accommodation" className="relative py-10 md:py-12 bg-background">

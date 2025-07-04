@@ -31,13 +31,13 @@ export default async function ContentPage() {
                 </form>
             </header>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle>Manage Website Text</CardTitle>
-                    <CardDescription>Edit text for all sections of your website here. Click "Save All Text Changes" at the bottom when you're done.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form action={updateContent} className="space-y-8">
+            <form action={updateContent}>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Manage Website Text</CardTitle>
+                        <CardDescription>Edit text for all sections of your website here. Click "Save All Text Changes" at the bottom when you're done.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
                         <div className="space-y-4 p-4 border rounded-lg">
                             <h3 className="font-semibold font-serif text-lg">Hero Section</h3>
                             <div className="space-y-2">
@@ -61,11 +61,11 @@ export default async function ContentPage() {
                                 <Textarea id="accommodation_subheading" name="accommodation_subheading" defaultValue={content.accommodation?.subheading} />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="accommodation_main_text">Main Text Block</Label>
+                                <Label htmlFor="accommodation_main_text">Main Text Block (The Vibe)</Label>
                                 <Textarea id="accommodation_main_text" name="accommodation_main_text" rows={5} defaultValue={content.accommodation?.main_text} />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="accommodation_secondary_text">Secondary Text (Amenities)</Label>
+                                <Label htmlFor="accommodation_secondary_text">Secondary Text (The Space)</Label>
                                 <Textarea id="accommodation_secondary_text" name="accommodation_secondary_text" rows={5} defaultValue={content.accommodation?.secondary_text} />
                             </div>
                         </div>
@@ -141,12 +141,60 @@ export default async function ContentPage() {
                                 </div>
                             </div>
                         </div>
-                        <Button type="submit">Save All Text Changes</Button>
-                    </form>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
 
-            <Card>
+                <Card className="mt-8">
+                    <CardHeader>
+                        <CardTitle>Detailed Content Blocks</CardTitle>
+                        <CardDescription>Edit the list items for various detailed sections. Place each item on a new line.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        <div className="space-y-4 p-4 border rounded-lg">
+                             <h3 className="font-semibold font-serif text-lg">Accommodation - Facilities & Amenities</h3>
+                             <div className="grid md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="accommodation_power_tech_items">Power & Tech Items</Label>
+                                    <Textarea id="accommodation_power_tech_items" name="accommodation_power_tech_items" rows={5} defaultValue={content.accommodation?.power_tech_items} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="accommodation_kitchen_living_items">Kitchen & Living Items</Label>
+                                    <Textarea id="accommodation_kitchen_living_items" name="accommodation_kitchen_living_items" rows={5} defaultValue={content.accommodation?.kitchen_living_items} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="accommodation_outdoor_living_items">Outdoor Living Items</Label>
+                                    <Textarea id="accommodation_outdoor_living_items" name="accommodation_outdoor_living_items" rows={5} defaultValue={content.accommodation?.outdoor_living_items} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="accommodation_parking_access_items">Parking & Access Items</Label>
+                                    <Textarea id="accommodation_parking_access_items" name="accommodation_parking_access_items" rows={5} defaultValue={content.accommodation?.parking_access_items} />
+                                </div>
+                             </div>
+                        </div>
+                         <div className="space-y-4 p-4 border rounded-lg">
+                             <h3 className="font-semibold font-serif text-lg">Booking - Good to Know Section</h3>
+                             <div className="grid md:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="booking_rules_items">House Rules Items</Label>
+                                    <Textarea id="booking_rules_items" name="booking_rules_items" rows={5} defaultValue={content.booking?.rules_items} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="booking_checkin_items">Check-in & Check-out Items</Label>
+                                    <Textarea id="booking_checkin_items" name="booking_checkin_items" rows={5} defaultValue={content.booking?.checkin_items} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="booking_practical_items">Practical Info Items</Label>
+                                    <Textarea id="booking_practical_items" name="booking_practical_items" rows={5} defaultValue={content.booking?.practical_items} />
+                                </div>
+                             </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Button type="submit" className="mt-8">Save All Text Changes</Button>
+            </form>
+
+            <Card className="mt-8">
                 <CardHeader>
                     <CardTitle>Manage Website Images</CardTitle>
                     <CardDescription>Upload and manage images for different sections of your website.</CardDescription>

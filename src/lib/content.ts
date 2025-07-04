@@ -67,7 +67,11 @@ function shapeContent(rows: any[]): WebsiteContent {
             heading: 'The Cottage: Rustic Luxe Meets Off-Grid Charm', 
             subheading: 'Experience the authentic Karoo in a beautifully restored shepherd\'s cottage, blending original character with modern comforts.',
             main_text: `Ida Olive Shepherd's Cottage is a sanctuary on the Giddy Goat Farm—a working dairy goat farm and wildlife sanctuary. It features beautifully restored stone and timber architecture, offering a unique "rustic-luxe" feel.\n\nThe property is completely off-grid, making it ideal for nature lovers wanting to disconnect and reconnect with the serene surroundings of the endangered Robertson Succulent Karoo.`,
-            secondary_text: 'The cottage accommodates a maximum of 4 adults, perfect for a romantic getaway or a quiet retreat with friends. It includes two bedrooms (one king, one queen) and a main bathroom with a bath, walk-in indoor shower, and a separate outdoor shower for a truly immersive nature experience.' 
+            secondary_text: 'The cottage accommodates a maximum of 4 adults, perfect for a romantic getaway or a quiet retreat with friends. It includes two bedrooms (one king, one queen) and a main bathroom with a bath, walk-in indoor shower, and a separate outdoor shower for a truly immersive nature experience.',
+            power_tech_items: 'Completely off-grid (no mains electricity).\nLighting: Solar lamps, candles, and fairy lights create a magical ambiance.\nA mini solar panel is available for phones and USB fans.\nConnectivity: No Wi-Fi. Limited mobile signal in specific spots.',
+            kitchen_living_items: 'Fully-equipped open-plan kitchen.\nGas stove and gas refrigerator.\nAll necessary kitchenware and cleaning products provided.\nCozy lounge with an indoor, wood-burning fireplace.',
+            outdoor_living_items: 'Private plunge pool to cool off.\nShaded patio (stoep) with outdoor dining area.\nBoma-style braai area for cooking under the stars.\nConvenient gas braai on the verandah.',
+            parking_access_items: 'Free, secure private parking available on-site.\nAccessed via a gravel road, suitable for most vehicles.\nThe cottage is located on a remote, working farm.',
         },
         activities: { 
             heading: 'Explore & Experience', 
@@ -75,7 +79,10 @@ function shapeContent(rows: any[]): WebsiteContent {
         },
         booking: { 
             heading: 'Rates & Availability', 
-            subheading: 'Ready for your peaceful escape? Check availability below or send us an enquiry.'
+            subheading: 'Ready for your peaceful escape? Check availability below or send us an enquiry.',
+            rules_items: 'Strictly for adults only. No children or infants.\nNo pets allowed.\nNo parties or events.\nSmoking is not permitted on the property.',
+            checkin_items: 'Check-in is from 14:00. Closing times vary by booking site (17:00-20:00). Please confirm your arrival time.\nCheck-out is between 10:00 and 11:00.\nDaily cleaning is not included but can be arranged for longer stays.',
+            practical_items: 'Guests are advised to bring their own drinking water.\nWe are off-grid: there is no Wi-Fi and limited mobile signal.\nPlease bring cash for any on-site extras like farm produce.',
         },
         reviews: { 
             heading: 'What Our Guests Say', 

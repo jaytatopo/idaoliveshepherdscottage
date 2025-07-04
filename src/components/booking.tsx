@@ -32,6 +32,9 @@ const formSchema = z.object({
 interface BookingContent {
     heading: string;
     subheading: string;
+    rules_items?: string;
+    checkin_items?: string;
+    practical_items?: string;
 }
 
 interface BookingProps {
@@ -173,6 +176,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="mr-2 h-5 w-5"><path d="M16.75 13.96c-.25-.12-1.47-.72-1.7-.81-.23-.09-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.28.18-.52.06-.25-.12-1.03-.38-1.96-1.21-.72-.64-1.21-1.43-1.38-1.68-.17-.25-.02-.38.1-.51.11-.11.25-.28.37-.42.13-.14.17-.25.25-.41.09-.17.04-.31-.02-.42-.06-.12-.56-1.34-.76-1.84s-.4-.42-.55-.42h-.48c-.17 0-.45.06-.68.31-.23.25-.87 1.03-.87 2.5s.89 2.9,1.01 3.1c.12.21,1.74,2.65,4.22,3.72.59.26,1.05.41,1.41.52.59.17,1.13.14,1.54.09.46-.06,1.47-.6,1.68-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28zM12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10z"/></svg>
                                                 Chat on WhatsApp
                                             </a>
+                                            </Button>
                                         )}
                                 </CardContent>
                             </Card>
@@ -192,10 +196,9 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                             <AccordionTrigger>House Rules</AccordionTrigger>
                             <AccordionContent>
                                 <ul className="list-disc list-inside space-y-2 text-sm">
-                                <li>Strictly for adults only. No children or infants.</li>
-                                <li>No pets allowed.</li>
-                                <li>No parties or events.</li>
-                                <li>Smoking is not permitted on the property.</li>
+                                  {content.rules_items?.split('\n').filter(Boolean).map((item, i) => (
+                                    <li key={i}>{item}</li>
+                                  ))}
                                 </ul>
                             </AccordionContent>
                             </AccordionItem>
@@ -203,9 +206,9 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                             <AccordionTrigger>Check-in & Check-out</AccordionTrigger>
                             <AccordionContent>
                                 <ul className="list-disc list-inside space-y-2 text-sm">
-                                <li>Check-in is from 14:00. Closing times vary by booking site (17:00-20:00). Please confirm your arrival time.</li>
-                                <li>Check-out is between 10:00 and 11:00.</li>
-                                <li>Daily cleaning is not included but can be arranged for longer stays.</li>
+                                   {content.checkin_items?.split('\n').filter(Boolean).map((item, i) => (
+                                    <li key={i}>{item}</li>
+                                  ))}
                                 </ul>
                             </AccordionContent>
                             </AccordionItem>
@@ -213,9 +216,9 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                             <AccordionTrigger>Practical Info</AccordionTrigger>
                             <AccordionContent>
                                 <ul className="list-disc list-inside space-y-2 text-sm">
-                                <li>Guests are advised to bring their own drinking water.</li>
-                                <li>We are off-grid: there is no Wi-Fi and limited mobile signal.</li>
-                                <li>Please bring cash for any on-site extras like farm produce.</li>
+                                   {content.practical_items?.split('\n').filter(Boolean).map((item, i) => (
+                                    <li key={i}>{item}</li>
+                                  ))}
                                 </ul>
                             </AccordionContent>
                             </AccordionItem>
