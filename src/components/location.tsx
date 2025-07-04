@@ -20,7 +20,7 @@ interface LocationProps {
 export default function Location({ content, imageBg }: LocationProps) {
   return (
     <section id="location" className="relative py-16 md:py-24 bg-background overflow-hidden">
-        {imageBg && (
+        {imageBg && imageBg.src && (
             <Image
                 src={imageBg.src}
                 alt={imageBg.alt}

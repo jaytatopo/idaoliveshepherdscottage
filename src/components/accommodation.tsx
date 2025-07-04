@@ -22,7 +22,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
 
   return (
     <section id="accommodation" className="relative py-16 md:py-24 bg-card">
-      {imageBg && (
+      {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
           alt={imageBg.alt}

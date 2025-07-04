@@ -68,7 +68,7 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
         id="reviews" 
         className="relative py-16 md:py-24 bg-card overflow-hidden"
     >
-      {imageBg && (
+      {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
           alt={imageBg.alt}

@@ -21,7 +21,7 @@ export default function Amenities({ content, amenities, imageBg }: AmenitiesProp
 
   return (
     <section id="amenities" className="relative py-16 md:py-24 bg-background">
-      {imageBg && (
+      {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
           alt={imageBg.alt}

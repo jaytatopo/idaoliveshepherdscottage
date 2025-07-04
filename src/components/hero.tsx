@@ -13,7 +13,7 @@ interface HeroContent {
 export default function Hero({ content, image }: { content: HeroContent, image?: GalleryImage }) {
   return (
     <section id="home" className="relative h-screen w-full bg-secondary">
-      {image ? (
+      {image && image.src ? (
           <Image
             src={image.src}
             alt={image.alt}
@@ -27,11 +27,11 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
       )}
       <div className={cn(
         "absolute inset-0",
-        image ? "bg-gradient-to-t from-black/60 to-transparent" : "bg-gradient-to-t from-primary/30 to-transparent"
+        image && image.src ? "bg-gradient-to-t from-black/60 to-transparent" : "bg-gradient-to-t from-primary/30 to-transparent"
       )} />
       <div className={cn(
         "relative z-10 flex h-full flex-col items-center justify-center text-center",
-        image ? "text-white" : "text-primary-foreground"
+        image && image.src ? "text-white" : "text-primary-foreground"
       )}>
         <div className="max-w-4xl p-6">
             <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg opacity-0 animate-fade-in [animation-delay:200ms]">

@@ -44,7 +44,7 @@ export default function Facilities({ content, imageBg }: FacilitiesProps) {
 
   return (
     <section id="facilities" className="relative py-16 md:py-24 bg-background">
-      {imageBg && (
+      {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
           alt={imageBg.alt}

@@ -27,7 +27,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
       id="activities" 
       className="relative py-16 md:py-24 bg-card"
     >
-      {imageBg && (
+      {imageBg && imageBg.src && (
         <Image
           src={imageBg.src}
           alt={imageBg.alt}

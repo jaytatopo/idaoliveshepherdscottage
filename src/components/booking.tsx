@@ -82,7 +82,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
             id="booking" 
             className="relative py-16 md:py-24 bg-background overflow-hidden"
         >
-             {imageBg && (
+             {imageBg && imageBg.src && (
                 <Image
                     src={imageBg.src}
                     alt={imageBg.alt}
