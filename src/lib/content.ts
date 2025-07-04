@@ -8,6 +8,14 @@ export interface Amenity {
     sort_order: number;
 }
 
+export interface Facility {
+    id: number;
+    icon: string;
+    category: string;
+    items: string;
+    sort_order: number;
+}
+
 export interface Activity {
     id: number;
     icon: string;
@@ -54,6 +62,13 @@ export interface PageSection {
     sort_order: number;
 }
 
+export interface FAQ {
+    id: number;
+    question: string;
+    answer: string;
+    sort_order: number;
+}
+
 
 type ContentValue = {
     [key: string]: string;
@@ -78,16 +93,12 @@ function shapeContent(rows: any[]): WebsiteContent {
             secondary_text: 'The cottage accommodates a maximum of 4 adults, perfect for a romantic getaway or a quiet retreat with friends. It includes two bedrooms (one king, one queen) and a main bathroom with a bath, walk-in indoor shower, and a separate outdoor shower for a truly immersive nature experience.',
         },
         amenities: {
-            heading: 'What We Offer',
+            heading: 'Amenities',
             subheading: 'Curated comforts for an unforgettable off-grid experience.'
         },
         facilities: {
             heading: 'Facilities',
-            subheading: 'Details about the cottage facilities.',
-            power_tech_items: 'Completely off-grid (no mains electricity).\nLighting: Solar lamps, candles, and fairy lights create a magical ambiance.\nA mini solar panel is available for phones and USB fans.\nConnectivity: No Wi-Fi. Limited mobile signal in specific spots.',
-            kitchen_living_items: 'Fully-equipped open-plan kitchen.\nGas stove and gas refrigerator.\nAll necessary kitchenware and cleaning products provided.\nCozy lounge with an indoor, wood-burning fireplace.',
-            outdoor_living_items: 'Private plunge pool to cool off.\nShaded patio (stoep) with outdoor dining area.\nBoma-style braai area for cooking under the stars.\nConvenient gas braai on the verandah.',
-            parking_access_items: 'Free, secure private parking available on-site.\nAccessed via a gravel road, suitable for most vehicles.\nThe cottage is located on a remote, working farm.',
+            subheading: 'Details about what the cottage includes.',
         },
         activities: { 
             heading: 'Explore & Experience', 
@@ -113,6 +124,27 @@ function shapeContent(rows: any[]): WebsiteContent {
             facebook_url: '', 
             instagram_url: '' 
         },
+        faq: {
+            heading: 'Frequently Asked Questions',
+            subheading: 'Your questions, answered.'
+        },
+        host: {
+            heading: 'Meet Your Hosts',
+            subheading: 'We\'re delighted to welcome you to our little piece of paradise.',
+            name: 'Tina & The Giddy Goats',
+            bio: 'As your hosts, we are passionate about sustainable living, conservation, and sharing the unique beauty of the Karoo. We live on the farm and are available to assist with anything you need, from farm-fresh goat milk for your coffee to recommendations for local activities. Our goal is to make your stay unforgettable.'
+        },
+        cta: {
+            heading: 'Ready for a Digital Detox?',
+            subheading: 'Escape the noise. Reconnect with nature. Find your peace at Ida Olive.',
+            button_text: 'Book Your Escape Now',
+            button_url: '#booking',
+        },
+        video: {
+            heading: 'A Glimpse of Ida Olive',
+            subheading: 'Press play and transport yourself to the tranquility of the Karoo.',
+            url: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+        }
     };
 
     for (const row of rows) {
@@ -158,6 +190,28 @@ export async function getAmenities(): Promise<Amenity[]> {
         return rows as Amenity[];
     } catch (error) {
         console.error("Failed to fetch amenities:", error);
+        return [];
+    }
+}
+
+export async function getFacilities(): Promise<Facility[]> {
+    noStore();
+    try {
+        const [rows] = await db.query('SELECT id, icon, category, items, sort_order FROM facilities ORDER BY sort_order ASC');
+        return rows as Facility[];
+    } catch (error) {
+        console.error("Failed to fetch facilities:", error);
+        return [];
+    }
+}
+
+export async function getFaqs(): Promise<FAQ[]> {
+    noStore();
+    try {
+        const [rows] = await db.query('SELECT id, question, answer, sort_order FROM faq ORDER BY sort_order ASC');
+        return rows as FAQ[];
+    } catch (error) {
+        console.error("Failed to fetch FAQs:", error);
         return [];
     }
 }
@@ -233,9 +287,13 @@ export async function getAllPageSections(): Promise<PageSection[]> {
     noStore();
     try {
         const [rows] = await db.query('SELECT * FROM page_sections ORDER BY sort_order ASC');
+        if ((rows as any[]).length === 0) {
+             // Fallback to a default order if table is empty
+            return getPageSections();
+        }
         return rows as PageSection[];
     } catch (error) {
-        console.error("Failed to fetch all page sections:", error);
-        return [];
+        console.error("Failed to fetch all page sections, returning default visible sections:", error);
+        return getPageSections();
     }
 }

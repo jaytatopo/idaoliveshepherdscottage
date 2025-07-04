@@ -11,12 +11,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
-import type { Activity, Amenity, Review } from '@/lib/content';
+import type { Activity, Amenity, Review, Facility, FAQ } from '@/lib/content';
 import { useToast } from '@/hooks/use-toast';
 import {
     addAmenity, updateAmenity, deleteAmenity,
     addActivity, updateActivity, deleteActivity,
     addReview, updateReview, deleteReview,
+    addFacility, updateFacility, deleteFacility,
+    addFaq, updateFaq, deleteFaq,
 } from '@/app/actions/content-actions';
 
 
@@ -355,6 +357,189 @@ export function ReviewsClientPage({ reviews }: { reviews: Review[] }) {
                     <TableBody>
                         {reviews.map(item => <ReviewRow key={item.id} review={item} />)}
                     </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+// FACILITIES
+function FacilityForm({ facility, onDone }: { facility?: Facility, onDone: () => void }) {
+    const { toast } = useToast();
+    const action = facility ? updateFacility.bind(null, facility.id) : addFacility;
+
+    async function handleSubmit(formData: FormData) {
+        const result = await action(formData);
+        if (result.success) {
+            toast({ title: facility ? 'Facility Category Updated' : 'Facility Category Added' });
+            onDone();
+        } else {
+            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
+        }
+    }
+
+    return (
+        <form action={handleSubmit} className="space-y-4">
+            <div>
+                <Label htmlFor="category">Category Title</Label>
+                <Input id="category" name="category" defaultValue={facility?.category} required />
+            </div>
+            <div>
+                <Label htmlFor="icon">Icon Name</Label>
+                <Input id="icon" name="icon" defaultValue={facility?.icon} placeholder="e.g., ZapOff, Car" required />
+                 <p className="text-xs text-muted-foreground mt-1">Use any icon name from <a href="https://lucide.dev/icons/" target="_blank" rel="noopener noreferrer" className="underline">lucide.dev</a>.</p>
+            </div>
+            <div>
+                <Label htmlFor="items">List Items (one per line)</Label>
+                <Textarea id="items" name="items" defaultValue={facility?.items} required rows={5} />
+            </div>
+            <div>
+                <Label htmlFor="sort_order">Sort Order</Label>
+                <Input id="sort_order" name="sort_order" type="number" defaultValue={facility?.sort_order ?? 0} required />
+            </div>
+            <DialogFooter>
+                <Button type="submit">{facility ? 'Save Changes' : 'Add Facility Category'}</Button>
+            </DialogFooter>
+        </form>
+    );
+}
+
+function FacilityRow({ facility }: { facility: Facility }) {
+    const { toast } = useToast();
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
+    async function handleDelete() {
+        if (!confirm(`Are you sure you want to delete the category "${facility.category}"?`)) return;
+        const result = await deleteFacility(facility.id);
+        if (result.success) {
+            toast({ title: 'Facility Deleted' });
+        } else {
+            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
+        }
+    }
+
+    return (
+        <TableRow>
+            <TableCell>{facility.category}</TableCell>
+            <TableCell>{facility.icon}</TableCell>
+            <TableCell className="max-w-sm truncate">{facility.items}</TableCell>
+            <TableCell>{facility.sort_order}</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent><DialogHeader><DialogTitle>Edit Facility Category</DialogTitle></DialogHeader><FacilityForm facility={facility} onDone={() => setIsEditOpen(false)} /></DialogContent>
+                </Dialog>
+                <form action={handleDelete} className="inline-block"><Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button></form>
+            </TableCell>
+        </TableRow>
+    );
+}
+
+export function FacilitiesClientPage({ facilities }: { facilities: Facility[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center"><CardTitle>Manage Facility Categories</CardTitle>
+                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Category</Button></DialogTrigger>
+                        <DialogContent><DialogHeader><DialogTitle>Add New Facility Category</DialogTitle></DialogHeader><FacilityForm onDone={() => setIsAddOpen(false)} /></DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Category</TableHead><TableHead>Icon</TableHead><TableHead>Items</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>{facilities.map(item => <FacilityRow key={item.id} facility={item} />)}</TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+
+// FAQs
+function FaqForm({ faq, onDone }: { faq?: FAQ, onDone: () => void }) {
+    const { toast } = useToast();
+    const action = faq ? updateFaq.bind(null, faq.id) : addFaq;
+
+    async function handleSubmit(formData: FormData) {
+        const result = await action(formData);
+        if (result.success) {
+            toast({ title: faq ? 'FAQ Updated' : 'FAQ Added' });
+            onDone();
+        } else {
+            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
+        }
+    }
+
+    return (
+        <form action={handleSubmit} className="space-y-4">
+            <div>
+                <Label htmlFor="question">Question</Label>
+                <Input id="question" name="question" defaultValue={faq?.question} required />
+            </div>
+            <div>
+                <Label htmlFor="answer">Answer</Label>
+                <Textarea id="answer" name="answer" defaultValue={faq?.answer} required rows={5} />
+            </div>
+            <div>
+                <Label htmlFor="sort_order">Sort Order</Label>
+                <Input id="sort_order" name="sort_order" type="number" defaultValue={faq?.sort_order ?? 0} required />
+            </div>
+            <DialogFooter>
+                <Button type="submit">{faq ? 'Save Changes' : 'Add FAQ'}</Button>
+            </DialogFooter>
+        </form>
+    );
+}
+
+function FaqRow({ faq }: { faq: FAQ }) {
+    const { toast } = useToast();
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
+    async function handleDelete() {
+        if (!confirm(`Are you sure you want to delete this FAQ?`)) return;
+        const result = await deleteFaq(faq.id);
+        if (result.success) {
+            toast({ title: 'FAQ Deleted' });
+        } else {
+            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
+        }
+    }
+
+    return (
+        <TableRow>
+            <TableCell className="font-medium">{faq.question}</TableCell>
+            <TableCell className="max-w-sm truncate">{faq.answer}</TableCell>
+            <TableCell>{faq.sort_order}</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent><DialogHeader><DialogTitle>Edit FAQ</DialogTitle></DialogHeader><FaqForm faq={faq} onDone={() => setIsEditOpen(false)} /></DialogContent>
+                </Dialog>
+                <form action={handleDelete} className="inline-block"><Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button></form>
+            </TableCell>
+        </TableRow>
+    );
+}
+
+export function FaqsClientPage({ faqs }: { faqs: FAQ[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center"><CardTitle>Manage FAQs</CardTitle>
+                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add FAQ</Button></DialogTrigger>
+                        <DialogContent><DialogHeader><DialogTitle>Add New FAQ</DialogTitle></DialogHeader><FaqForm onDone={() => setIsAddOpen(false)} /></DialogContent>
+                    </Dialog>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow><TableHead>Question</TableHead><TableHead>Answer</TableHead><TableHead>Order</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                    <TableBody>{faqs.map(item => <FaqRow key={item.id} faq={item} />)}</TableBody>
                 </Table>
             </CardContent>
         </Card>

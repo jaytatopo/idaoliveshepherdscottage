@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/header';
 import Hero from '@/components/hero';
@@ -10,8 +9,21 @@ import Location from '@/components/location';
 import Gallery from '@/components/gallery';
 import Facilities from '@/components/facilities';
 import Amenities from '@/components/amenities';
+import Faq from '@/components/faq';
+import HostProfile from '@/components/host-profile';
+import CallToAction from '@/components/cta';
+import Video from '@/components/video';
 import Footer from '@/components/footer';
-import { getContent, getAmenities as fetchAmenities, getActivities as fetchActivities, getGalleryImages, getReviews as fetchReviews, getPageSections } from '@/lib/content';
+import { 
+    getContent, 
+    getAmenities as fetchAmenities, 
+    getFacilities as fetchFacilities,
+    getActivities as fetchActivities, 
+    getGalleryImages, 
+    getReviews as fetchReviews, 
+    getFaqs,
+    getPageSections 
+} from '@/lib/content';
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -25,14 +37,20 @@ const sectionComponents: { [key: string]: React.ComponentType<any> } = {
   booking: Booking,
   reviews: Reviews,
   location: Location,
+  faq: Faq,
+  host: HostProfile,
+  cta: CallToAction,
+  video: Video,
 };
 
 async function getAllData() {
     const [
         content,
         amenities,
+        facilities,
         activities,
         reviews,
+        faqs,
         accommodationGalleryImages,
         heroImage,
         accommodationBg,
@@ -42,11 +60,18 @@ async function getAllData() {
         reviewsBg,
         bookingBg,
         locationBg,
+        hostProfileImage,
+        hostBg,
+        faqBg,
+        ctaBg,
+        videoBg,
     ] = await Promise.all([
         getContent(),
         fetchAmenities(),
+        fetchFacilities(),
         fetchActivities(),
         fetchReviews(),
+        getFaqs(),
         getGalleryImages('accommodation'),
         getGalleryImages('hero').then(images => images[0]),
         getGalleryImages('accommodation_bg').then(images => images[0]),
@@ -56,14 +81,22 @@ async function getAllData() {
         getGalleryImages('reviews').then(images => images[0]),
         getGalleryImages('booking_bg').then(images => images[0]),
         getGalleryImages('location_bg').then(images => images[0]),
+        getGalleryImages('host_profile').then(images => images[0]),
+        getGalleryImages('host_bg').then(images => images[0]),
+        getGalleryImages('faq_bg').then(images => images[0]),
+        getGalleryImages('cta_bg').then(images => images[0]),
+        getGalleryImages('video_bg').then(images => images[0]),
     ]);
 
     return {
         content,
         amenities,
+        facilities,
         activities,
         reviews,
+        faqs,
         accommodationGalleryImages,
+        hostProfileImage,
         backgrounds: {
             hero: heroImage,
             accommodation: accommodationBg,
@@ -73,6 +106,10 @@ async function getAllData() {
             reviews: reviewsBg,
             booking: bookingBg,
             location: locationBg,
+            host: hostBg,
+            faq: faqBg,
+            cta: ctaBg,
+            video: videoBg,
         },
     };
 }
@@ -93,7 +130,7 @@ export default async function Home() {
       case 'amenities':
         return { content: allData.content.amenities, amenities: allData.amenities, imageBg: allData.backgrounds.amenities };
       case 'facilities':
-        return { content: allData.content.facilities, imageBg: allData.backgrounds.facilities };
+        return { content: allData.content.facilities, facilities: allData.facilities, imageBg: allData.backgrounds.facilities };
       case 'activities':
         return { content: allData.content.activities, activities: allData.activities, imageBg: allData.backgrounds.activities };
       case 'booking':
@@ -102,6 +139,14 @@ export default async function Home() {
         return { content: allData.content.reviews, reviews: allData.reviews, imageBg: allData.backgrounds.reviews };
       case 'location':
         return { content: allData.content.location, imageBg: allData.backgrounds.location };
+      case 'faq':
+        return { content: allData.content.faq, faqs: allData.faqs, imageBg: allData.backgrounds.faq };
+      case 'host':
+        return { content: allData.content.host, image: allData.hostProfileImage, imageBg: allData.backgrounds.host };
+      case 'cta':
+        return { content: allData.content.cta, imageBg: allData.backgrounds.cta };
+      case 'video':
+        return { content: allData.content.video, imageBg: allData.backgrounds.video };
       default:
         return {};
     }

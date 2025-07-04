@@ -7,7 +7,7 @@ export default async function AmenitiesPage() {
         <div className="space-y-6">
             <header>
                  <h1 className="text-3xl font-bold font-serif">Amenities Management</h1>
-                 <p className="text-muted-foreground">Add, edit, or remove cottage amenities.</p>
+                 <p className="text-muted-foreground">Manage the list of amenities displayed in the "Amenities" section.</p>
             </header>
             <AmenitiesClientPage amenities={amenities} />
         </div>

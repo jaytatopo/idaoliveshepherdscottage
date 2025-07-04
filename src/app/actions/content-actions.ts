@@ -66,7 +66,12 @@ export async function uploadGalleryImage(formData: FormData) {
         'facilities_bg',
         'activities_bg',
         'booking_bg',
-        'location_bg'
+        'location_bg',
+        'host_profile',
+        'host_bg',
+        'faq_bg',
+        'cta_bg',
+        'video_bg'
     ];
 
     // For singleton sections, remove existing image record before uploading a new one.
@@ -348,6 +353,107 @@ export async function deleteReview(id: number) {
         return { success: false, message: 'Database error.' };
     }
 };
+
+// --- Facilities Actions ---
+const facilitySchema = z.object({ 
+    category: z.string().min(1),
+    items: z.string().min(1),
+    icon: z.string().min(1),
+    sort_order: z.coerce.number().default(0)
+});
+
+export async function addFacility(formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = facilitySchema.parse(rawData);
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
+        await db.execute(`INSERT INTO facilities (${columns}) VALUES (${placeholders})`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/facilities');
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+}
+
+export async function updateFacility(id: number, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = facilitySchema.parse(rawData);
+        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const values = [...Object.values(data), id];
+        await db.execute(`UPDATE facilities SET ${setClauses} WHERE id = ?`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/facilities');
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+}
+
+export async function deleteFacility(id: number) {
+    try {
+        await db.execute(`DELETE FROM facilities WHERE id = ?`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/facilities');
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: 'Database error.' };
+    }
+}
+
+
+// --- FAQ Actions ---
+const faqSchema = z.object({ 
+    question: z.string().min(1),
+    answer: z.string().min(1),
+    sort_order: z.coerce.number().default(0)
+});
+
+export async function addFaq(formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = faqSchema.parse(rawData);
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
+        await db.execute(`INSERT INTO faq (${columns}) VALUES (${placeholders})`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/faq');
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+}
+
+export async function updateFaq(id: number, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = faqSchema.parse(rawData);
+        const setClauses = Object.keys(data).map(key => `${key} = ?`).join(', ');
+        const values = [...Object.values(data), id];
+        await db.execute(`UPDATE faq SET ${setClauses} WHERE id = ?`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/faq');
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : 'Database error.' };
+    }
+}
+
+export async function deleteFaq(id: number) {
+    try {
+        await db.execute(`DELETE FROM faq WHERE id = ?`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/faq');
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: 'Database error.' };
+    }
+}
+
 
 // --- Page Layout Actions ---
 export async function updatePageLayout(sections: PageSection[]) {

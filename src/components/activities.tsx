@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/ca
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { Activity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
+import { Leaf } from 'lucide-react';
 
 interface ActivitiesContent {
   heading: string;
@@ -37,8 +38,10 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up flex items-center justify-center gap-3">
+            <Leaf className="w-7 h-7 text-primary/80" />
             {content.heading}
+            <Leaf className="w-7 h-7 text-primary/80 scale-x-[-1]" />
           </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LayoutDashboard, LogOut, Home, FileText, List, Mountain, Star, LayoutTemplate } from "lucide-react";
+import { LayoutDashboard, LogOut, Home, FileText, List, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2 } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -48,7 +48,7 @@ export default function AdminLayout({
                         <SidebarMenuButton asChild tooltip="Content" isActive={pathname === '/admin/dashboard/content'}>
                             <Link href="/admin/dashboard/content">
                                 <FileText />
-                                <span>Content</span>
+                                <span>Content & Images</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -63,8 +63,16 @@ export default function AdminLayout({
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild tooltip="Amenities" isActive={pathname === '/admin/dashboard/amenities'}>
                             <Link href="/admin/dashboard/amenities">
-                                <List />
+                                <Sparkles />
                                 <span>Amenities</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip="Facilities" isActive={pathname === '/admin/dashboard/facilities'}>
+                            <Link href="/admin/dashboard/facilities">
+                                <Building2 />
+                                <span>Facilities</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -81,6 +89,14 @@ export default function AdminLayout({
                             <Link href="/admin/dashboard/reviews">
                                 <Star />
                                 <span>Reviews</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip="FAQ" isActive={pathname === '/admin/dashboard/faq'}>
+                            <Link href="/admin/dashboard/faq">
+                                <HelpCircle />
+                                <span>FAQ</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
