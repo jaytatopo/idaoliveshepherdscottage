@@ -114,7 +114,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-12">
+                <div className="space-y-12">
                      <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:300ms]">
                         <CardHeader>
                             <CardTitle className="font-serif">Live Availability</CardTitle>
@@ -134,19 +134,19 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                         </CardContent>
                     </Card>
 
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms]">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms] lg:col-span-1">
                             <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800 / night</span></div>
-                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200 / night</span></div>
-                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500 / night</span></div>
-                                <p className="text-sm text-muted-foreground pt-2">Rates are for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
+                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800</span></div>
+                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200</span></div>
+                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500</span></div>
+                                <p className="text-sm text-muted-foreground pt-2">Rates are per night for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms]">
+                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms] lg:col-span-4">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Have a question? Fill out the form below and our team will get back to you promptly.</CardDescription>
