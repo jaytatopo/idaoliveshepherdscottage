@@ -1,7 +1,11 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { Activity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
-import Image from 'next/image';
 
 interface ActivitiesContent {
   heading: string;
@@ -15,6 +19,8 @@ interface ActivitiesProps {
 }
 
 export default function Activities({ content, activities, imageBg }: ActivitiesProps) {
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+
   return (
     <section 
       id="activities" 
@@ -37,15 +43,16 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {activities.map((activity, index) => {
-            return (
-                <Card 
-                  key={activity.id} 
-                  className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background/80 backdrop-blur-sm overflow-visible opacity-0 animate-fade-in-up"
-                  style={{ animationDelay: `${300 + index * 100}ms` }}
-                >
+          {activities.map((activity, index) => (
+              <div 
+                key={activity.id}
+                className="cursor-pointer opacity-0 animate-fade-in-up group"
+                style={{ animationDelay: `${300 + index * 100}ms` }}
+                onClick={() => setSelectedActivity(activity)}
+              >
+                <Card className="flex flex-col text-center h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden">
                     <div className="relative z-10">
-                        <div className="aspect-video w-full transition-transform duration-300 group-hover:scale-105 relative bg-muted">
+                        <div className="aspect-video w-full transition-transform duration-500 group-hover:scale-105 relative bg-muted">
                             {activity.image_src ? (
                                 <Image
                                     src={activity.image_src}
@@ -66,13 +73,42 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
                     </div>
                     <CardHeader className="items-center flex-grow pt-12">
                         <CardTitle className="font-serif text-xl">{activity.title}</CardTitle>
-                        <CardDescription className="pt-2 text-sm">{activity.description}</CardDescription>
+                        <CardDescription className="pt-2 text-sm line-clamp-3">{activity.description}</CardDescription>
                     </CardHeader>
                 </Card>
-            );
-        })}
+              </div>
+          ))}
         </div>
       </div>
+
+      <Dialog open={!!selectedActivity} onOpenChange={(isOpen) => !isOpen && setSelectedActivity(null)}>
+        <DialogContent className="sm:max-w-lg p-0">
+            {selectedActivity && (
+                <>
+                    <div className="relative aspect-video w-full bg-muted overflow-hidden">
+                        {selectedActivity.image_src ? (
+                            <Image
+                                src={selectedActivity.image_src}
+                                alt={selectedActivity.title}
+                                fill
+                                className="object-cover"
+                            />
+                        ) : (
+                             <div className="flex items-center justify-center h-full">
+                                <DynamicIcon name={selectedActivity.icon} className="w-16 h-16 text-muted-foreground/50" />
+                            </div>
+                        )}
+                    </div>
+                    <DialogHeader className="p-6 text-left items-start">
+                        <DialogTitle className="font-serif text-2xl mb-2">{selectedActivity.title}</DialogTitle>
+                        <DialogDescription className="text-base text-muted-foreground">
+                            {selectedActivity.description}
+                        </DialogDescription>
+                    </DialogHeader>
+                </>
+            )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
