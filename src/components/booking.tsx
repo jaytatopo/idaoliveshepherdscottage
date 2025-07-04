@@ -20,12 +20,14 @@ import { saveInquiry } from '@/app/actions/save-inquiry';
 import { Textarea } from './ui/textarea';
 import type { GalleryImage } from '@/lib/content';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phone: z.string().optional(),
+  guests: z.coerce.number().min(1, { message: "Please select the number of guests."}),
   message: z.string().min(10, { message: 'Please provide a message of at least 10 characters.' }),
 });
 
@@ -51,15 +53,13 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
             name: '',
             email: '',
             phone: '',
+            guests: 1,
             message: '',
         },
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const result = await saveInquiry({
-            ...values,
-            guests: 1, // Default value
-        });
+        const result = await saveInquiry(values);
 
         if (result.success) {
             toast({
@@ -159,6 +159,30 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                                     <FormItem><FormLabel>Phone <span className="text-muted-foreground/80">(Opt)</span></FormLabel><FormControl><Input placeholder="+27..." {...field} /></FormControl><FormMessage /></FormItem>
                                                 )} />
                                             </div>
+                                             <FormField
+                                                control={form.control}
+                                                name="guests"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Number of Guests</FormLabel>
+                                                        <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={String(field.value)}>
+                                                            <FormControl>
+                                                                <SelectTrigger>
+                                                                    <SelectValue placeholder="Select number of guests" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                {[1, 2, 3, 4].map(num => (
+                                                                    <SelectItem key={num} value={String(num)}>
+                                                                        {num} {num > 1 ? 'Guests' : 'Guest'}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
                                             <FormField control={form.control} name="message" render={({ field }) => (
                                                 <FormItem><FormLabel>Your Message</FormLabel><FormControl><Textarea placeholder="Tell us about your query..." rows={4} {...field} /></FormControl><FormMessage /></FormItem>
                                             )} />
