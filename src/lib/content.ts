@@ -1,5 +1,4 @@
 import { db } from './db';
-import { unstable_noStore as noStore } from 'next/cache';
 
 export interface Amenity {
     id: number;
@@ -172,7 +171,6 @@ function shapeContent(rows: any[]): WebsiteContent {
 
 
 export async function getContent(): Promise<WebsiteContent> {
-    noStore(); // Opt out of caching for this function
     try {
         const { rows } = await db.query('SELECT section, content_key, content_value FROM page_content');
         return shapeContent(rows);
@@ -184,7 +182,6 @@ export async function getContent(): Promise<WebsiteContent> {
 }
 
 export async function getAmenities(): Promise<Amenity[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT id, icon, text, sort_order FROM amenities ORDER BY sort_order ASC');
         return rows as Amenity[];
@@ -195,7 +192,6 @@ export async function getAmenities(): Promise<Amenity[]> {
 }
 
 export async function getFacilities(): Promise<Facility[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT id, icon, category, items, sort_order FROM facilities ORDER BY sort_order ASC');
         return rows as Facility[];
@@ -206,7 +202,6 @@ export async function getFacilities(): Promise<Facility[]> {
 }
 
 export async function getFaqs(): Promise<FAQ[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT id, question, answer, sort_order FROM faq ORDER BY sort_order ASC');
         return rows as FAQ[];
@@ -217,7 +212,6 @@ export async function getFaqs(): Promise<FAQ[]> {
 }
 
 export async function getActivities(): Promise<Activity[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT id, icon, title, description, image_src, sort_order FROM activities ORDER BY sort_order ASC');
         return rows as Activity[];
@@ -228,7 +222,6 @@ export async function getActivities(): Promise<Activity[]> {
 }
 
 export async function getGalleryImages(section: string): Promise<GalleryImage[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT id, src, alt, section, sort_order FROM gallery_images WHERE section = $1 ORDER BY sort_order ASC', [section]);
         return rows as GalleryImage[];
@@ -239,7 +232,6 @@ export async function getGalleryImages(section: string): Promise<GalleryImage[]>
 }
 
 export async function getReviews(): Promise<Review[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT id, quote, author, rating, source, sort_order FROM reviews ORDER BY sort_order ASC');
         return rows as Review[];
@@ -250,7 +242,6 @@ export async function getReviews(): Promise<Review[]> {
 }
 
 export async function getInquiries(): Promise<Inquiry[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT 50');
         return rows as Inquiry[];
@@ -261,7 +252,6 @@ export async function getInquiries(): Promise<Inquiry[]> {
 }
 
 export async function getPageSections(): Promise<PageSection[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT * FROM page_sections WHERE is_visible = TRUE ORDER BY sort_order ASC');
         if (rows.length === 0) throw new Error("No sections found");
@@ -284,7 +274,6 @@ export async function getPageSections(): Promise<PageSection[]> {
 }
 
 export async function getAllPageSections(): Promise<PageSection[]> {
-    noStore();
     try {
         const { rows } = await db.query('SELECT * FROM page_sections ORDER BY sort_order ASC');
         if (rows.length === 0) {
