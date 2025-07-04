@@ -36,7 +36,7 @@ export default function Header() {
   }`;
 
   const linkClasses = `text-lg font-serif font-bold transition-colors duration-300 ${
-    isScrolled ? 'text-primary' : 'text-white drop-shadow-md'
+    isScrolled ? 'text-primary' : 'text-primary-foreground [text-shadow:1px_1px_2px_rgba(0,0,0,0.5)]'
   }`;
 
   const DesktopNav = () => (
@@ -45,10 +45,10 @@ export default function Header() {
         <Link key={link.href} href={link.href} passHref>
           <Button
             variant="link"
-            className={`text-lg font-bold transition-colors duration-300 ${
+            className={`text-base font-semibold transition-colors duration-300 ${
               isScrolled
                 ? 'text-foreground hover:text-primary'
-                : 'text-white hover:text-white/80 drop-shadow-md'
+                : 'text-primary-foreground hover:text-primary-foreground/80 [text-shadow:1px_1px_2px_rgba(0,0,0,0.5)]'
             }`}
           >
             {link.label}
@@ -57,7 +57,7 @@ export default function Header() {
       ))}
       <Link href="#booking" passHref>
         <Button
-          className={`transition-all duration-300 bg-accent hover:bg-accent/90 text-accent-foreground`}
+          className={`bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold transform transition-transform duration-200 hover:scale-105 active:scale-95`}
         >
           Book Now
         </Button>
@@ -71,7 +71,7 @@ export default function Header() {
         <Link key={link.href} href={link.href} passHref>
           <Button
             variant="link"
-            className="text-2xl h-auto text-foreground hover:text-primary justify-start"
+            className="text-xl h-auto font-semibold text-foreground hover:text-primary justify-start"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             {link.label}
@@ -80,7 +80,7 @@ export default function Header() {
       ))}
       <Link href="#booking" passHref>
         <Button
-          className="bg-accent hover:bg-accent/90 text-accent-foreground text-2xl h-auto"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground text-xl h-auto font-semibold transform transition-transform hover:scale-105 active:scale-95"
           onClick={() => setIsMobileMenuOpen(false)}
         >
           Book Now
