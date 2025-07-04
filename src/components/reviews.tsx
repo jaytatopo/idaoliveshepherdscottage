@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 interface ReviewsProps {
   content: {
@@ -37,11 +38,14 @@ const renderStars = (rating: number) => {
 };
 
 // Reusable ReviewCard component
-const ReviewCard = ({ review }: { review: Review }) => (
+const ReviewCard = ({ review, truncate = false }: { review: Review, truncate?: boolean }) => (
     <Card className="flex flex-col bg-background/80 backdrop-blur-sm shadow-md h-full">
         <CardContent className="p-6 flex-grow flex flex-col">
             <div className="flex mb-2">{renderStars(review.rating)}</div>
-            <blockquote className="text-muted-foreground italic flex-grow">
+            <blockquote className={cn(
+              "text-muted-foreground italic flex-grow",
+              truncate && "line-clamp-4"
+            )}>
                 "{review.quote}"
             </blockquote>
         </CardContent>
@@ -83,7 +87,7 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {reviewsToShow.map((testimonial) => (
-            <ReviewCard key={testimonial.id} review={testimonial} />
+            <ReviewCard key={testimonial.id} review={testimonial} truncate={true} />
           ))}
         </div>
 
