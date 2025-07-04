@@ -21,8 +21,6 @@ function AdminSidebar() {
 
   return (
     <Sidebar>
-      <SheetTitle className="sr-only">Admin Menu</SheetTitle>
-      <SheetDescription className="sr-only">Navigate the admin panel using the links below.</SheetDescription>
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <Avatar>
