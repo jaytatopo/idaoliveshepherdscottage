@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Loader } from "lucide-react";
 import type { Activity, Amenity, Review, Facility, FAQ } from '@/lib/content';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -20,7 +20,17 @@ import {
     addFacility, updateFacility, deleteFacility,
     addFaq, updateFaq, deleteFaq,
 } from '@/app/actions/content-actions';
+import { useFormStatus } from 'react-dom';
 
+
+function DeleteCrudButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" variant="ghost" size="icon" className="text-destructive" disabled={pending}>
+            {pending ? <Loader className="h-5 w-5 animate-spin" /> : <Trash2 />}
+        </Button>
+    );
+}
 
 // AMENITIES
 function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => void }) {
@@ -96,7 +106,7 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
                     </DialogContent>
                 </Dialog>
                 <form action={handleDelete} className="inline-block">
-                    <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                    <DeleteCrudButton />
                 </form>
             </TableCell>
         </TableRow>
@@ -230,7 +240,7 @@ function ActivityRow({ activity }: { activity: Activity }) {
                     </DialogContent>
                 </Dialog>
                 <form action={handleDelete} className="inline-block">
-                    <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                    <DeleteCrudButton />
                 </form>
             </TableCell>
         </TableRow>
@@ -349,7 +359,7 @@ function ReviewRow({ review }: { review: Review }) {
                     </DialogContent>
                 </Dialog>
                 <form action={handleDelete} className="inline-block">
-                    <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
+                    <DeleteCrudButton />
                 </form>
             </TableCell>
         </TableRow>
@@ -457,7 +467,7 @@ function FacilityRow({ facility }: { facility: Facility }) {
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
                     <DialogContent><DialogHeader><DialogTitle>Edit Facility Category</DialogTitle></DialogHeader><FacilityForm facility={facility} onDone={() => setIsEditOpen(false)} /></DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block"><Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button></form>
+                <form action={handleDelete} className="inline-block"><DeleteCrudButton /></form>
             </TableCell>
         </TableRow>
     );
@@ -553,7 +563,7 @@ function FaqRow({ faq }: { faq: FAQ }) {
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
                     <DialogContent><DialogHeader><DialogTitle>Edit FAQ</DialogTitle></DialogHeader><FaqForm faq={faq} onDone={() => setIsEditOpen(false)} /></DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block"><Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button></form>
+                <form action={handleDelete} className="inline-block"><DeleteCrudButton /></form>
             </TableCell>
         </TableRow>
     );

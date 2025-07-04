@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, Trash2 } from "lucide-react";
+import { Upload, Trash2, Loader } from "lucide-react";
 import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
@@ -41,7 +41,7 @@ function DeleteButton() {
     const { pending } = useFormStatus();
     return (
         <Button type="submit" variant="destructive" size="icon" className="h-8 w-8" disabled={pending}>
-            <Trash2 className="h-4 w-4" />
+            {pending ? <Loader className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
         </Button>
     )
 }

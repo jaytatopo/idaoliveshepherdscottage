@@ -1,5 +1,4 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -9,6 +8,7 @@ import { updateContent } from "@/app/actions/content-actions";
 import { getContent, getGalleryImages } from '@/lib/content';
 import { ImageUploadSection } from "../content-image-forms";
 import { ContentSubmitButton } from "../content-submit-button";
+import { PublishButton } from "../publish-button";
 
 export default async function ContentPage() {
     const content = await getContent();
@@ -35,7 +35,7 @@ export default async function ContentPage() {
                     <p className="text-muted-foreground">Manage your website's text and images.</p>
                 </div>
                  <form action={async () => { 'use server'; revalidatePath('/', 'layout'); revalidatePath('/admin/dashboard', 'layout'); }}>
-                    <Button>Publish Changes</Button>
+                    <PublishButton />
                 </form>
             </header>
             
