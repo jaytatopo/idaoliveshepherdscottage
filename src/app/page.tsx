@@ -1,4 +1,5 @@
 
+import React from 'react';
 import Header from '@/components/header';
 import Hero from '@/components/hero';
 import Accommodation from '@/components/accommodation';
@@ -8,64 +9,124 @@ import Reviews from '@/components/reviews';
 import Location from '@/components/location';
 import Gallery from '@/components/gallery';
 import Facilities from '@/components/facilities';
+import Amenities from '@/components/amenities';
 import Footer from '@/components/footer';
-import { getContent, getAmenities, getActivities, getGalleryImages, getReviews as fetchReviews } from '@/lib/content';
+import { getContent, getAmenities as fetchAmenities, getActivities as fetchActivities, getGalleryImages, getReviews as fetchReviews, getPageSections } from '@/lib/content';
+import DecorativeSeparator from '@/components/ui/decorative-separator';
 
 export const revalidate = 3600; // Revalidate at most every hour
 
+const sectionComponents: { [key: string]: React.ComponentType<any> } = {
+  hero: Hero,
+  accommodation: Accommodation,
+  amenities: Amenities,
+  facilities: Facilities,
+  activities: Activities,
+  gallery: Gallery,
+  booking: Booking,
+  reviews: Reviews,
+  location: Location,
+};
+
+async function getAllData() {
+    const [
+        content,
+        amenities,
+        activities,
+        reviews,
+        accommodationGalleryImages,
+        heroImage,
+        accommodationBg,
+        amenitiesBg,
+        facilitiesBg,
+        activitiesBg,
+        reviewsBg,
+        bookingBg,
+        locationBg,
+    ] = await Promise.all([
+        getContent(),
+        fetchAmenities(),
+        fetchActivities(),
+        fetchReviews(),
+        getGalleryImages('accommodation'),
+        getGalleryImages('hero').then(images => images[0]),
+        getGalleryImages('accommodation_bg').then(images => images[0]),
+        getGalleryImages('amenities_bg').then(images => images[0]),
+        getGalleryImages('facilities_bg').then(images => images[0]),
+        getGalleryImages('activities_bg').then(images => images[0]),
+        getGalleryImages('reviews').then(images => images[0]),
+        getGalleryImages('booking_bg').then(images => images[0]),
+        getGalleryImages('location_bg').then(images => images[0]),
+    ]);
+
+    return {
+        content,
+        amenities,
+        activities,
+        reviews,
+        accommodationGalleryImages,
+        backgrounds: {
+            hero: heroImage,
+            accommodation: accommodationBg,
+            amenities: amenitiesBg,
+            facilities: facilitiesBg,
+            activities: activitiesBg,
+            reviews: reviewsBg,
+            booking: bookingBg,
+            location: locationBg,
+        },
+    };
+}
+
+
 export default async function Home() {
-  const content = await getContent();
-  const amenities = await getAmenities();
-  const activities = await getActivities();
-  const accommodationGalleryImages = await getGalleryImages('accommodation');
-  const heroImage = (await getGalleryImages('hero'))[0];
-  const reviewsData = await fetchReviews();
-  const phone = content.location?.phone;
+  const pageSections = await getPageSections();
+  const allData = await getAllData();
 
-  // Fetch all optional background images
-  const accommodationBg = (await getGalleryImages('accommodation_bg'))[0];
-  const facilitiesBg = (await getGalleryImages('facilities_bg'))[0];
-  const activitiesBg = (await getGalleryImages('activities_bg'))[0];
-  const reviewsBg = (await getGalleryImages('reviews'))[0];
-  const bookingBg = (await getGalleryImages('booking_bg'))[0];
-  const locationBg = (await getGalleryImages('location_bg'))[0];
-
+  const getSectionProps = (type: string) => {
+    switch (type) {
+      case 'hero':
+        return { content: allData.content.hero, image: allData.backgrounds.hero };
+      case 'accommodation':
+        return { content: allData.content.accommodation, images: allData.accommodationGalleryImages.slice(0, 2), imageBg: allData.backgrounds.accommodation };
+      case 'gallery':
+        return { galleryImages: allData.accommodationGalleryImages };
+      case 'amenities':
+        return { content: allData.content.amenities, amenities: allData.amenities, imageBg: allData.backgrounds.amenities };
+      case 'facilities':
+        return { content: allData.content.facilities, imageBg: allData.backgrounds.facilities };
+      case 'activities':
+        return { content: allData.content.activities, activities: allData.activities, imageBg: allData.backgrounds.activities };
+      case 'booking':
+        return { content: allData.content.booking, phone: allData.content.location?.phone, imageBg: allData.backgrounds.booking };
+      case 'reviews':
+        return { content: allData.content.reviews, reviews: allData.reviews, imageBg: allData.backgrounds.reviews };
+      case 'location':
+        return { content: allData.content.location, imageBg: allData.backgrounds.location };
+      default:
+        return {};
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <Hero content={content.hero} image={heroImage} />
-        <Accommodation 
-          content={content.accommodation} 
-          images={accommodationGalleryImages.slice(0, 2)}
-          imageBg={accommodationBg}
-        />
-        <Gallery galleryImages={accommodationGalleryImages} />
-        <Facilities
-          content={content.facilities}
-          amenities={amenities}
-          imageBg={facilitiesBg}
-        />
-        <Activities 
-          content={content.activities} 
-          activities={activities}
-          imageBg={activitiesBg}
-        />
-        <Booking 
-          content={content.booking} 
-          phone={phone}
-          imageBg={bookingBg}
-        />
-        <Reviews 
-          content={content.reviews} 
-          reviews={reviewsData} 
-          imageBg={reviewsBg} 
-        />
-        <Location 
-          content={content.location}
-          imageBg={locationBg}
-        />
+        {pageSections.map((section, index) => {
+            if (!section.is_visible) return null;
+            const Component = sectionComponents[section.section_type];
+            if (!Component) return null;
+
+            const isFirstSection = index === 0;
+            const isHero = section.section_type === 'hero';
+
+            return (
+                <React.Fragment key={section.id}>
+                    {!isHero && <DecorativeSeparator />}
+                    <Component {...getSectionProps(section.section_type)} />
+                </React.Fragment>
+            );
+        })}
       </main>
       <Footer />
     </div>

@@ -15,6 +15,7 @@ export default async function ContentPage() {
     const heroImage = await getGalleryImages('hero');
     const reviewsImage = await getGalleryImages('reviews');
     const accommodationBg = await getGalleryImages('accommodation_bg');
+    const amenitiesBg = await getGalleryImages('amenities_bg');
     const facilitiesBg = await getGalleryImages('facilities_bg');
     const activitiesBg = await getGalleryImages('activities_bg');
     const bookingBg = await getGalleryImages('booking_bg');
@@ -71,9 +72,21 @@ export default async function ContentPage() {
                                     <Textarea id="accommodation_secondary_text" name="accommodation_secondary_text" rows={5} defaultValue={content.accommodation?.secondary_text} />
                                 </div>
                             </div>
+                            
+                            <div className="space-y-4 p-4 border rounded-lg">
+                                <h3 className="font-semibold font-serif text-lg">Amenities Section (What We Offer)</h3>
+                                 <div className="space-y-2">
+                                    <Label htmlFor="amenities_heading">Heading</Label>
+                                    <Input id="amenities_heading" name="amenities_heading" defaultValue={content.amenities?.heading} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="amenities_subheading">Subheading</Label>
+                                    <Textarea id="amenities_subheading" name="amenities_subheading" defaultValue={content.amenities?.subheading} />
+                                </div>
+                            </div>
 
                             <div className="space-y-4 p-4 border rounded-lg">
-                                <h3 className="font-semibold font-serif text-lg">Facilities & Amenities Section</h3>
+                                <h3 className="font-semibold font-serif text-lg">Facilities Section</h3>
                                  <div className="space-y-2">
                                     <Label htmlFor="facilities_heading">Heading</Label>
                                     <Input id="facilities_heading" name="facilities_heading" defaultValue={content.facilities?.heading} />
@@ -216,15 +229,9 @@ export default async function ContentPage() {
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="gallery" className="w-full">
-                        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
-                            <TabsTrigger value="gallery">Gallery</TabsTrigger>
-                            <TabsTrigger value="hero">Hero BG</TabsTrigger>
-                            <TabsTrigger value="accommodation">Accom. BG</TabsTrigger>
-                            <TabsTrigger value="facilities">Facilities BG</TabsTrigger>
-                            <TabsTrigger value="activities">Activities BG</TabsTrigger>
-                            <TabsTrigger value="reviews">Reviews BG</TabsTrigger>
-                            <TabsTrigger value="booking">Booking BG</TabsTrigger>
-                            <TabsTrigger value="location">Location BG</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="gallery">Accommodation Gallery</TabsTrigger>
+                            <TabsTrigger value="backgrounds">Section Backgrounds</TabsTrigger>
                         </TabsList>
                         <TabsContent value="gallery" className="mt-6">
                             <ImageUploadSection 
@@ -235,7 +242,7 @@ export default async function ContentPage() {
                                 isSingleton={false}
                             />
                         </TabsContent>
-                        <TabsContent value="hero" className="mt-6">
+                        <TabsContent value="backgrounds" className="mt-6 grid md:grid-cols-2 gap-6">
                              <ImageUploadSection 
                                 section="hero"
                                 title="Hero Section Background"
@@ -243,8 +250,6 @@ export default async function ContentPage() {
                                 images={heroImage}
                                 isSingleton={true}
                             />
-                        </TabsContent>
-                         <TabsContent value="accommodation" className="mt-6">
                              <ImageUploadSection 
                                 section="accommodation_bg"
                                 title="Accommodation Section Background"
@@ -252,8 +257,13 @@ export default async function ContentPage() {
                                 images={accommodationBg}
                                 isSingleton={true}
                             />
-                        </TabsContent>
-                        <TabsContent value="facilities" className="mt-6">
+                            <ImageUploadSection 
+                                section="amenities_bg"
+                                title="Amenities Section Background"
+                                description="Optional background image for the amenities section."
+                                images={amenitiesBg}
+                                isSingleton={true}
+                            />
                              <ImageUploadSection 
                                 section="facilities_bg"
                                 title="Facilities Section Background"
@@ -261,8 +271,6 @@ export default async function ContentPage() {
                                 images={facilitiesBg}
                                 isSingleton={true}
                             />
-                        </TabsContent>
-                         <TabsContent value="activities" className="mt-6">
                              <ImageUploadSection 
                                 section="activities_bg"
                                 title="Activities Section Background"
@@ -270,8 +278,6 @@ export default async function ContentPage() {
                                 images={activitiesBg}
                                 isSingleton={true}
                             />
-                        </TabsContent>
-                        <TabsContent value="reviews" className="mt-6">
                              <ImageUploadSection 
                                 section="reviews"
                                 title="Reviews Section Background"
@@ -279,8 +285,6 @@ export default async function ContentPage() {
                                 images={reviewsImage}
                                 isSingleton={true}
                             />
-                        </TabsContent>
-                         <TabsContent value="booking" className="mt-6">
                              <ImageUploadSection 
                                 section="booking_bg"
                                 title="Booking Section Background"
@@ -288,8 +292,6 @@ export default async function ContentPage() {
                                 images={bookingBg}
                                 isSingleton={true}
                             />
-                        </TabsContent>
-                         <TabsContent value="location" className="mt-6">
                              <ImageUploadSection 
                                 section="location_bg"
                                 title="Location Section Background"

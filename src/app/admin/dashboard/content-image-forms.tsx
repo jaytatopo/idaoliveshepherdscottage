@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 
-type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'facilities_bg' | 'activities_bg' | 'booking_bg' | 'location_bg';
+type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'amenities_bg' | 'facilities_bg' | 'activities_bg' | 'booking_bg' | 'location_bg';
 
 interface ImageUploadSectionProps {
     section: SectionType;
@@ -83,7 +83,7 @@ export function ImageUploadSection({ section, title, description, images, isSing
             <CardContent>
                 {isSingleton ? (
                     <div className="space-y-4">
-                        {firstImage ? (
+                        {firstImage && firstImage.src ? (
                             <div className="relative group w-full max-w-sm">
                                 <Image src={firstImage.src} alt={firstImage.alt} width={300} height={180} className="rounded-md object-cover aspect-video"/>
                                 <form action={() => handleDelete(firstImage.id)} className="absolute top-2 right-2">
@@ -103,7 +103,7 @@ export function ImageUploadSection({ section, title, description, images, isSing
                                     <Input id={`${section}_alt_text`} name="alt" type="text" placeholder="e.g., View from the stoep" required/>
                                 </div>
                                 <input type="hidden" name="section" value={section} />
-                                <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage} />
+                                <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage?.src} />
                             </div>
                         </form>
                     </div>

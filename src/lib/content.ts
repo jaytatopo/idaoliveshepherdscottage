@@ -46,6 +46,14 @@ export interface Inquiry {
     created_at: string;
 }
 
+export interface PageSection {
+    id: number;
+    section_type: string;
+    title: string;
+    is_visible: boolean;
+    sort_order: number;
+}
+
 
 type ContentValue = {
     [key: string]: string;
@@ -69,9 +77,13 @@ function shapeContent(rows: any[]): WebsiteContent {
             main_text: `Ida Olive Shepherd's Cottage is a sanctuary on the Giddy Goat Farm—a working dairy goat farm and wildlife sanctuary. It features beautifully restored stone and timber architecture, offering a unique "rustic-luxe" feel.\n\nThe property is completely off-grid, making it ideal for nature lovers wanting to disconnect and reconnect with the serene surroundings of the endangered Robertson Succulent Karoo.`,
             secondary_text: 'The cottage accommodates a maximum of 4 adults, perfect for a romantic getaway or a quiet retreat with friends. It includes two bedrooms (one king, one queen) and a main bathroom with a bath, walk-in indoor shower, and a separate outdoor shower for a truly immersive nature experience.',
         },
+        amenities: {
+            heading: 'What We Offer',
+            subheading: 'Curated comforts for an unforgettable off-grid experience.'
+        },
         facilities: {
-            heading: 'Facilities & Amenities',
-            subheading: 'Everything you need for a comfortable off-grid stay.',
+            heading: 'Facilities',
+            subheading: 'Details about the cottage facilities.',
             power_tech_items: 'Completely off-grid (no mains electricity).\nLighting: Solar lamps, candles, and fairy lights create a magical ambiance.\nA mini solar panel is available for phones and USB fans.\nConnectivity: No Wi-Fi. Limited mobile signal in specific spots.',
             kitchen_living_items: 'Fully-equipped open-plan kitchen.\nGas stove and gas refrigerator.\nAll necessary kitchenware and cleaning products provided.\nCozy lounge with an indoor, wood-burning fireplace.',
             outdoor_living_items: 'Private plunge pool to cool off.\nShaded patio (stoep) with outdoor dining area.\nBoma-style braai area for cooking under the stars.\nConvenient gas braai on the verandah.',
@@ -190,6 +202,40 @@ export async function getInquiries(): Promise<Inquiry[]> {
         return rows as Inquiry[];
     } catch (error) {
         console.error("Failed to fetch inquiries:", error);
+        return [];
+    }
+}
+
+export async function getPageSections(): Promise<PageSection[]> {
+    noStore();
+    try {
+        const [rows] = await db.query('SELECT * FROM page_sections WHERE is_visible = TRUE ORDER BY sort_order ASC');
+        if ((rows as any[]).length === 0) throw new Error("No sections found");
+        return rows as PageSection[];
+    } catch (error) {
+        console.error("Failed to fetch page sections, returning default order:", error);
+        // Fallback to a default order if table doesn't exist or is empty
+        return [
+            { id: 1, section_type: 'hero', title: 'Hero', is_visible: true, sort_order: 10 },
+            { id: 2, section_type: 'accommodation', title: 'Accommodation', is_visible: true, sort_order: 20 },
+            { id: 3, section_type: 'amenities', title: 'Amenities', is_visible: true, sort_order: 30 },
+            { id: 4, section_type: 'facilities', title: 'Facilities', is_visible: true, sort_order: 40 },
+            { id: 5, section_type: 'activities', title: 'Activities', is_visible: true, sort_order: 50 },
+            { id: 6, section_type: 'gallery', title: 'Gallery', is_visible: true, sort_order: 60 },
+            { id: 7, section_type: 'booking', title: 'Rates & Booking', is_visible: true, sort_order: 70 },
+            { id: 8, section_type: 'reviews', title: 'Reviews', is_visible: true, sort_order: 80 },
+            { id: 9, section_type: 'location', title: 'Location', is_visible: true, sort_order: 90 },
+        ];
+    }
+}
+
+export async function getAllPageSections(): Promise<PageSection[]> {
+    noStore();
+    try {
+        const [rows] = await db.query('SELECT * FROM page_sections ORDER BY sort_order ASC');
+        return rows as PageSection[];
+    } catch (error) {
+        console.error("Failed to fetch all page sections:", error);
         return [];
     }
 }

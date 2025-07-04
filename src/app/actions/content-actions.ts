@@ -3,6 +3,7 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import type { PageSection } from '@/lib/content';
 
 const MAX_FILE_SIZE_MB = 3;
 
@@ -61,6 +62,7 @@ export async function uploadGalleryImage(formData: FormData) {
         'hero', 
         'reviews',
         'accommodation_bg',
+        'amenities_bg',
         'facilities_bg',
         'activities_bg',
         'booking_bg',
@@ -346,3 +348,22 @@ export async function deleteReview(id: number) {
         return { success: false, message: 'Database error.' };
     }
 };
+
+// --- Page Layout Actions ---
+export async function updatePageLayout(sections: PageSection[]) {
+    try {
+        const queries = sections.map(section => 
+            db.execute(
+                'UPDATE page_sections SET sort_order = ?, is_visible = ? WHERE id = ?',
+                [section.sort_order, section.is_visible, section.id]
+            )
+        );
+        await Promise.all(queries);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/layout');
+        return { success: true };
+    } catch (error) {
+        console.error('Failed to update page layout:', error);
+        return { success: false, message: 'Database error while updating layout.' };
+    }
+}

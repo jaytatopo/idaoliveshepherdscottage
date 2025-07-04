@@ -1,7 +1,7 @@
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
 import { Card } from './ui/card';
-import { BedDouble, Users, ZapOff } from 'lucide-react';
+import { BedDouble, Users, ZapOff, Leaf } from 'lucide-react';
 
 interface AccommodationContent {
   heading: string;
@@ -21,7 +21,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
   const image2 = images?.[1];
 
   return (
-    <section id="accommodation" className="relative py-10 md:py-12 bg-card">
+    <section id="accommodation" className="relative py-16 md:py-24 bg-card">
       {imageBg && (
         <Image
           src={imageBg.src}
@@ -33,7 +33,11 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">{content.heading}</h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up flex items-center justify-center gap-3">
+            <Leaf className="w-7 h-7 text-primary/80" />
+            {content.heading}
+            <Leaf className="w-7 h-7 text-primary/80 scale-x-[-1]" />
+          </h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}
           </p>
@@ -68,17 +72,17 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
         )}
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
-            <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:300ms] bg-background/70">
+            <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:300ms] bg-background/70 backdrop-blur-sm">
                 <Users className="w-10 h-10 text-primary mb-3"/>
                 <h4 className="font-serif font-semibold text-lg">Sleeps 4 Adults</h4>
                 <p className="text-sm text-muted-foreground">Max capacity, ideal for 2</p>
             </Card>
-            <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:400ms] bg-background/70">
+            <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:400ms] bg-background/70 backdrop-blur-sm">
                 <BedDouble className="w-10 h-10 text-primary mb-3"/>
                 <h4 className="font-serif font-semibold text-lg">2 Bedrooms</h4>
                 <p className="text-sm text-muted-foreground">1 King Bed, 1 Queen Bed</p>
             </Card>
-             <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:500ms] bg-background/70">
+             <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:500ms] bg-background/70 backdrop-blur-sm">
                 <ZapOff className="w-10 h-10 text-primary mb-3"/>
                 <h4 className="font-serif font-semibold text-lg">Off-Grid Serenity</h4>
                 <p className="text-sm text-muted-foreground">Unplug and reconnect</p>

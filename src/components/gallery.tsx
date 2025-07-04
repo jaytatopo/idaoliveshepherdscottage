@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Plus, Leaf } from 'lucide-react';
 import type { GalleryImage } from '@/lib/content';
 
 interface GalleryProps {
@@ -38,18 +38,22 @@ export default function Gallery({ galleryImages }: GalleryProps) {
     }
   };
 
-  const imagesToShow = galleryImages.slice(0, galleryImages.length > 9 ? 8 : 9);
+  const imagesToShow = galleryImages.slice(0, galleryImages.length > 8 ? 7 : 8);
 
   return (
-    <section id="gallery" className="relative py-10 md:py-12 bg-card overflow-hidden">
+    <section id="gallery" className="relative py-16 md:py-24 bg-card overflow-hidden">
         <div className="relative z-10 container mx-auto px-4 md:px-6">
             <div className="text-center mb-12">
-                <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">Gallery</h2>
+                <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up flex items-center justify-center gap-3">
+                    <Leaf className="w-7 h-7 text-primary/80" />
+                    Gallery
+                    <Leaf className="w-7 h-7 text-primary/80 scale-x-[-1]" />
+                </h2>
                 <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
                     Step inside and discover the comfort and charm of Ida Olive.
                 </p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {imagesToShow.map((img, index) => (
                     <button
                     key={img.id}
@@ -66,17 +70,17 @@ export default function Gallery({ galleryImages }: GalleryProps) {
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>
                 ))}
-                {galleryImages.length > 9 && (
+                {galleryImages.length > 8 && (
                     <button
                         key="view-more"
-                        onClick={() => handleOpen(8)}
+                        onClick={() => handleOpen(7)}
                         className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80 opacity-0 animate-fade-in"
                         style={{ animationDelay: `${300 + imagesToShow.length * 75}ms` }}
                     >
                         <div className="text-center text-muted-foreground">
                         <Plus className="h-8 w-8 mx-auto" />
                         <span className="text-sm font-medium mt-1">
-                            +{galleryImages.length - 8} More
+                            +{galleryImages.length - 7} More
                         </span>
                         </div>
                     </button>
