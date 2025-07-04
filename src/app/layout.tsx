@@ -3,6 +3,8 @@ import { Inter, Lora } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,6 +33,8 @@ export default function RootLayout({
         {children}
         <Toaster />
         <CookieBanner />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
