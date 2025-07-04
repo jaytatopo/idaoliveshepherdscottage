@@ -167,7 +167,7 @@ export async function addAmenity(formData: FormData) {
         await db.execute(`INSERT INTO amenities (${columns}) VALUES (${placeholders})`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Amenity added successfully.' };
     } catch (error: any) {
         console.error(`Failed to add to amenities:`, error);
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
@@ -184,7 +184,7 @@ export async function updateAmenity(id: number, formData: FormData) {
         await db.execute(`UPDATE amenities SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Amenity updated successfully.' };
     } catch (error: any) {
         console.error(`Failed to update amenity:`, error);
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
@@ -196,7 +196,7 @@ export async function deleteAmenity(id: number) {
         await db.execute(`DELETE FROM amenities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Amenity deleted successfully.' };
     } catch (error: any) {
         console.error(`Failed to delete from amenities:`, error);
         return { success: false, message: `Database error: ${error.message}` };
@@ -250,7 +250,7 @@ export async function addActivity(formData: FormData) {
 
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Activity added successfully.' };
     } catch (error: any) {
         console.error(`Failed to add to activities:`, error);
         if (error.code === '22001') {
@@ -286,7 +286,7 @@ export async function updateActivity(id: number, formData: FormData) {
 
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Activity updated successfully.' };
     } catch (error: any) {
         console.error(`Failed to update activity:`, error);
         if (error.code === '22001') {
@@ -302,7 +302,7 @@ export async function deleteActivity(id: number) {
         await db.execute(`DELETE FROM activities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Activity deleted successfully.' };
     } catch (error: any) {
         console.error(`Failed to delete from activities:`, error);
         return { success: false, message: `Database error: ${error.message}` };
@@ -330,7 +330,7 @@ export async function addReview(formData: FormData) {
         await db.execute(`INSERT INTO reviews (${columns}) VALUES (${placeholders})`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Review added successfully.' };
     } catch (error: any) {
         console.error(`Failed to add to reviews:`, error);
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
@@ -347,7 +347,7 @@ export async function updateReview(id: number, formData: FormData) {
         await db.execute(`UPDATE reviews SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Review updated successfully.' };
     } catch (error: any) {
         console.error(`Failed to update review:`, error);
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
@@ -359,7 +359,7 @@ export async function deleteReview(id: number) {
         await db.execute(`DELETE FROM reviews WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
-        return { success: true };
+        return { success: true, message: 'Review deleted successfully.' };
     } catch (error: any) {
         console.error(`Failed to delete from reviews:`, error);
         return { success: false, message: `Database error: ${error.message}` };
@@ -384,7 +384,7 @@ export async function addFacility(formData: FormData) {
         await db.execute(`INSERT INTO facilities (${columns}) VALUES (${placeholders})`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
-        return { success: true };
+        return { success: true, message: 'Facility category added successfully.' };
     } catch (error: any) {
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
@@ -399,7 +399,7 @@ export async function updateFacility(id: number, formData: FormData) {
         await db.execute(`UPDATE facilities SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
-        return { success: true };
+        return { success: true, message: 'Facility category updated successfully.' };
     } catch (error: any) {
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
@@ -410,7 +410,7 @@ export async function deleteFacility(id: number) {
         await db.execute(`DELETE FROM facilities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/facilities');
-        return { success: true };
+        return { success: true, message: 'Facility category deleted successfully.' };
     } catch (error: any) {
         return { success: false, message: `Database error: ${error.message}` };
     }
@@ -434,7 +434,7 @@ export async function addFaq(formData: FormData) {
         await db.execute(`INSERT INTO faq (${columns}) VALUES (${placeholders})`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
-        return { success: true };
+        return { success: true, message: 'FAQ added successfully.' };
     } catch (error: any) {
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
@@ -449,7 +449,7 @@ export async function updateFaq(id: number, formData: FormData) {
         await db.execute(`UPDATE faq SET ${setClauses} WHERE id = $${values.length}`, values);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
-        return { success: true };
+        return { success: true, message: 'FAQ updated successfully.' };
     } catch (error: any) {
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
@@ -460,7 +460,7 @@ export async function deleteFaq(id: number) {
         await db.execute(`DELETE FROM faq WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/faq');
-        return { success: true };
+        return { success: true, message: 'FAQ deleted successfully.' };
     } catch (error: any) {
         return { success: false, message: `Database error: ${error.message}` };
     }

@@ -1,11 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { format } from 'date-fns';
 import type { Inquiry } from '@/lib/content';
 import { getInquiries } from '@/lib/content';
 import { deleteInquiry } from '@/app/actions/content-actions';
+import { DeleteActionButton } from "./delete-action-button";
 
 export default async function DashboardPage() {
     const inquiries = await getInquiries();
@@ -48,9 +47,10 @@ export default async function DashboardPage() {
                                             {format(new Date(inquiry.created_at), "PP")}
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <form action={deleteInquiry.bind(null, inquiry.id)}>
-                                                <Button type="submit" variant="ghost" size="icon" className="text-destructive"><Trash2 /></Button>
-                                            </form>
+                                            <DeleteActionButton
+                                                itemName={`inquiry from ${inquiry.name}`}
+                                                deleteAction={deleteInquiry.bind(null, inquiry.id)}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))

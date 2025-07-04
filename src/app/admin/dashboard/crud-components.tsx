@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, Edit, Trash2, Loader } from "lucide-react";
+import { PlusCircle, Edit } from "lucide-react";
 import type { Activity, Amenity, Review, Facility, FAQ } from '@/lib/content';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -20,17 +20,7 @@ import {
     addFacility, updateFacility, deleteFacility,
     addFaq, updateFaq, deleteFaq,
 } from '@/app/actions/content-actions';
-import { useFormStatus } from 'react-dom';
-
-
-function DeleteCrudButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button type="submit" variant="ghost" size="icon" className="text-destructive" disabled={pending}>
-            {pending ? <Loader className="h-5 w-5 animate-spin" /> : <Trash2 />}
-        </Button>
-    );
-}
+import { DeleteActionButton } from './delete-action-button';
 
 // AMENITIES
 function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => void }) {
@@ -44,7 +34,7 @@ function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => voi
         setIsSubmitting(true);
         const result = await action(formData);
         if (result.success) {
-            toast({ title: amenity ? 'Amenity Updated' : 'Amenity Added', description: 'Your changes have been saved successfully.' });
+            toast({ title: 'Success!', description: result.message });
             onDone();
         } else {
             toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
@@ -79,19 +69,8 @@ function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => voi
 }
 
 function AmenityRow({ amenity }: { amenity: Amenity }) {
-    const { toast } = useToast();
     const [isEditOpen, setIsEditOpen] = useState(false);
     
-    async function handleDelete() {
-        if (!confirm(`Are you sure you want to delete the amenity "${amenity.text}"?`)) return;
-        const result = await deleteAmenity(amenity.id);
-        if (result.success) {
-            toast({ title: 'Amenity Deleted', description: `The amenity "${amenity.text}" has been removed.` });
-        } else {
-            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
-        }
-    }
-
     return (
         <TableRow>
             <TableCell>{amenity.text}</TableCell>
@@ -105,9 +84,10 @@ function AmenityRow({ amenity }: { amenity: Amenity }) {
                         <AmenityForm amenity={amenity} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block">
-                    <DeleteCrudButton />
-                </form>
+                <DeleteActionButton 
+                    itemName={amenity.text}
+                    deleteAction={deleteAmenity.bind(null, amenity.id)}
+                />
             </TableCell>
         </TableRow>
     );
@@ -161,7 +141,7 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
         setIsSubmitting(true);
         const result = await action(formData);
         if (result.success) {
-            toast({ title: activity ? 'Activity Updated' : 'Activity Added', description: 'Your changes have been saved successfully.' });
+            toast({ title: 'Success!', description: result.message });
             onDone();
         } else {
             toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
@@ -210,18 +190,7 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
 }
 
 function ActivityRow({ activity }: { activity: Activity }) {
-    const { toast } = useToast();
     const [isEditOpen, setIsEditOpen] = useState(false);
-
-    async function handleDelete() {
-        if (!confirm(`Are you sure you want to delete the activity "${activity.title}"?`)) return;
-        const result = await deleteActivity(activity.id);
-        if (result.success) {
-            toast({ title: 'Activity Deleted', description: `The activity "${activity.title}" has been removed.` });
-        } else {
-            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
-        }
-    }
 
     return (
         <TableRow>
@@ -244,9 +213,10 @@ function ActivityRow({ activity }: { activity: Activity }) {
                         <ActivityForm activity={activity} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block">
-                    <DeleteCrudButton />
-                </form>
+                <DeleteActionButton 
+                    itemName={activity.title}
+                    deleteAction={deleteActivity.bind(null, activity.id)}
+                />
             </TableCell>
         </TableRow>
     );
@@ -300,7 +270,7 @@ function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void })
         setIsSubmitting(true);
         const result = await action(formData);
         if (result.success) {
-            toast({ title: review ? 'Review Updated' : 'Review Added', description: 'Your changes have been saved successfully.' });
+            toast({ title: 'Success!', description: result.message });
             onDone();
         } else {
             toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
@@ -342,18 +312,7 @@ function ReviewForm({ review, onDone }: { review?: Review, onDone: () => void })
 }
 
 function ReviewRow({ review }: { review: Review }) {
-    const { toast } = useToast();
     const [isEditOpen, setIsEditOpen] = useState(false);
-
-    async function handleDelete() {
-        if (!confirm(`Are you sure you want to delete the review by "${review.author}"?`)) return;
-        const result = await deleteReview(review.id);
-        if (result.success) {
-            toast({ title: 'Review Deleted', description: `The review by "${review.author}" has been removed.` });
-        } else {
-            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
-        }
-    }
 
     return (
         <TableRow>
@@ -370,9 +329,10 @@ function ReviewRow({ review }: { review: Review }) {
                         <ReviewForm review={review} onDone={() => setIsEditOpen(false)} />
                     </DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block">
-                    <DeleteCrudButton />
-                </form>
+                <DeleteActionButton 
+                    itemName={`review by ${review.author}`}
+                    deleteAction={deleteReview.bind(null, review.id)}
+                />
             </TableCell>
         </TableRow>
     );
@@ -423,7 +383,7 @@ function FacilityForm({ facility, onDone }: { facility?: Facility, onDone: () =>
         setIsSubmitting(true);
         const result = await action(formData);
         if (result.success) {
-            toast({ title: facility ? 'Facility Category Updated' : 'Facility Category Added' });
+            toast({ title: 'Success!', description: result.message });
             onDone();
         } else {
             toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
@@ -462,18 +422,7 @@ function FacilityForm({ facility, onDone }: { facility?: Facility, onDone: () =>
 }
 
 function FacilityRow({ facility }: { facility: Facility }) {
-    const { toast } = useToast();
     const [isEditOpen, setIsEditOpen] = useState(false);
-
-    async function handleDelete() {
-        if (!confirm(`Are you sure you want to delete the category "${facility.category}"?`)) return;
-        const result = await deleteFacility(facility.id);
-        if (result.success) {
-            toast({ title: 'Facility Deleted' });
-        } else {
-            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
-        }
-    }
 
     return (
         <TableRow>
@@ -486,7 +435,10 @@ function FacilityRow({ facility }: { facility: Facility }) {
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
                     <DialogContent><DialogHeader><DialogTitle>Edit Facility Category</DialogTitle></DialogHeader><FacilityForm facility={facility} onDone={() => setIsEditOpen(false)} /></DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block"><DeleteCrudButton /></form>
+                <DeleteActionButton 
+                    itemName={facility.category}
+                    deleteAction={deleteFacility.bind(null, facility.id)}
+                />
             </TableCell>
         </TableRow>
     );
@@ -531,7 +483,7 @@ function FaqForm({ faq, onDone }: { faq?: FAQ, onDone: () => void }) {
         setIsSubmitting(true);
         const result = await action(formData);
         if (result.success) {
-            toast({ title: faq ? 'FAQ Updated' : 'FAQ Added' });
+            toast({ title: 'Success!', description: result.message });
             onDone();
         } else {
             toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
@@ -565,18 +517,7 @@ function FaqForm({ faq, onDone }: { faq?: FAQ, onDone: () => void }) {
 }
 
 function FaqRow({ faq }: { faq: FAQ }) {
-    const { toast } = useToast();
     const [isEditOpen, setIsEditOpen] = useState(false);
-
-    async function handleDelete() {
-        if (!confirm(`Are you sure you want to delete this FAQ?`)) return;
-        const result = await deleteFaq(faq.id);
-        if (result.success) {
-            toast({ title: 'FAQ Deleted' });
-        } else {
-            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
-        }
-    }
 
     return (
         <TableRow>
@@ -588,7 +529,10 @@ function FaqRow({ faq }: { faq: FAQ }) {
                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
                     <DialogContent><DialogHeader><DialogTitle>Edit FAQ</DialogTitle></DialogHeader><FaqForm faq={faq} onDone={() => setIsEditOpen(false)} /></DialogContent>
                 </Dialog>
-                <form action={handleDelete} className="inline-block"><DeleteCrudButton /></form>
+                <DeleteActionButton 
+                    itemName={faq.question}
+                    deleteAction={deleteFaq.bind(null, faq.id)}
+                />
             </TableCell>
         </TableRow>
     );
