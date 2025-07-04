@@ -6,6 +6,8 @@ export default function PrivacyPolicyPage() {
     const [lastUpdated, setLastUpdated] = useState('');
 
     useEffect(() => {
+        // This code runs only on the client, after the component has mounted,
+        // which prevents a server-client mismatch (hydration error).
         setLastUpdated(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
     }, []);
 
@@ -16,7 +18,9 @@ export default function PrivacyPolicyPage() {
                 <div className="max-w-3xl mx-auto space-y-6">
                     <h1 className="font-serif text-4xl md:text-5xl font-bold">Privacy Policy</h1>
                     
-                    <p className="text-lg text-muted-foreground">Last updated: {lastUpdated || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <p className="text-lg text-muted-foreground h-7">
+                        {lastUpdated && `Last updated: ${lastUpdated}`}
+                    </p>
                     
                     <div className="prose prose-lg dark:prose-invert max-w-none">
                         <p>This is a placeholder for your privacy policy. A privacy policy is a statement or a legal document that discloses some or all of the ways a party gathers, uses, discloses, and manages a customer or client's data. It fulfills a legal requirement to protect a customer or client's privacy.</p>

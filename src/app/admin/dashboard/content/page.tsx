@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { updateContent } from "@/app/actions/content-actions";
 import { getContent, getGalleryImages } from '@/lib/content';
 import { ImageUploadSection } from "../content-image-forms";
-import { ContentSubmitButton } from "./content-submit-button";
+import { ContentSubmitButton } from "../content-submit-button";
 
 export default async function ContentPage() {
     const content = await getContent();
