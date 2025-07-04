@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MapPin, Mail, Phone } from 'lucide-react';
-import Image from 'next/image';
 
 interface LocationContent {
   heading: string;
@@ -14,13 +13,6 @@ interface LocationContent {
 export default function Location({ content }: { content: LocationContent }) {
   return (
     <section id="location" className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:800ms] overflow-hidden">
-      <Image
-        src="/images/location-bg.jpg"
-        alt="Faded background image of a vintage map"
-        fill
-        className="object-cover opacity-5 z-0"
-        data-ai-hint="map vintage"
-      />
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>

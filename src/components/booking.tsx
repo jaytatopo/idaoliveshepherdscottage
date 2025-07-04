@@ -95,13 +95,6 @@ export default function Booking({ content, phone }: BookingProps) {
             id="booking" 
             className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
         >
-            <Image
-              src="/images/booking-bg.jpg"
-              alt="Faded background image of a booking calendar"
-              fill
-              className="object-cover opacity-5 z-0"
-              data-ai-hint="booking calendar"
-            />
             <div className="relative z-10 container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>

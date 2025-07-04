@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useFormStatus } from "react-dom";
+import { cn } from "@/lib/utils";
 
 interface ImageUploadSectionProps {
     section: 'hero' | 'reviews' | 'accommodation';
@@ -28,6 +29,7 @@ function SubmitButton({ isSingleton, hasImage }: { isSingleton: boolean; hasImag
 
     return (
         <Button type="submit" size="sm" className="mt-2" disabled={pending}>
+            <Upload className="mr-2" />
             {pending ? "Uploading..." : text}
         </Button>
     );
@@ -37,7 +39,7 @@ function DeleteButton() {
     const { pending } = useFormStatus();
     return (
         <Button type="submit" variant="destructive" size="icon" className="h-8 w-8" disabled={pending}>
-            <Trash2 />
+            <Trash2 className="h-4 w-4" />
         </Button>
     )
 }
@@ -71,23 +73,38 @@ export function ImageUploadSection({ section, title, description, images, isSing
     const firstImage = images?.[0];
 
     return (
-        <Card>
-            <CardHeader>
+        <Card className={cn(isSingleton ? "bg-muted/50" : "")}>
+            <CardHeader className={cn(isSingleton ? "pb-4" : "")}>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent>
                 {isSingleton ? (
-                    <>
+                    <div className="space-y-4">
                         {firstImage ? (
-                            <div className="mb-6 relative group w-full max-w-md">
-                                <Image src={firstImage.src} alt={firstImage.alt} width={400} height={250} className="rounded-md object-cover aspect-video"/>
-                                <form action={() => handleDelete(firstImage.id)} className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="relative group w-full max-w-sm">
+                                <Image src={firstImage.src} alt={firstImage.alt} width={300} height={180} className="rounded-md object-cover aspect-video"/>
+                                <form action={() => handleDelete(firstImage.id)} className="absolute top-2 right-2">
                                     <DeleteButton />
                                 </form>
                             </div>
-                        ) : <p className="text-sm text-muted-foreground mb-4">No image has been uploaded.</p>}
-                    </>
+                        ) : <p className="text-sm text-muted-foreground">No image has been uploaded for this section.</p>}
+                        
+                        <form action={handleUpload} className="p-4 bg-background/50 border-dashed rounded-lg border">
+                            <div className="grid w-full items-center gap-4">
+                                 <div className="grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor={`${section}_image_upload`}>Select New Image</Label>
+                                    <Input id={`${section}_image_upload`} name="image" type="file" required accept="image/*" className="text-xs" />
+                                </div>
+                                <div className="grid w-full max-w-sm items-center gap-1.5">
+                                    <Label htmlFor={`${section}_alt_text`}>Image Description (Alt Text)</Label>
+                                    <Input id={`${section}_alt_text`} name="alt" type="text" placeholder="e.g., View from the stoep" required/>
+                                </div>
+                                <input type="hidden" name="section" value={section} />
+                                <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage} />
+                            </div>
+                        </form>
+                    </div>
                 ) : (
                     <>
                         {images.length > 0 ? (
@@ -104,29 +121,28 @@ export function ImageUploadSection({ section, title, description, images, isSing
                         ) : (
                              <p className="text-sm text-muted-foreground mb-4">No images have been uploaded for this gallery.</p>
                         )}
+                         <form action={handleUpload}>
+                            <Card className="p-4 bg-muted/50 border-dashed">
+                                <div className="flex flex-col items-center justify-center space-y-4">
+                                    <Upload className="h-8 w-8 text-muted-foreground"/>
+                                    <p className="text-sm font-medium">
+                                        Upload a new image for the gallery.
+                                    </p>
+                                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                                        <Label htmlFor={`${section}_image_upload`}>Select Image</Label>
+                                        <Input id={`${section}_image_upload`} name="image" type="file" required accept="image/*" />
+                                    </div>
+                                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                                        <Label htmlFor={`${section}_alt_text`}>Image Description (Alt Text)</Label>
+                                        <Input id={`${section}_alt_text`} name="alt" type="text" placeholder="e.g., View from the stoep" required/>
+                                    </div>
+                                    <input type="hidden" name="section" value={section} />
+                                    <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage} />
+                                </div>
+                            </Card>
+                        </form>
                     </>
                 )}
-                
-                <form action={handleUpload}>
-                    <Card className="p-4 bg-muted/50 border-dashed">
-                        <div className="flex flex-col items-center justify-center space-y-4">
-                            <Upload className="h-8 w-8 text-muted-foreground"/>
-                            <p className="text-sm font-medium">
-                                {isSingleton && firstImage ? 'Upload a new image to replace the current one.' : `Upload a new image for the ${title}.`}
-                            </p>
-                            <div className="grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor={`${section}_image_upload`}>Select Image</Label>
-                                <Input id={`${section}_image_upload`} name="image" type="file" required accept="image/*" />
-                            </div>
-                            <div className="grid w-full max-w-sm items-center gap-1.5">
-                                <Label htmlFor={`${section}_alt_text`}>Image Description (Alt Text)</Label>
-                                <Input id={`${section}_alt_text`} name="alt" type="text" placeholder="e.g., View from the stoep" required/>
-                            </div>
-                            <input type="hidden" name="section" value={section} />
-                            <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage} />
-                        </div>
-                    </Card>
-                </form>
             </CardContent>
         </Card>
     );

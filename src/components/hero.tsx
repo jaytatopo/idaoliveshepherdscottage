@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowDown } from 'lucide-react';
 import type { GalleryImage } from '@/lib/content';
+import { cn } from '@/lib/utils';
 
 interface HeroContent {
   heading: string;
@@ -11,17 +12,25 @@ interface HeroContent {
 
 export default function Hero({ content, image }: { content: HeroContent, image?: GalleryImage }) {
   return (
-    <section id="home" className="relative h-screen w-full">
-      <Image
-        src={image?.src || "/images/hero-bg.jpg"}
-        alt={image?.alt || "Panoramic view of Ida Olive Shepherds Cottage and surrounding nature"}
-        fill
-        className="object-cover"
-        priority
-        data-ai-hint="cottage landscape"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
+    <section id="home" className="relative h-screen w-full bg-secondary">
+      {image && (
+          <Image
+            src={image.src}
+            alt={image.alt}
+            fill
+            className="object-cover"
+            priority
+            data-ai-hint="cottage landscape"
+          />
+      )}
+      <div className={cn(
+        "absolute inset-0",
+        image ? "bg-gradient-to-t from-black/60 to-transparent" : "bg-gradient-to-t from-primary/30 to-transparent"
+      )} />
+      <div className={cn(
+        "relative z-10 flex h-full flex-col items-center justify-center text-center",
+        image ? "text-white" : "text-primary-foreground"
+      )}>
         <div className="max-w-4xl p-6">
             <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg">
               {content.heading}
@@ -36,7 +45,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
                   </Button>
               </Link>
               <Link href="#gallery" passHref>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-primary hover:bg-white hover:text-foreground">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-primary-foreground hover:bg-white hover:text-primary">
                     Explore the Gallery
                   </Button>
               </Link>

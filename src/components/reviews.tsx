@@ -64,13 +64,15 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
         id="reviews" 
         className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms] overflow-hidden"
     >
-      <Image
-        src={image?.src || "/images/reviews-bg.jpg"}
-        alt={image?.alt || "Faded background of a cozy setting"}
-        fill
-        className="object-cover opacity-5 z-0"
-        data-ai-hint="cozy setting"
-      />
+      {image && (
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="object-cover opacity-5 z-0"
+          data-ai-hint="cozy setting"
+        />
+      )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>

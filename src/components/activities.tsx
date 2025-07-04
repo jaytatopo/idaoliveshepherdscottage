@@ -31,14 +31,21 @@ export default function Activities({ content, activities }: ActivitiesProps) {
             return (
                 <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background overflow-visible">
                     <div className="relative z-10">
-                        <Image
-                            src={activity.image_src || `/images/activity-default.jpg`}
-                            alt={activity.title}
-                            width={300}
-                            height={200}
-                            className="aspect-video object-cover w-full transition-transform duration-300 group-hover:scale-105"
-                            data-ai-hint="nature activity"
-                        />
+                        <div className="aspect-video w-full transition-transform duration-300 group-hover:scale-105 relative bg-muted">
+                            {activity.image_src ? (
+                                <Image
+                                    src={activity.image_src}
+                                    alt={activity.title}
+                                    fill
+                                    className="object-cover"
+                                    data-ai-hint="nature activity"
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-full">
+                                    <DynamicIcon name={activity.icon} className="w-12 h-12 text-muted-foreground/50" />
+                                </div>
+                            )}
+                        </div>
                          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-background p-3 rounded-full border-2 transition-transform duration-300 group-hover:scale-110">
                             <DynamicIcon name={activity.icon} className="w-6 h-6 text-primary" />
                         </div>

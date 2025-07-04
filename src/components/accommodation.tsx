@@ -1,6 +1,7 @@
 import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
+import { Card } from './ui/card';
 
 interface AccommodationContent {
   heading: string;
@@ -29,26 +30,34 @@ export default function Accommodation({ content, amenities, images }: Accommodat
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
-               <Image
-                  src={image1?.src || "/images/accommodation-1.jpg"}
-                  alt={image1?.alt || "Interior view of the cottage"}
-                  fill
-                  className="object-cover"
-                  data-ai-hint="cottage interior"
-                />
-            </div>
-            <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
-               <Image
-                  src={image2?.src || "/images/accommodation-2.jpg"}
-                  alt={image2?.alt || "Cottage amenity details"}
-                  fill
-                  className="object-cover"
-                  data-ai-hint="cottage amenities"
-                />
-            </div>
-        </div>
+        {(image1 || image2) && (
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {image1 && (
+              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+                <Image
+                    src={image1.src}
+                    alt={image1.alt}
+                    fill
+                    className="object-cover"
+                    data-ai-hint="cottage interior"
+                  />
+              </div>
+            )}
+            {image2 && (
+              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+                <Image
+                    src={image2.src}
+                    alt={image2.alt}
+                    fill
+                    className="object-cover"
+                    data-ai-hint="cottage amenities"
+                  />
+              </div>
+            )}
+            {/* If only one image, show a placeholder for the second slot to maintain layout */}
+            {(image1 && !image2) && <Card className="hidden md:block bg-muted/50"/>}
+          </div>
+        )}
 
         <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-4">

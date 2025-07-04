@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { revalidatePath } from 'next/cache';
 import { updateContent } from "@/app/actions/content-actions";
 import { getContent, getGalleryImages } from '@/lib/content';
@@ -11,28 +12,28 @@ import { ImageUploadSection } from "../content-image-forms";
 export default async function ContentPage() {
     const content = await getContent();
     const accommodationImages = await getGalleryImages('accommodation');
-    const heroImage = await getGalleryImages('hero'); // is an array
-    const reviewsImage = await getGalleryImages('reviews'); // is an array
+    const heroImage = await getGalleryImages('hero');
+    const reviewsImage = await getGalleryImages('reviews');
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <header className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold font-serif">Content Management</h1>
-                    <p className="text-muted-foreground">Manage your website's text and gallery images.</p>
+                    <p className="text-muted-foreground">Manage your website's text and images.</p>
                 </div>
                  <form action={async () => { 'use server'; revalidatePath('/', 'layout'); revalidatePath('/admin/dashboard', 'layout'); }}>
                     <Button>Publish Changes</Button>
                 </form>
             </header>
             
-            <form action={updateContent} className="space-y-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Manage Website Text</CardTitle>
-                        <CardDescription>Edit text for various sections. Remember to save and publish changes.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-8 pt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Manage Website Text</CardTitle>
+                    <CardDescription>Edit text for all sections of your website here. Click "Save All Text Changes" at the bottom when you're done.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form action={updateContent} className="space-y-8">
                         <div className="space-y-4 p-4 border rounded-lg">
                             <h3 className="font-semibold font-serif text-lg">Hero Section</h3>
                             <div className="space-y-2">
@@ -137,35 +138,52 @@ export default async function ContentPage() {
                             </div>
                         </div>
                         <Button type="submit">Save All Text Changes</Button>
-                    </CardContent>
-                </Card>
-            </form>
+                    </form>
+                </CardContent>
+            </Card>
 
-            <div className="space-y-6">
-                <ImageUploadSection 
-                    section="hero"
-                    title="Hero Section Image"
-                    description="The main background image for the homepage hero section. Only one image can be active."
-                    images={heroImage}
-                    isSingleton={true}
-                />
-
-                <ImageUploadSection 
-                    section="reviews"
-                    title="Reviews Section Image"
-                    description="The background image for the guest reviews section. Only one image can be active."
-                    images={reviewsImage}
-                    isSingleton={true}
-                />
-               
-                <ImageUploadSection 
-                    section="accommodation"
-                    title="Accommodation Gallery"
-                    description="Upload or delete photos for the accommodation gallery."
-                    images={accommodationImages}
-                    isSingleton={false}
-                />
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Manage Website Images</CardTitle>
+                    <CardDescription>Upload and manage images for different sections of your website.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Tabs defaultValue="gallery" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="gallery">Accommodation Gallery</TabsTrigger>
+                            <TabsTrigger value="hero">Hero Image</TabsTrigger>
+                            <TabsTrigger value="reviews">Reviews Image</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="gallery" className="mt-6">
+                            <ImageUploadSection 
+                                section="accommodation"
+                                title="Accommodation Gallery"
+                                description="Upload or delete photos for the main accommodation gallery."
+                                images={accommodationImages}
+                                isSingleton={false}
+                            />
+                        </TabsContent>
+                        <TabsContent value="hero" className="mt-6">
+                             <ImageUploadSection 
+                                section="hero"
+                                title="Hero Section Image"
+                                description="The main background image for the homepage hero section."
+                                images={heroImage}
+                                isSingleton={true}
+                            />
+                        </TabsContent>
+                        <TabsContent value="reviews" className="mt-6">
+                             <ImageUploadSection 
+                                section="reviews"
+                                title="Reviews Section Image"
+                                description="The background image for the guest reviews section."
+                                images={reviewsImage}
+                                isSingleton={true}
+                            />
+                        </TabsContent>
+                    </Tabs>
+                </CardContent>
+            </Card>
         </div>
     );
 }
