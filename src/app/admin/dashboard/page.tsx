@@ -28,9 +28,9 @@ export default async function DashboardPage() {
                             <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead className="hidden sm:table-cell">Dates</TableHead>
-                                <TableHead className="hidden md:table-cell">Guests</TableHead>
+                                <TableHead className="hidden sm:table-cell">Guests</TableHead>
                                 <TableHead className="hidden lg:table-cell">Message</TableHead>
+                                <TableHead className="hidden md:table-cell">Received</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -40,15 +40,12 @@ export default async function DashboardPage() {
                                     <TableRow key={inquiry.id}>
                                         <TableCell className="font-medium">{inquiry.name}</TableCell>
                                         <TableCell>{inquiry.email}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">
-                                            {inquiry.check_in && inquiry.check_out 
-                                                ? `${format(new Date(inquiry.check_in), "PP")} - ${format(new Date(inquiry.check_out), "PP")}`
-                                                : 'N/A'
-                                            }
-                                        </TableCell>
-                                        <TableCell className="hidden md:table-cell">{inquiry.guests}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">{inquiry.guests}</TableCell>
                                         <TableCell className="hidden lg:table-cell max-w-[250px] truncate">
                                             {inquiry.message}
+                                        </TableCell>
+                                        <TableCell className="hidden md:table-cell">
+                                            {format(new Date(inquiry.created_at), "PP")}
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <form action={deleteInquiry.bind(null, inquiry.id)}>
