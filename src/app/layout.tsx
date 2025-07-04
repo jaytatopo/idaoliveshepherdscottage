@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { getContent, getGalleryImages } from '@/lib/content';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,10 +18,45 @@ const lora = Lora({
   variable: '--font-lora',
 });
 
-export const metadata: Metadata = {
-  title: 'Ida Olive Shepherd’s Cottage, McGregor',
-  description: 'A serene, off-the-grid escape for nature lovers.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getContent();
+  const heroContent = content.hero;
+  const heroImage = await getGalleryImages('hero').then(images => images[0]);
+
+  const title = heroContent?.heading || 'Ida Olive Shepherd’s Cottage, McGregor';
+  const description = heroContent?.subheading || 'A serene, off-the-grid escape for nature lovers.';
+  const ogImageUrl = heroImage?.src || 'https://placehold.co/1200x630.png';
+
+  // TODO: Replace with your actual production domain
+  const siteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: siteUrl, 
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: 'A view of Ida Olive Shepherd’s Cottage',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
+
 
 export default function RootLayout({
   children,

@@ -25,6 +25,7 @@ export default function Location({ content, imageBg }: LocationProps) {
                 src={imageBg.src}
                 alt={imageBg.alt}
                 fill
+                sizes="100vw"
                 className="object-cover opacity-[0.18] z-0"
                 data-ai-hint="map location"
             />
@@ -50,7 +51,8 @@ export default function Location({ content, imageBg }: LocationProps) {
                   allowFullScreen={false}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Location of Ida Olive Cottage"
+                  title="Location of Ida Olive Cottage on Google Maps"
+                  aria-label="Location of Ida Olive Cottage on Google Maps"
                   className='absolute inset-0 w-full h-full'
                 ></iframe>
             </div>

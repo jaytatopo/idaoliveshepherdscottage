@@ -13,6 +13,7 @@ import {
     getFaqs,
     getPageSections 
 } from '@/lib/content';
+import StructuredData from '@/components/structured-data';
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -157,6 +158,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
+      <StructuredData content={allData.content} heroImage={allData.backgrounds.hero} />
       <Header />
       <main className="flex-1">
         {pageSections.map((section) => {

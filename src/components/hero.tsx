@@ -18,6 +18,7 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
             src={image.src}
             alt={image.alt}
             fill
+            sizes="100vw"
             className="object-cover"
             priority
             data-ai-hint="cottage landscape"

@@ -27,6 +27,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
           src={imageBg.src}
           alt={imageBg.alt}
           fill
+          sizes="100vw"
           className="object-cover opacity-[0.18] z-0"
           data-ai-hint="cottage pattern"
         />
@@ -49,6 +50,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
                     src={image1.src}
                     alt={image1.alt}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     data-ai-hint="cottage interior"
                   />
@@ -60,6 +62,7 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
                     src={image2.src}
                     alt={image2.alt}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     data-ai-hint="cottage amenities"
                   />

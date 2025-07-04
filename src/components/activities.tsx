@@ -31,6 +31,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
           src={imageBg.src}
           alt={imageBg.alt}
           fill
+          sizes="100vw"
           className="object-cover opacity-[0.18] z-0"
           data-ai-hint="nature landscape"
         />
@@ -60,6 +61,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
                                     src={activity.image_src}
                                     alt={activity.title}
                                     fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                                     data-ai-hint="nature activity"
                                 />
@@ -103,6 +105,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
                                 src={selectedActivity.image_src}
                                 alt={selectedActivity.title}
                                 fill
+                                sizes="100vw"
                                 className="object-cover"
                             />
                         ) : (
