@@ -1,3 +1,4 @@
+
 'use server';
 
 import { db } from '@/lib/db';
@@ -22,7 +23,10 @@ async function updateSingleContent(section: string, key: string, value: string) 
 export async function updateContent(formData: FormData) {
     const updates = [];
     for (const [key, value] of formData.entries()) {
-        const [section, content_key] = key.split('_');
+        const keyParts = key.split('_');
+        const section = keyParts.shift(); // The section is the first part
+        const content_key = keyParts.join('_'); // The rest of the parts form the key
+
         if (section && content_key && value !== null) {
             // Normalize newlines to prevent \r\n issues from different OSes
             const normalizedValue = value.toString().replace(/\r\n/g, '\n');
