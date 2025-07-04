@@ -12,7 +12,6 @@ import Facilities from '@/components/facilities';
 import Amenities from '@/components/amenities';
 import Footer from '@/components/footer';
 import { getContent, getAmenities as fetchAmenities, getActivities as fetchActivities, getGalleryImages, getReviews as fetchReviews, getPageSections } from '@/lib/content';
-import DecorativeSeparator from '@/components/ui/decorative-separator';
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -112,19 +111,13 @@ export default async function Home() {
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
       <main className="flex-1">
-        {pageSections.map((section, index) => {
+        {pageSections.map((section) => {
             if (!section.is_visible) return null;
             const Component = sectionComponents[section.section_type];
             if (!Component) return null;
 
-            const isFirstSection = index === 0;
-            const isHero = section.section_type === 'hero';
-
             return (
-                <React.Fragment key={section.id}>
-                    {!isHero && <DecorativeSeparator />}
-                    <Component {...getSectionProps(section.section_type)} />
-                </React.Fragment>
+                <Component key={section.id} {...getSectionProps(section.section_type)} />
             );
         })}
       </main>
