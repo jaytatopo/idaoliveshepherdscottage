@@ -1,7 +1,7 @@
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
 import { Card } from './ui/card';
-import { BedDouble, Bath, Users } from 'lucide-react';
+import { BedDouble, Users, ZapOff } from 'lucide-react';
 
 interface AccommodationContent {
   heading: string;
@@ -79,9 +79,9 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
                 <p className="text-sm text-muted-foreground">1 King Bed, 1 Queen Bed</p>
             </Card>
              <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:500ms] bg-background/70">
-                <Bath className="w-10 h-10 text-primary mb-3"/>
-                <h4 className="font-serif font-semibold text-lg">Full Bathroom</h4>
-                <p className="text-sm text-muted-foreground">Bath, indoor & outdoor showers</p>
+                <ZapOff className="w-10 h-10 text-primary mb-3"/>
+                <h4 className="font-serif font-semibold text-lg">Off-Grid Serenity</h4>
+                <p className="text-sm text-muted-foreground">Unplug and reconnect</p>
             </Card>
         </div>
 
