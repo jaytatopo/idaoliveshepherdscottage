@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 
-type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'activities_bg' | 'booking_bg' | 'location_bg';
+type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'facilities_bg' | 'activities_bg' | 'booking_bg' | 'location_bg';
 
 interface ImageUploadSectionProps {
     section: SectionType;

@@ -61,6 +61,7 @@ export async function uploadGalleryImage(formData: FormData) {
         'hero', 
         'reviews',
         'accommodation_bg',
+        'facilities_bg',
         'activities_bg',
         'booking_bg',
         'location_bg'

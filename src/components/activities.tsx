@@ -46,11 +46,11 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
           {activities.map((activity, index) => (
               <div 
                 key={activity.id}
-                className="cursor-pointer opacity-0 animate-fade-in-up group"
+                className="cursor-pointer opacity-0 animate-fade-in-up"
                 style={{ animationDelay: `${300 + index * 100}ms` }}
                 onClick={() => setSelectedActivity(activity)}
               >
-                <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden">
+                <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden group">
                     <div className="relative aspect-video w-full overflow-hidden">
                       {activity.image_src ? (
                           <Image

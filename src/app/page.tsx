@@ -7,6 +7,7 @@ import Booking from '@/components/booking';
 import Reviews from '@/components/reviews';
 import Location from '@/components/location';
 import Gallery from '@/components/gallery';
+import Facilities from '@/components/facilities';
 import Footer from '@/components/footer';
 import { getContent, getAmenities, getActivities, getGalleryImages, getReviews as fetchReviews } from '@/lib/content';
 
@@ -23,6 +24,7 @@ export default async function Home() {
 
   // Fetch all optional background images
   const accommodationBg = (await getGalleryImages('accommodation_bg'))[0];
+  const facilitiesBg = (await getGalleryImages('facilities_bg'))[0];
   const activitiesBg = (await getGalleryImages('activities_bg'))[0];
   const reviewsBg = (await getGalleryImages('reviews'))[0];
   const bookingBg = (await getGalleryImages('booking_bg'))[0];
@@ -36,11 +38,15 @@ export default async function Home() {
         <Hero content={content.hero} image={heroImage} />
         <Accommodation 
           content={content.accommodation} 
-          amenities={amenities}
           images={accommodationGalleryImages.slice(0, 2)}
           imageBg={accommodationBg}
         />
         <Gallery galleryImages={accommodationGalleryImages} />
+        <Facilities
+          content={content.facilities}
+          amenities={amenities}
+          imageBg={facilitiesBg}
+        />
         <Activities 
           content={content.activities} 
           activities={activities}
