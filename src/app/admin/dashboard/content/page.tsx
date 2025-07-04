@@ -3,11 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { revalidatePath } from 'next/cache';
 import { updateContent } from "@/app/actions/content-actions";
 import { getContent, getGalleryImages } from '@/lib/content';
 import { ImageUploadSection } from "../content-image-forms";
-import { ContentSubmitButton } from "../content-submit-button";
 import { PublishButton } from "../publish-button";
 
 export default async function ContentPage() {
@@ -29,22 +27,20 @@ export default async function ContentPage() {
 
     return (
         <div className="space-y-8">
-            <header className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold font-serif">Content Management</h1>
-                    <p className="text-muted-foreground">Manage your website's text and images.</p>
-                </div>
-                 <form action={async () => { 'use server'; revalidatePath('/', 'layout'); revalidatePath('/admin/dashboard', 'layout'); }}>
-                    <PublishButton />
-                </form>
-            </header>
-            
-            <form action={updateContent}>
+            <form id="contentForm" action={updateContent}>
+                <header className="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold font-serif">Content Management</h1>
+                        <p className="text-muted-foreground">Manage your website's text and images.</p>
+                    </div>
+                    <PublishButton form="contentForm" />
+                </header>
+                
                 <div className="grid gap-8">
                     <Card>
                         <CardHeader>
                             <CardTitle>Page Section Content</CardTitle>
-                            <CardDescription>Edit text for various sections of your website here. Click "Save All Text Changes" at the bottom when you're done.</CardDescription>
+                            <CardDescription>Edit text for various sections of your website here. Click "Publish Changes" at the top when you're done.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-8">
                             <div className="space-y-4 p-4 border rounded-lg">
@@ -271,8 +267,6 @@ export default async function ContentPage() {
                         </CardContent>
                     </Card>
                 </div>
-
-                <ContentSubmitButton />
             </form>
 
             <Card className="mt-8">

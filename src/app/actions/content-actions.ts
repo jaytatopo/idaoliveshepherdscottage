@@ -24,14 +24,16 @@ export async function updateContent(formData: FormData) {
     for (const [key, value] of formData.entries()) {
         const [section, content_key] = key.split('_');
         if (section && content_key && value !== null) {
-            updates.push(updateSingleContent(section, content_key, value.toString()));
+            // Normalize newlines to prevent \r\n issues from different OSes
+            const normalizedValue = value.toString().replace(/\r\n/g, '\n');
+            updates.push(updateSingleContent(section, content_key, normalizedValue));
         }
     }
     
     try {
         await Promise.all(updates);
-        revalidatePath('/');
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/', 'layout');
+        revalidatePath('/admin/dashboard', 'layout');
         return { success: true, message: 'Content updated successfully.' };
     } catch (error: any) {
         console.error('Failed to update content:', error);
