@@ -18,7 +18,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
   return (
     <section 
       id="activities" 
-      className="relative py-12 md:py-16 bg-card opacity-0 animate-fade-in-up [animation-delay:200ms]"
+      className="relative py-12 md:py-16 bg-card"
     >
       {imageBg && (
         <Image
@@ -31,15 +31,19 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
-          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">{content.heading}</h2>
+          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {activities.map((activity) => {
+          {activities.map((activity, index) => {
             return (
-                <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background/80 backdrop-blur-sm overflow-visible">
+                <Card 
+                  key={activity.id} 
+                  className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background/80 backdrop-blur-sm overflow-visible opacity-0 animate-fade-in-up"
+                  style={{ animationDelay: `${300 + index * 100}ms` }}
+                >
                     <div className="relative z-10">
                         <div className="aspect-video w-full transition-transform duration-300 group-hover:scale-105 relative bg-muted">
                             {activity.image_src ? (

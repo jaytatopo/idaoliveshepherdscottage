@@ -22,7 +22,7 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
   const image2 = images?.[1];
 
   return (
-    <section id="accommodation" className="relative py-12 md:py-16 bg-background opacity-0 animate-fade-in-up">
+    <section id="accommodation" className="relative py-12 md:py-16 bg-background">
       {imageBg && (
         <Image
           src={imageBg.src}
@@ -34,8 +34,8 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
-          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">{content.heading}</h2>
+          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}
           </p>
         </div>
@@ -43,23 +43,23 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
         {(image1 || image2) && (
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {image1 && (
-              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:300ms]">
                 <Image
                     src={image1.src}
                     alt={image1.alt}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                     data-ai-hint="cottage interior"
                   />
               </div>
             )}
             {image2 && (
-              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:400ms]">
                 <Image
                     src={image2.src}
                     alt={image2.alt}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                     data-ai-hint="cottage amenities"
                   />
               </div>
@@ -70,13 +70,13 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
         )}
 
         <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-4">
+            <div className="space-y-4 opacity-0 animate-fade-in-up [animation-delay:500ms]">
               <h3 className="font-serif text-2xl font-semibold">The Heart of the Cottage</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.main_text}
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 opacity-0 animate-fade-in-up [animation-delay:600ms]">
               <h3 className="font-serif text-2xl font-semibold">Comforts & Details</h3>
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {content.secondary_text}
@@ -86,12 +86,15 @@ export default function Accommodation({ content, amenities, images, imageBg }: A
         
         {amenities.length > 0 && (
             <div className="mt-16 pt-12 border-t">
-                <h3 className="font-serif text-2xl font-semibold text-center mb-8">What We Offer</h3>
+                <h3 className="font-serif text-2xl font-semibold text-center mb-8 opacity-0 animate-fade-in-up [animation-delay:700ms]">What We Offer</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-6 max-w-4xl mx-auto">
-                    {amenities.map((item) => (
-                        <div key={item.id} className="flex items-center gap-3">
-                        <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
-                        <span className="font-medium">{item.text}</span>
+                    {amenities.map((item, index) => (
+                        <div key={item.id} 
+                          className="flex items-center gap-3 opacity-0 animate-fade-in-up"
+                          style={{ animationDelay: `${800 + index * 50}ms` }}
+                        >
+                          <DynamicIcon name={item.icon} className="w-6 h-6 text-primary" />
+                          <span className="font-medium">{item.text}</span>
                         </div>
                     ))}
                 </div>

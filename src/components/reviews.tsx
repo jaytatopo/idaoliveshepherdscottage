@@ -66,7 +66,7 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
   return (
     <section 
         id="reviews" 
-        className="relative py-12 md:py-16 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms] overflow-hidden"
+        className="relative py-12 md:py-16 bg-card overflow-hidden"
     >
       {imageBg && (
         <Image
@@ -79,20 +79,26 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
       )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
-          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">{content.heading}</h2>
+          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {reviewsToShow.map((testimonial) => (
-            <ReviewCard key={testimonial.id} review={testimonial} truncate={true} />
+          {reviewsToShow.map((testimonial, index) => (
+            <div 
+              key={testimonial.id}
+              className="opacity-0 animate-fade-in-up"
+              style={{ animationDelay: `${300 + index * 100}ms` }}
+            >
+              <ReviewCard review={testimonial} truncate={true} />
+            </div>
           ))}
         </div>
 
         {reviews.length > 4 && (
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 opacity-0 animate-fade-in-up [animation-delay:700ms]">
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
                 <Button>Show All {reviews.length} Reviews</Button>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, BedDouble, Camera } from 'lucide-react';
 import type { GalleryImage } from '@/lib/content';
 import { cn } from '@/lib/utils';
 
@@ -34,20 +34,22 @@ export default function Hero({ content, image }: { content: HeroContent, image?:
         image ? "text-white" : "text-primary-foreground"
       )}>
         <div className="max-w-4xl p-6">
-            <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg">
+            <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-lg opacity-0 animate-fade-in [animation-delay:200ms]">
               {content.heading}
             </h1>
-            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl drop-shadow-md">
+            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl drop-shadow-md opacity-0 animate-fade-in [animation-delay:400ms]">
               {content.subheading}
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in-up [animation-delay:600ms]">
               <Link href="#booking" passHref>
-                  <Button size="lg" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg transform hover:scale-105 transition-transform">
+                    <BedDouble />
                     Book Your Stay
                   </Button>
               </Link>
               <Link href="#gallery" passHref>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white bg-transparent text-white hover:bg-white hover:text-primary">
+                  <Button size="lg" variant="ghost" className="w-full sm:w-auto hover:bg-white/20 text-white backdrop-blur-sm transform hover:scale-105 transition-transform">
+                    <Camera />
                     Explore the Gallery
                   </Button>
               </Link>

@@ -19,7 +19,7 @@ interface LocationProps {
 
 export default function Location({ content, imageBg }: LocationProps) {
   return (
-    <section id="location" className="relative py-12 md:py-16 bg-background opacity-0 animate-fade-in-up [animation-delay:800ms] overflow-hidden">
+    <section id="location" className="relative py-12 md:py-16 bg-background overflow-hidden">
         {imageBg && (
             <Image
                 src={imageBg.src}
@@ -31,15 +31,15 @@ export default function Location({ content, imageBg }: LocationProps) {
         )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
-          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">{content.heading}</h2>
+          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
             {content.subheading}
           </p>
         </div>
 
         <Card className="overflow-hidden shadow-xl bg-background/80 backdrop-blur-sm">
           <div className="grid lg:grid-cols-3">
-            <div className="lg:col-span-2 relative h-80 lg:h-full min-h-[300px]">
+            <div className="lg:col-span-2 relative h-80 lg:h-full min-h-[300px] opacity-0 animate-slide-in-from-left [animation-delay:300ms]">
                <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3319.106517852355!2d19.82606087570201!3d-33.96414777328905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dd243491f893d5d%3A0xf6b5860731a31b41!2sMcGregor%2C%206708!5e0!3m2!1sen!2sza!4v1716900238148!5m2!1sen!2sza"
                   width="100%"
@@ -52,7 +52,7 @@ export default function Location({ content, imageBg }: LocationProps) {
                   className='absolute inset-0 w-full h-full'
                 ></iframe>
             </div>
-            <div className="p-8 flex flex-col justify-center">
+            <div className="p-8 flex flex-col justify-center opacity-0 animate-slide-in-from-right [animation-delay:300ms]">
               <h3 className="font-serif text-2xl font-semibold mb-6">Contact & Directions</h3>
               <div className="space-y-4 text-muted-foreground">
                 <div className="flex items-start gap-4">

@@ -41,11 +41,11 @@ export default function Gallery({ galleryImages }: GalleryProps) {
   const imagesToShow = galleryImages.slice(0, galleryImages.length > 9 ? 8 : 9);
 
   return (
-    <section id="gallery" className="relative py-12 md:py-16 bg-card opacity-0 animate-fade-in-up [animation-delay:100ms] overflow-hidden">
+    <section id="gallery" className="relative py-12 md:py-16 bg-card overflow-hidden">
         <div className="relative z-10 container mx-auto px-4 md:px-6">
             <div className="text-center mb-12">
-                <h2 className="font-serif text-3xl md:text-4xl font-bold">Gallery</h2>
-                <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+                <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">Gallery</h2>
+                <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
                     Step inside and discover the comfort and charm of Ida Olive.
                 </p>
             </div>
@@ -54,7 +54,8 @@ export default function Gallery({ galleryImages }: GalleryProps) {
                     <button
                     key={img.id}
                     onClick={() => handleOpen(index)}
-                    className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 opacity-0 animate-fade-in"
+                    style={{ animationDelay: `${300 + index * 75}ms` }}
                     >
                     <Image
                         src={img.src}
@@ -69,7 +70,8 @@ export default function Gallery({ galleryImages }: GalleryProps) {
                     <button
                         key="view-more"
                         onClick={() => handleOpen(8)}
-                        className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80"
+                        className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80 opacity-0 animate-fade-in"
+                        style={{ animationDelay: `${300 + imagesToShow.length * 75}ms` }}
                     >
                         <div className="text-center text-muted-foreground">
                         <Plus className="h-8 w-8 mx-auto" />

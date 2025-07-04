@@ -95,7 +95,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
     return (
         <section 
             id="booking" 
-            className="relative py-12 md:py-16 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
+            className="relative py-12 md:py-16 bg-background overflow-hidden"
         >
              {imageBg && (
                 <Image
@@ -108,36 +108,45 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
             )}
             <div className="relative z-10 container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
-                    <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold opacity-0 animate-fade-in-up">{content.heading}</h2>
+                    <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto opacity-0 animate-fade-in-up [animation-delay:200ms]">
                         {content.subheading}
                     </p>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-12">
-                    <div className="lg:col-span-2">
-                        <Card className="bg-background/80 backdrop-blur-sm">
+                <div className="grid grid-cols-1 gap-12">
+                     <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:300ms]">
+                        <CardHeader>
+                            <CardTitle className="font-serif">Live Availability</CardTitle>
+                            <CardDescription>
+                                Check up-to-the-minute availability and book securely online.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="h-[850px] bg-muted rounded-b-lg p-2">
+                                    <iframe 
+                                    src="https://book.nightsbridge.com/32988"
+                                    className="w-full h-full border-0 rounded-md"
+                                    title="Nightsbridge Booking Engine"
+                                    />
+                            </div>
+                            <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
+                        </CardContent>
+                    </Card>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:400ms]">
                             <CardHeader>
-                                <CardTitle className="font-serif">Live Availability</CardTitle>
-                                <CardDescription>
-                                    Check up-to-the-minute availability and book securely online.
-                                </CardDescription>
+                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-[850px] bg-muted rounded-b-lg p-2">
-                                     <iframe 
-                                        src="https://book.nightsbridge.com/32988"
-                                        className="w-full h-full border-0 rounded-md"
-                                        title="Nightsbridge Booking Engine"
-                                     />
-                                </div>
-                                <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
+                            <CardContent className="space-y-2">
+                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800 / night</span></div>
+                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200 / night</span></div>
+                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500 / night</span></div>
+                                <p className="text-sm text-muted-foreground pt-2">Rates are for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
-                    </div>
-
-                    <div className="lg:col-span-1 space-y-8">
-                        <Card className="bg-background/80 backdrop-blur-sm">
+                        <Card className="bg-background/80 backdrop-blur-sm opacity-0 animate-fade-in-up [animation-delay:500ms]">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Have a question? Fill out the form below and our team will get back to you promptly.</CardDescription>
@@ -206,17 +215,6 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                         </a>
                                     </Button>
                                 )}
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-background/80 backdrop-blur-sm">
-                            <CardHeader>
-                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <div className="flex justify-between"><span>Mid-Season:</span><span className="font-semibold">R1800 / night</span></div>
-                                <div className="flex justify-between"><span>High-Season:</span><span className="font-semibold">R2200 / night</span></div>
-                                <div className="flex justify-between"><span>Peak-Season:</span><span className="font-semibold">R2500 / night</span></div>
-                                <p className="text-sm text-muted-foreground pt-2">Rates are for the entire cottage (sleeps 4). Minimum 2-night stay.</p>
                             </CardContent>
                         </Card>
                     </div>
