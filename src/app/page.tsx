@@ -19,8 +19,15 @@ export default async function Home() {
   const accommodationGalleryImages = await getGalleryImages('accommodation');
   const heroImage = (await getGalleryImages('hero'))[0];
   const reviewsData = await fetchReviews();
-  const reviewsImage = (await getGalleryImages('reviews'))[0];
   const phone = content.location?.phone;
+
+  // Fetch all optional background images
+  const accommodationBg = (await getGalleryImages('accommodation_bg'))[0];
+  const activitiesBg = (await getGalleryImages('activities_bg'))[0];
+  const reviewsBg = (await getGalleryImages('reviews'))[0];
+  const bookingBg = (await getGalleryImages('booking_bg'))[0];
+  const locationBg = (await getGalleryImages('location_bg'))[0];
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -31,12 +38,28 @@ export default async function Home() {
           content={content.accommodation} 
           amenities={amenities}
           images={accommodationGalleryImages.slice(0, 2)}
+          imageBg={accommodationBg}
         />
         <Gallery galleryImages={accommodationGalleryImages} />
-        <Activities content={content.activities} activities={activities} />
-        <Booking content={content.booking} phone={phone} />
-        <Reviews content={content.reviews} reviews={reviewsData} image={reviewsImage} />
-        <Location content={content.location}/>
+        <Activities 
+          content={content.activities} 
+          activities={activities}
+          imageBg={activitiesBg}
+        />
+        <Booking 
+          content={content.booking} 
+          phone={phone}
+          imageBg={bookingBg}
+        />
+        <Reviews 
+          content={content.reviews} 
+          reviews={reviewsData} 
+          imageBg={reviewsBg} 
+        />
+        <Location 
+          content={content.location}
+          imageBg={locationBg}
+        />
       </main>
       <Footer />
     </div>

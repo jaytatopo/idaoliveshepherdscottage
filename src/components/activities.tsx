@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import type { Activity } from '@/lib/content';
+import type { Activity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
 
@@ -11,15 +11,25 @@ interface ActivitiesContent {
 interface ActivitiesProps {
     content: ActivitiesContent;
     activities: Activity[];
+    imageBg?: GalleryImage;
 }
 
-export default function Activities({ content, activities }: ActivitiesProps) {
+export default function Activities({ content, activities, imageBg }: ActivitiesProps) {
   return (
     <section 
       id="activities" 
-      className="py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:200ms]"
+      className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:200ms]"
     >
-      <div className="container mx-auto px-4 md:px-6">
+      {imageBg && (
+        <Image
+          src={imageBg.src}
+          alt={imageBg.alt}
+          fill
+          className="object-cover opacity-5 z-0"
+          data-ai-hint="nature landscape"
+        />
+      )}
+      <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -29,7 +39,7 @@ export default function Activities({ content, activities }: ActivitiesProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {activities.map((activity) => {
             return (
-                <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background overflow-visible">
+                <Card key={activity.id} className="flex flex-col text-center hover:shadow-xl transition-shadow duration-300 group bg-background/80 backdrop-blur-sm overflow-visible">
                     <div className="relative z-10">
                         <div className="aspect-video w-full transition-transform duration-300 group-hover:scale-105 relative bg-muted">
                             {activity.image_src ? (

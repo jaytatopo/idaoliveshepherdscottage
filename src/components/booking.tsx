@@ -23,6 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar } from './ui/calendar';
 import { cn } from '@/lib/utils';
 import { Textarea } from './ui/textarea';
+import type { GalleryImage } from '@/lib/content';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -51,9 +52,10 @@ interface BookingContent {
 interface BookingProps {
   content: BookingContent;
   phone?: string;
+  imageBg?: GalleryImage;
 }
 
-export default function Booking({ content, phone }: BookingProps) {
+export default function Booking({ content, phone, imageBg }: BookingProps) {
     const { toast } = useToast();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -95,6 +97,15 @@ export default function Booking({ content, phone }: BookingProps) {
             id="booking" 
             className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
         >
+             {imageBg && (
+                <Image
+                    src={imageBg.src}
+                    alt={imageBg.alt}
+                    fill
+                    className="object-cover opacity-5 z-0"
+                    data-ai-hint="booking calendar"
+                />
+            )}
             <div className="relative z-10 container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
@@ -105,7 +116,7 @@ export default function Booking({ content, phone }: BookingProps) {
 
                 <div className="grid lg:grid-cols-5 gap-12">
                     <div className="lg:col-span-3 space-y-8">
-                        <Card>
+                        <Card className="bg-background/80 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="font-serif">Live Availability</CardTitle>
                                 <CardDescription>
@@ -123,7 +134,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                 <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
                             </CardContent>
                         </Card>
-                        <Card>
+                        <Card className="bg-background/80 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="font-serif">Seasonal Rates</CardTitle>
                             </CardHeader>
@@ -137,7 +148,7 @@ export default function Booking({ content, phone }: BookingProps) {
                     </div>
 
                     <div className="lg:col-span-2">
-                        <Card>
+                        <Card className="bg-background/80 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="font-serif">Send an Enquiry</CardTitle>
                                 <CardDescription>Have a question? Fill out the form below and our team will get back to you promptly.</CardDescription>
@@ -196,7 +207,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                 </Form>
                                 <div className="relative my-6 flex items-center justify-center">
                                     <div className="absolute inset-0 flex items-center"> <span className="w-full border-t" /> </div>
-                                    <div className="relative flex justify-center text-xs uppercase"> <span className="bg-background px-2 text-muted-foreground"> Or </span> </div>
+                                    <div className="relative flex justify-center text-xs uppercase"> <span className="bg-card px-2 text-muted-foreground"> Or </span> </div>
                                 </div>
                                 {phone && (
                                     <Button variant="outline" asChild className="w-full bg-[#25D366] text-white hover:bg-[#25D366]/90 hover:text-white">

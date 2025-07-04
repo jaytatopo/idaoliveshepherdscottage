@@ -15,7 +15,7 @@ interface ReviewsProps {
     subheading: string;
   };
   reviews: Review[];
-  image?: GalleryImage;
+  imageBg?: GalleryImage;
 }
 
 const renderStars = (rating: number) => {
@@ -55,19 +55,19 @@ const ReviewCard = ({ review }: { review: Review }) => (
 );
 
 
-export default function Reviews({ content, reviews, image }: ReviewsProps) {
+export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const reviewsToShow = reviews.slice(0, 2);
+  const reviewsToShow = reviews.slice(0, 4);
 
   return (
     <section 
         id="reviews" 
         className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms] overflow-hidden"
     >
-      {image && (
+      {imageBg && (
         <Image
-          src={image.src}
-          alt={image.alt}
+          src={imageBg.src}
+          alt={imageBg.alt}
           fill
           className="object-cover opacity-5 z-0"
           data-ai-hint="cozy setting"
@@ -87,7 +87,7 @@ export default function Reviews({ content, reviews, image }: ReviewsProps) {
           ))}
         </div>
 
-        {reviews.length > 2 && (
+        {reviews.length > 4 && (
           <div className="text-center mt-12">
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>

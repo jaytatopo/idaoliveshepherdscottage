@@ -14,15 +14,25 @@ interface AccommodationProps {
   content: AccommodationContent;
   amenities: Amenity[];
   images: GalleryImage[];
+  imageBg?: GalleryImage;
 }
 
-export default function Accommodation({ content, amenities, images }: AccommodationProps) {
+export default function Accommodation({ content, amenities, images, imageBg }: AccommodationProps) {
   const image1 = images?.[0];
   const image2 = images?.[1];
 
   return (
-    <section id="accommodation" className="py-16 md:py-24 bg-background opacity-0 animate-fade-in-up">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="accommodation" className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up">
+      {imageBg && (
+        <Image
+          src={imageBg.src}
+          alt={imageBg.alt}
+          fill
+          className="object-cover opacity-5 z-0"
+          data-ai-hint="cottage pattern"
+        />
+      )}
+      <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
           <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">

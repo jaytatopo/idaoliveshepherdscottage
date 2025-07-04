@@ -57,8 +57,17 @@ export async function uploadGalleryImage(formData: FormData) {
         return { success: false, message: `File is too large. Please upload an image under ${MAX_FILE_SIZE_MB}MB.` };
     }
 
+    const singletonSections = [
+        'hero', 
+        'reviews',
+        'accommodation_bg',
+        'activities_bg',
+        'booking_bg',
+        'location_bg'
+    ];
+
     // For singleton sections, remove existing image record before uploading a new one.
-    if (section === 'hero' || section === 'reviews') {
+    if (singletonSections.includes(section)) {
         try {
             await db.execute('DELETE FROM gallery_images WHERE section = ?', [section]);
         } catch (error) {

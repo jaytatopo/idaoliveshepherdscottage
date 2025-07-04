@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MapPin, Mail, Phone } from 'lucide-react';
+import type { GalleryImage } from '@/lib/content';
+import Image from 'next/image';
 
 interface LocationContent {
   heading: string;
@@ -10,9 +12,23 @@ interface LocationContent {
   phone: string;
 }
 
-export default function Location({ content }: { content: LocationContent }) {
+interface LocationProps {
+    content: LocationContent;
+    imageBg?: GalleryImage;
+}
+
+export default function Location({ content, imageBg }: LocationProps) {
   return (
     <section id="location" className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:800ms] overflow-hidden">
+        {imageBg && (
+            <Image
+                src={imageBg.src}
+                alt={imageBg.alt}
+                fill
+                className="object-cover opacity-5 z-0"
+                data-ai-hint="map location"
+            />
+        )}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">{content.heading}</h2>
@@ -21,7 +37,7 @@ export default function Location({ content }: { content: LocationContent }) {
           </p>
         </div>
 
-        <Card className="overflow-hidden shadow-xl">
+        <Card className="overflow-hidden shadow-xl bg-background/80 backdrop-blur-sm">
           <div className="grid lg:grid-cols-3">
             <div className="lg:col-span-2 relative h-80 lg:h-full min-h-[300px]">
                <iframe

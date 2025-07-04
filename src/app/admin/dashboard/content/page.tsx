@@ -11,9 +11,13 @@ import { ImageUploadSection } from "../content-image-forms";
 
 export default async function ContentPage() {
     const content = await getContent();
-    const accommodationImages = await getGalleryImages('accommodation');
+    const accommodationGalleryImages = await getGalleryImages('accommodation');
     const heroImage = await getGalleryImages('hero');
     const reviewsImage = await getGalleryImages('reviews');
+    const accommodationBg = await getGalleryImages('accommodation_bg');
+    const activitiesBg = await getGalleryImages('activities_bg');
+    const bookingBg = await getGalleryImages('booking_bg');
+    const locationBg = await getGalleryImages('location_bg');
 
     return (
         <div className="space-y-8">
@@ -149,35 +153,75 @@ export default async function ContentPage() {
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="gallery" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="gallery">Accommodation Gallery</TabsTrigger>
-                            <TabsTrigger value="hero">Hero Image</TabsTrigger>
-                            <TabsTrigger value="reviews">Reviews Image</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7">
+                            <TabsTrigger value="gallery">Gallery</TabsTrigger>
+                            <TabsTrigger value="hero">Hero BG</TabsTrigger>
+                            <TabsTrigger value="accommodation">Accom. BG</TabsTrigger>
+                            <TabsTrigger value="activities">Activities BG</TabsTrigger>
+                            <TabsTrigger value="reviews">Reviews BG</TabsTrigger>
+                            <TabsTrigger value="booking">Booking BG</TabsTrigger>
+                            <TabsTrigger value="location">Location BG</TabsTrigger>
                         </TabsList>
                         <TabsContent value="gallery" className="mt-6">
                             <ImageUploadSection 
                                 section="accommodation"
                                 title="Accommodation Gallery"
                                 description="Upload or delete photos for the main accommodation gallery."
-                                images={accommodationImages}
+                                images={accommodationGalleryImages}
                                 isSingleton={false}
                             />
                         </TabsContent>
                         <TabsContent value="hero" className="mt-6">
                              <ImageUploadSection 
                                 section="hero"
-                                title="Hero Section Image"
+                                title="Hero Section Background"
                                 description="The main background image for the homepage hero section."
                                 images={heroImage}
+                                isSingleton={true}
+                            />
+                        </TabsContent>
+                         <TabsContent value="accommodation" className="mt-6">
+                             <ImageUploadSection 
+                                section="accommodation_bg"
+                                title="Accommodation Section Background"
+                                description="Optional background image for the accommodation section."
+                                images={accommodationBg}
+                                isSingleton={true}
+                            />
+                        </TabsContent>
+                         <TabsContent value="activities" className="mt-6">
+                             <ImageUploadSection 
+                                section="activities_bg"
+                                title="Activities Section Background"
+                                description="Optional background image for the activities section."
+                                images={activitiesBg}
                                 isSingleton={true}
                             />
                         </TabsContent>
                         <TabsContent value="reviews" className="mt-6">
                              <ImageUploadSection 
                                 section="reviews"
-                                title="Reviews Section Image"
-                                description="The background image for the guest reviews section."
+                                title="Reviews Section Background"
+                                description="Optional background image for the guest reviews section."
                                 images={reviewsImage}
+                                isSingleton={true}
+                            />
+                        </TabsContent>
+                         <TabsContent value="booking" className="mt-6">
+                             <ImageUploadSection 
+                                section="booking_bg"
+                                title="Booking Section Background"
+                                description="Optional background image for the booking section."
+                                images={bookingBg}
+                                isSingleton={true}
+                            />
+                        </TabsContent>
+                         <TabsContent value="location" className="mt-6">
+                             <ImageUploadSection 
+                                section="location_bg"
+                                title="Location Section Background"
+                                description="Optional background image for the location section."
+                                images={locationBg}
                                 isSingleton={true}
                             />
                         </TabsContent>
