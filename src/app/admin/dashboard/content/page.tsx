@@ -2,36 +2,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateContent } from "@/app/actions/content-actions";
-import { getContent, getGalleryImages } from '@/lib/content';
-import { ImageUploadSection } from "../content-image-forms";
+import { getContent } from '@/lib/content';
 import { PublishButton } from "../publish-button";
 
 export default async function ContentPage() {
     const content = await getContent();
-    const accommodationGalleryImages = await getGalleryImages('accommodation');
-    const heroImage = await getGalleryImages('hero');
-    const reviewsImage = await getGalleryImages('reviews');
-    const hostProfileImage = await getGalleryImages('host_profile');
-    const accommodationBg = await getGalleryImages('accommodation_bg');
-    const amenitiesBg = await getGalleryImages('amenities_bg');
-    const facilitiesBg = await getGalleryImages('facilities_bg');
-    const activitiesBg = await getGalleryImages('activities_bg');
-    const bookingBg = await getGalleryImages('booking_bg');
-    const locationBg = await getGalleryImages('location_bg');
-    const faqBg = await getGalleryImages('faq_bg');
-    const hostBg = await getGalleryImages('host_bg');
-    const ctaBg = await getGalleryImages('cta_bg');
-    const videoBg = await getGalleryImages('video_bg');
 
     return (
         <div className="space-y-8">
             <form id="contentForm" action={updateContent}>
                 <header className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold font-serif">Content Management</h1>
-                        <p className="text-muted-foreground">Manage your website's text and images.</p>
+                        <h1 className="text-3xl font-bold font-serif">Text Content Management</h1>
+                        <p className="text-muted-foreground">Manage your website's text content.</p>
                     </div>
                     <PublishButton form="contentForm" />
                 </header>
@@ -268,126 +252,6 @@ export default async function ContentPage() {
                     </Card>
                 </div>
             </form>
-
-            <Card className="mt-8">
-                <CardHeader>
-                    <CardTitle>Manage Website Images</CardTitle>
-                    <CardDescription>Upload and manage images for different sections of your website.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Tabs defaultValue="gallery" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="gallery">Accommodation Gallery</TabsTrigger>
-                             <TabsTrigger value="profile">Profile Pictures</TabsTrigger>
-                            <TabsTrigger value="backgrounds">Section Backgrounds</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="gallery" className="mt-6">
-                            <ImageUploadSection 
-                                section="accommodation"
-                                title="Accommodation Gallery"
-                                description="Upload or delete photos for the main accommodation gallery."
-                                images={accommodationGalleryImages}
-                                isSingleton={false}
-                            />
-                        </TabsContent>
-                         <TabsContent value="profile" className="mt-6">
-                            <ImageUploadSection 
-                                section="host_profile"
-                                title="Host Profile Picture"
-                                description="The picture for the 'Meet Your Hosts' section."
-                                images={hostProfileImage}
-                                isSingleton={true}
-                            />
-                        </TabsContent>
-                        <TabsContent value="backgrounds" className="mt-6 grid md:grid-cols-2 gap-6">
-                             <ImageUploadSection 
-                                section="hero"
-                                title="Hero Section Background"
-                                description="The main background image for the homepage hero section."
-                                images={heroImage}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="accommodation_bg"
-                                title="Accommodation Section Background"
-                                description="Optional background image for the accommodation section."
-                                images={accommodationBg}
-                                isSingleton={true}
-                            />
-                            <ImageUploadSection 
-                                section="amenities_bg"
-                                title="Amenities Section Background"
-                                description="Optional background image for the amenities section."
-                                images={amenitiesBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="facilities_bg"
-                                title="Facilities Section Background"
-                                description="Optional background image for the facilities & amenities section."
-                                images={facilitiesBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="activities_bg"
-                                title="Activities Section Background"
-                                description="Optional background image for the activities section."
-                                images={activitiesBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="reviews"
-                                title="Reviews Section Background"
-                                description="Optional background image for the guest reviews section."
-                                images={reviewsImage}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="booking_bg"
-                                title="Booking Section Background"
-                                description="Optional background image for the booking section."
-                                images={bookingBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="location_bg"
-                                title="Location Section Background"
-                                description="Optional background image for the location section."
-                                images={locationBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="faq_bg"
-                                title="FAQ Section Background"
-                                description="Optional background image for the FAQ section."
-                                images={faqBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="host_bg"
-                                title="Host Profile Section Background"
-                                description="Optional background for the host profile section."
-                                images={hostBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="cta_bg"
-                                title="Call to Action Section Background"
-                                description="Optional background for the CTA section."
-                                images={ctaBg}
-                                isSingleton={true}
-                            />
-                             <ImageUploadSection 
-                                section="video_bg"
-                                title="Video Section Background"
-                                description="Optional background for the video section."
-                                images={videoBg}
-                                isSingleton={true}
-                            />
-                        </TabsContent>
-                    </Tabs>
-                </CardContent>
-            </Card>
         </div>
     );
 }

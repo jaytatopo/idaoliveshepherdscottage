@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LayoutDashboard, LogOut, Home, FileText, List, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2 } from "lucide-react";
+import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -45,10 +45,18 @@ export default function AdminLayout({
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
-                        <SidebarMenuButton asChild tooltip="Content" isActive={pathname === '/admin/dashboard/content'}>
+                        <SidebarMenuButton asChild tooltip="Text Content" isActive={pathname === '/admin/dashboard/content'}>
                             <Link href="/admin/dashboard/content">
                                 <FileText />
-                                <span>Content & Images</span>
+                                <span>Text Content</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip="Images" isActive={pathname === '/admin/dashboard/images'}>
+                            <Link href="/admin/dashboard/images">
+                                <ImageIcon />
+                                <span>Images</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
