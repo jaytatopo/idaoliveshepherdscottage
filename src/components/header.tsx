@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -37,7 +36,7 @@ export default function Header() {
   }`;
 
   const linkClasses = `text-lg font-serif font-bold transition-colors duration-300 ${
-    isScrolled ? 'text-primary' : 'text-white'
+    isScrolled ? 'text-primary' : 'text-white drop-shadow-md'
   }`;
 
   const DesktopNav = () => (
@@ -46,10 +45,10 @@ export default function Header() {
         <Link key={link.href} href={link.href} passHref>
           <Button
             variant="link"
-            className={`text-base font-semibold transition-colors duration-300 ${
+            className={`text-lg font-bold transition-colors duration-300 ${
               isScrolled
                 ? 'text-foreground hover:text-primary'
-                : 'text-white hover:text-white/80'
+                : 'text-white hover:text-white/80 drop-shadow-md'
             }`}
           >
             {link.label}
@@ -58,12 +57,7 @@ export default function Header() {
       ))}
       <Link href="#booking" passHref>
         <Button
-          variant={isScrolled ? 'default' : 'outline'}
-          className={`transition-all duration-300 ${
-            isScrolled
-              ? 'bg-accent hover:bg-accent/90 text-accent-foreground'
-              : 'border-white text-white hover:bg-white/10'
-          }`}
+          className={`transition-all duration-300 bg-accent hover:bg-accent/90 text-accent-foreground`}
         >
           Book Now
         </Button>
