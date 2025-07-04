@@ -1,9 +1,7 @@
 'use client';
 
-import React from 'react';
-import { useFormState } from 'react-dom';
+import React, { useActionState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect } from 'react';
 import { updateContent } from '@/app/actions/content-actions';
 import { PublishButton } from '../publish-button';
 
@@ -22,8 +20,8 @@ const initialState = {
 
 export function ContentForm({ content }: { content: WebsiteContent }) {
     const { toast } = useToast();
-    // The `useFormState` hook provides stateful logic to handle the result of a form action.
-    const [state, formAction] = useFormState(updateContent, initialState);
+    // The `useActionState` hook provides stateful logic to handle the result of a form action.
+    const [state, formAction] = useActionState(updateContent, initialState);
 
     useEffect(() => {
         // This effect runs only after a form submission.
