@@ -66,7 +66,7 @@ export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
   return (
     <section 
         id="reviews" 
-        className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms] overflow-hidden"
+        className="relative py-12 md:py-16 bg-card opacity-0 animate-fade-in-up [animation-delay:600ms] overflow-hidden"
     >
       {imageBg && (
         <Image

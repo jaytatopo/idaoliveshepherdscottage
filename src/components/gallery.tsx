@@ -41,7 +41,7 @@ export default function Gallery({ galleryImages }: GalleryProps) {
   const imagesToShow = galleryImages.slice(0, galleryImages.length > 9 ? 8 : 9);
 
   return (
-    <section id="gallery" className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:100ms] overflow-hidden">
+    <section id="gallery" className="relative py-12 md:py-16 bg-card opacity-0 animate-fade-in-up [animation-delay:100ms] overflow-hidden">
         <div className="relative z-10 container mx-auto px-4 md:px-6">
             <div className="text-center mb-12">
                 <h2 className="font-serif text-3xl md:text-4xl font-bold">Gallery</h2>

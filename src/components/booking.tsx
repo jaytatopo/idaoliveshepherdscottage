@@ -95,7 +95,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
     return (
         <section 
             id="booking" 
-            className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
+            className="relative py-12 md:py-16 bg-background opacity-0 animate-fade-in-up [animation-delay:400ms] overflow-hidden"
         >
              {imageBg && (
                 <Image
@@ -124,7 +124,7 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="h-[700px] bg-muted rounded-b-lg p-2">
+                                <div className="h-[850px] bg-muted rounded-b-lg p-2">
                                      <iframe 
                                         src="https://book.nightsbridge.com/32988"
                                         className="w-full h-full border-0 rounded-md"

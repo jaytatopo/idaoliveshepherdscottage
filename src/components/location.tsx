@@ -19,7 +19,7 @@ interface LocationProps {
 
 export default function Location({ content, imageBg }: LocationProps) {
   return (
-    <section id="location" className="relative py-16 md:py-24 bg-background opacity-0 animate-fade-in-up [animation-delay:800ms] overflow-hidden">
+    <section id="location" className="relative py-12 md:py-16 bg-background opacity-0 animate-fade-in-up [animation-delay:800ms] overflow-hidden">
         {imageBg && (
             <Image
                 src={imageBg.src}

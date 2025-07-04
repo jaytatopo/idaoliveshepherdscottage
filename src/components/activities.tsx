@@ -18,7 +18,7 @@ export default function Activities({ content, activities, imageBg }: ActivitiesP
   return (
     <section 
       id="activities" 
-      className="relative py-16 md:py-24 bg-card opacity-0 animate-fade-in-up [animation-delay:200ms]"
+      className="relative py-12 md:py-16 bg-card opacity-0 animate-fade-in-up [animation-delay:200ms]"
     >
       {imageBg && (
         <Image
