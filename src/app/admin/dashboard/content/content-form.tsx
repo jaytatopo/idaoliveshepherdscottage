@@ -143,6 +143,10 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                             <Label htmlFor="booking_subheading">Subheading</Label>
                             <Textarea id="booking_subheading" name="booking_subheading" defaultValue={content.booking?.subheading} />
                         </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="booking_booking_url">Booking Engine URL</Label>
+                            <Input id="booking_booking_url" name="booking_booking_url" type="url" defaultValue={content.booking?.booking_url} />
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -293,6 +297,14 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                                 <Label htmlFor="location_instagram_url">Instagram URL</Label>
                                 <Input id="location_instagram_url" name="location_instagram_url" type="url" defaultValue={content.location?.instagram_url} />
                             </div>
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="location_map_embed_url">Google Maps Embed URL</Label>
+                            <Input id="location_map_embed_url" name="location_map_embed_url" type="url" defaultValue={content.location?.map_embed_url} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="location_map_directions_url">Google Maps Directions URL</Label>
+                            <Input id="location_map_directions_url" name="location_map_directions_url" type="url" defaultValue={content.location?.map_directions_url} />
                         </div>
                     </CardContent>
                 </Card>

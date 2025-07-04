@@ -37,6 +37,7 @@ interface BookingContent {
     rules_items?: string;
     checkin_items?: string;
     practical_items?: string;
+    booking_url?: string;
 }
 
 interface BookingProps {
@@ -110,14 +111,22 @@ export default function Booking({ content, phone, imageBg }: BookingProps) {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="h-[750px] bg-muted rounded-lg p-2 shadow-inner">
-                                    <iframe 
-                                        src="https://book.nightsbridge.com/32988"
-                                        className="w-full h-full border-0 rounded-md"
-                                        title="Nightsbridge Booking Engine"
-                                    />
-                                </div>
-                                <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
+                                {content.booking_url ? (
+                                    <>
+                                        <div className="h-[750px] bg-muted rounded-lg p-2 shadow-inner">
+                                            <iframe 
+                                                src={content.booking_url}
+                                                className="w-full h-full border-0 rounded-md"
+                                                title="Nightsbridge Booking Engine"
+                                            />
+                                        </div>
+                                        <p className="text-xs text-muted-foreground text-center mt-2">Powered by Nightsbridge</p>
+                                    </>
+                                ) : (
+                                    <div className="h-[750px] bg-muted rounded-lg p-2 shadow-inner flex items-center justify-center">
+                                        <p className="text-muted-foreground">Booking engine not configured.</p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </div>

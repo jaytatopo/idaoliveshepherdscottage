@@ -109,6 +109,7 @@ function shapeContent(rows: any[]): WebsiteContent {
             rules_items: 'Strictly for adults only. No children or infants.\nNo pets allowed.\nNo parties or events.\nSmoking is not permitted on the property.',
             checkin_items: 'Check-in is from 14:00. Closing times vary by booking site (17:00-20:00). Please confirm your arrival time.\nCheck-out is between 10:00 and 11:00.\nDaily cleaning is not included but can be arranged for longer stays.',
             practical_items: 'Guests are advised to bring their own drinking water.\nWe are off-grid: there is no Wi-Fi and limited mobile signal.\nPlease bring cash for any on-site extras like farm produce.',
+            booking_url: 'https://book.nightsbridge.com/32988',
         },
         reviews: { 
             heading: 'What Our Guests Say', 
@@ -121,7 +122,9 @@ function shapeContent(rows: any[]): WebsiteContent {
             email: 'reservations@idaolivecottagemcgregor.co.za', 
             phone: '+27 12 345 6789', 
             facebook_url: '', 
-            instagram_url: '' 
+            instagram_url: '',
+            map_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3319.106517852355!2d19.82606087570201!3d-33.96414777328905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dd243491f893d5d%3A0xf6b5860731a31b41!2sMcGregor%2C%206708!5e0!3m2!1sen!2sza!4v1716900238148!5m2!1sen!2sza',
+            map_directions_url: 'https://www.google.com/maps/place/McGregor,+6708/@-33.9641478,19.8260609,17z/data=!3m1!4b1!4m6!3m5!1s0x1dd243491f893d5d:0xf6b5860731a31b41!8m2!3d-33.9641523!4d19.8286358!16s%2Fm%2F02pw_yq?entry=ttu',
         },
         faq: {
             heading: 'Frequently Asked Questions',

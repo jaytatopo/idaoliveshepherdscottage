@@ -10,6 +10,8 @@ interface LocationContent {
   address: string;
   email: string;
   phone: string;
+  map_embed_url: string;
+  map_directions_url: string;
 }
 
 interface LocationProps {
@@ -43,18 +45,24 @@ export default function Location({ content, imageBg }: LocationProps) {
         <Card className="overflow-hidden shadow-xl bg-background/80 backdrop-blur-sm">
           <div className="grid grid-cols-1 md:grid-cols-5">
             <div className="md:col-span-3 relative h-80 md:h-full min-h-[300px] opacity-0 animate-slide-in-from-left [animation-delay:300ms]">
-               <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3319.106517852355!2d19.82606087570201!3d-33.96414777328905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dd243491f893d5d%3A0xf6b5860731a31b41!2sMcGregor%2C%206708!5e0!3m2!1sen!2sza!4v1716900238148!5m2!1sen!2sza"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen={false}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Location of Ida Olive Cottage on Google Maps"
-                  aria-label="Location of Ida Olive Cottage on Google Maps"
-                  className='absolute inset-0 w-full h-full'
-                ></iframe>
+               {content.map_embed_url ? (
+                    <iframe
+                        src={content.map_embed_url}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen={false}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Location of Ida Olive Cottage on Google Maps"
+                        aria-label="Location of Ida Olive Cottage on Google Maps"
+                        className='absolute inset-0 w-full h-full'
+                    ></iframe>
+                ) : (
+                    <div className="absolute inset-0 w-full h-full bg-muted flex items-center justify-center">
+                        <p className="text-muted-foreground">Map not configured.</p>
+                    </div>
+                )}
             </div>
             <div className="md:col-span-2 p-6 md:p-8 flex flex-col justify-center opacity-0 animate-slide-in-from-right [animation-delay:300ms]">
               <h3 className="font-serif text-2xl font-semibold mb-6">Contact & Directions</h3>
@@ -74,11 +82,13 @@ export default function Location({ content, imageBg }: LocationProps) {
                   <span>{content.phone}</span>
                 </div>
               </div>
-              <Button asChild className="mt-8">
-                 <a href="https://www.google.com/maps/place/McGregor,+6708/@-33.9641478,19.8260609,17z/data=!3m1!4b1!4m6!3m5!1s0x1dd243491f893d5d:0xf6b5860731a31b41!8m2!3d-33.9641523!4d19.8286358!16s%2Fm%2F02pw_yq?entry=ttu" target="_blank" rel="noopener noreferrer">
-                    Get Directions on Google Maps
-                 </a>
-              </Button>
+              {content.map_directions_url && (
+                <Button asChild className="mt-8">
+                    <a href={content.map_directions_url} target="_blank" rel="noopener noreferrer">
+                        Get Directions on Google Maps
+                    </a>
+                </Button>
+              )}
             </div>
           </div>
         </Card>
