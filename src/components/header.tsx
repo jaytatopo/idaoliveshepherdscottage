@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -36,7 +37,7 @@ export default function Header() {
   }`;
 
   const linkClasses = `text-lg font-serif font-bold transition-colors duration-300 ${
-    isScrolled ? 'text-primary' : 'text-primary-foreground'
+    isScrolled ? 'text-primary' : 'text-white'
   }`;
 
   const DesktopNav = () => (
@@ -45,10 +46,10 @@ export default function Header() {
         <Link key={link.href} href={link.href} passHref>
           <Button
             variant="link"
-            className={`transition-colors duration-300 ${
+            className={`text-base font-semibold transition-colors duration-300 ${
               isScrolled
                 ? 'text-foreground hover:text-primary'
-                : 'text-primary-foreground hover:text-primary-foreground/80'
+                : 'text-white hover:text-white/80'
             }`}
           >
             {link.label}
@@ -61,7 +62,7 @@ export default function Header() {
           className={`transition-all duration-300 ${
             isScrolled
               ? 'bg-accent hover:bg-accent/90 text-accent-foreground'
-              : 'border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10'
+              : 'border-white text-white hover:bg-white/10'
           }`}
         >
           Book Now
@@ -113,7 +114,7 @@ export default function Header() {
               className={`transition-colors duration-300 ${
                 isScrolled
                   ? 'text-foreground'
-                  : 'text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground'
+                  : 'text-white hover:bg-white/10 hover:text-white'
               }`}
             >
               <Menu className="h-6 w-6" />
