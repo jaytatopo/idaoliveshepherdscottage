@@ -1,6 +1,10 @@
+'use client';
+
 import type { Amenity, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { useEffect, useState } from 'react';
 
 interface AmenitiesContent {
   heading: string;
@@ -10,10 +14,21 @@ interface AmenitiesContent {
 interface AmenitiesProps {
   content: AmenitiesContent;
   amenities: Amenity[];
-  imageBg?: GalleryImage;
 }
 
-export default function Amenities({ content, amenities, imageBg }: AmenitiesProps) {
+export default function Amenities({ content, amenities }: AmenitiesProps) {
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('amenities_bg');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+  
   if (!amenities || amenities.length === 0) {
     return null;
   }

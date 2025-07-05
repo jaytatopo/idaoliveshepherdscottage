@@ -4,7 +4,11 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { PageSection } from '@/lib/content';
+import type { PageSection, GalleryImage, Activity } from '@/lib/content';
+import { 
+    getGalleryImages as fetchGalleryImages,
+    getActivities as fetchActivities
+} from '@/lib/content';
 
 const MAX_FILE_SIZE_MB = 3;
 
@@ -483,5 +487,27 @@ export async function updatePageLayout(sections: PageSection[]) {
     } catch (error: any) {
         console.error('Failed to update page layout:', error);
         return { success: false, message: `Database error while updating layout. Details: ${error.message}` };
+    }
+}
+
+// --- New Actions for Client-Side Fetching ---
+
+export async function getClientGalleryImages(section: string): Promise<{ success: boolean; data?: GalleryImage[]; message?: string; }> {
+    try {
+        const images = await fetchGalleryImages(section);
+        return { success: true, data: images };
+    } catch (error: any) {
+        console.error(`Failed to fetch gallery images for section ${section} via action:`, error);
+        return { success: false, message: `Failed to fetch images. Details: ${error.message}` };
+    }
+}
+
+export async function getClientActivities(): Promise<{ success: boolean; data?: Activity[]; message?: string; }> {
+    try {
+        const activities = await fetchActivities();
+        return { success: true, data: activities };
+    } catch (error: any) {
+        console.error(`Failed to fetch activities via action:`, error);
+        return { success: false, message: `Failed to fetch activities. Details: ${error.message}` };
     }
 }

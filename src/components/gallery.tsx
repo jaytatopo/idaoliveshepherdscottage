@@ -1,23 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
 import type { GalleryImage } from '@/lib/content';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { Skeleton } from './ui/skeleton';
 
 interface GalleryProps {
-  galleryImages: GalleryImage[];
+  // galleryImages are now fetched client-side
 }
 
-export default function Gallery({ galleryImages }: GalleryProps) {
+const GallerySkeleton = () => (
+    <section id="gallery" className="relative py-12 md:py-20 bg-card overflow-hidden">
+      <div className="relative z-10 container mx-auto px-4 md:px-6">
+        <div className="text-center mb-12">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold">Gallery</h2>
+          <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+            Step inside and discover the comfort and charm of Ida Olive.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <Skeleton key={index} className="aspect-square w-full rounded-lg" />
+          ))}
+        </div>
+      </div>
+    </section>
+);
+
+
+export default function Gallery({}: GalleryProps) {
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-  if (!galleryImages || galleryImages.length === 0) {
-    return null; // Don't render the section if there are no images
-  }
-  
+  useEffect(() => {
+    const loadImages = async () => {
+      const result = await getClientGalleryImages('accommodation');
+      if (result.success && result.data) {
+        setImages(result.data);
+      }
+      setIsLoading(false);
+    };
+    loadImages();
+  }, []);
+
   const handleOpen = (index: number) => {
     setSelectedImageIndex(index);
   };
@@ -28,17 +58,25 @@ export default function Gallery({ galleryImages }: GalleryProps) {
 
   const handleNext = () => {
     if (selectedImageIndex !== null) {
-      setSelectedImageIndex((selectedImageIndex + 1) % galleryImages.length);
+      setSelectedImageIndex((selectedImageIndex + 1) % images.length);
     }
   };
 
   const handlePrev = () => {
     if (selectedImageIndex !== null) {
-      setSelectedImageIndex((selectedImageIndex - 1 + galleryImages.length) % galleryImages.length);
+      setSelectedImageIndex((selectedImageIndex - 1 + images.length) % images.length);
     }
   };
 
-  const imagesToShow = galleryImages.slice(0, galleryImages.length > 8 ? 7 : 8);
+  if (isLoading) {
+    return <GallerySkeleton />;
+  }
+  
+  if (!images || images.length === 0) {
+    return null; // Don't render the section if there are no images
+  }
+  
+  const imagesToShow = images.slice(0, images.length > 8 ? 7 : 8);
 
   return (
     <section id="gallery" className="relative py-12 md:py-20 bg-card overflow-hidden">
@@ -69,7 +107,7 @@ export default function Gallery({ galleryImages }: GalleryProps) {
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>
                 ))}
-                {galleryImages.length > 8 && (
+                {images.length > 8 && (
                     <button
                         key="view-more"
                         onClick={() => handleOpen(7)}
@@ -79,7 +117,7 @@ export default function Gallery({ galleryImages }: GalleryProps) {
                         <div className="text-center text-muted-foreground">
                         <Plus className="h-8 w-8 mx-auto" />
                         <span className="text-sm font-medium mt-1">
-                            +{galleryImages.length - 7} More
+                            +{images.length - 7} More
                         </span>
                         </div>
                     </button>
@@ -92,15 +130,15 @@ export default function Gallery({ galleryImages }: GalleryProps) {
                  <DialogHeader className="sr-only">
                     <DialogTitle>Accommodation Gallery</DialogTitle>
                     {selectedImageIndex !== null && (
-                        <DialogDescription>{galleryImages[selectedImageIndex].alt}</DialogDescription>
+                        <DialogDescription>{images[selectedImageIndex].alt}</DialogDescription>
                     )}
                 </DialogHeader>
 
                 <div className="relative aspect-video">
                     {selectedImageIndex !== null && (
                         <Image
-                            src={galleryImages[selectedImageIndex].src}
-                            alt={galleryImages[selectedImageIndex].alt}
+                            src={images[selectedImageIndex].src}
+                            alt={images[selectedImageIndex].alt}
                             fill
                             sizes="100vw"
                             className="object-contain"

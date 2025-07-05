@@ -1,8 +1,12 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MapPin, Mail, Phone } from 'lucide-react';
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { useEffect, useState } from 'react';
 
 interface LocationContent {
   heading: string;
@@ -16,10 +20,21 @@ interface LocationContent {
 
 interface LocationProps {
     content: LocationContent;
-    imageBg?: GalleryImage;
 }
 
-export default function Location({ content, imageBg }: LocationProps) {
+export default function Location({ content }: LocationProps) {
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('location_bg');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+
   return (
     <section id="location" className="relative py-12 md:py-20 bg-background overflow-hidden">
         {imageBg && imageBg.src && (

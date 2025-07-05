@@ -1,7 +1,11 @@
+'use client';
+
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
 
 interface CTAContent {
   heading: string;
@@ -12,10 +16,21 @@ interface CTAContent {
 
 interface CTAProps {
   content: CTAContent;
-  imageBg?: GalleryImage;
 }
 
-export default function CallToAction({ content, imageBg }: CTAProps) {
+export default function CallToAction({ content }: CTAProps) {
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('cta_bg');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+
   if (!content.heading) return null;
 
   return (

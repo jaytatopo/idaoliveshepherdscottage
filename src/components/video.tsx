@@ -1,5 +1,9 @@
+'use client';
+
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { useEffect, useState } from 'react';
 
 interface VideoContent {
   heading: string;
@@ -9,10 +13,21 @@ interface VideoContent {
 
 interface VideoProps {
   content: VideoContent;
-  imageBg?: GalleryImage;
 }
 
-export default function Video({ content, imageBg }: VideoProps) {
+export default function Video({ content }: VideoProps) {
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('video_bg');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+
   if (!content.url) return null;
 
   return (

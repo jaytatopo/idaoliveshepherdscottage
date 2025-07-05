@@ -1,3 +1,5 @@
+'use client';
+
 import type { FAQ, GalleryImage } from '@/lib/content';
 import {
   Accordion,
@@ -6,6 +8,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
 
 interface FaqContent {
   heading: string;
@@ -15,10 +19,21 @@ interface FaqContent {
 interface FaqProps {
   content: FaqContent;
   faqs: FAQ[];
-  imageBg?: GalleryImage;
 }
 
-export default function Faq({ content, faqs, imageBg }: FaqProps) {
+export default function Faq({ content, faqs }: FaqProps) {
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('faq_bg');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+  
   if (!faqs || faqs.length === 0) {
     return null;
   }

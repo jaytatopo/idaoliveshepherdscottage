@@ -21,6 +21,8 @@ import { Textarea } from './ui/textarea';
 import type { GalleryImage } from '@/lib/content';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useEffect, useState } from 'react';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
 
 
 const formSchema = z.object({
@@ -43,11 +45,22 @@ interface BookingContent {
 interface BookingProps {
   content: BookingContent;
   phone?: string;
-  imageBg?: GalleryImage;
 }
 
-export default function Booking({ content, phone, imageBg }: BookingProps) {
+export default function Booking({ content, phone }: BookingProps) {
     const { toast } = useToast();
+    const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+    useEffect(() => {
+        const loadBgImage = async () => {
+        const result = await getClientGalleryImages('booking_bg');
+        if (result.success && result.data) {
+            setImageBg(result.data[0]);
+        }
+        };
+        loadBgImage();
+    }, []);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {

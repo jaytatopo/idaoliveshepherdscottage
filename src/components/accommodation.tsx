@@ -1,7 +1,12 @@
+'use client';
+
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
 import { Card } from './ui/card';
 import { BedDouble, Users, ZapOff } from 'lucide-react';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { useEffect, useState } from 'react';
+import { Skeleton } from './ui/skeleton';
 
 interface AccommodationContent {
   heading: string;
@@ -12,11 +17,35 @@ interface AccommodationContent {
 
 interface AccommodationProps {
   content: AccommodationContent;
-  images: GalleryImage[];
-  imageBg?: GalleryImage;
 }
 
-export default function Accommodation({ content, images, imageBg }: AccommodationProps) {
+export default function Accommodation({ content }: AccommodationProps) {
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [imagesResult, bgResult] = await Promise.all([
+          getClientGalleryImages('accommodation'),
+          getClientGalleryImages('accommodation_bg')
+        ]);
+        if (imagesResult.success && imagesResult.data) {
+          setImages(imagesResult.data);
+        }
+        if (bgResult.success && bgResult.data) {
+          setImageBg(bgResult.data[0]);
+        }
+      } catch (error) {
+        console.error("Failed to load accommodation images", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
   const image1 = images?.[0];
   const image2 = images?.[1];
 
@@ -42,35 +71,42 @@ export default function Accommodation({ content, images, imageBg }: Accommodatio
           </p>
         </div>
 
-        {(image1 || image2) && (
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {image1 && (
-              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:300ms]">
-                <Image
-                    src={image1.src}
-                    alt={image1.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    data-ai-hint="cottage interior"
-                  />
-              </div>
-            )}
-            {image2 && (
-              <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:400ms]">
-                <Image
-                    src={image2.src}
-                    alt={image2.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    data-ai-hint="cottage amenities"
-                  />
-              </div>
-            )}
-            {(image1 && !image2) && <Card className="hidden md:block bg-muted/50"/>}
-          </div>
-        )}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {isLoading ? (
+            <>
+              <Skeleton className="aspect-video w-full rounded-lg" />
+              <Skeleton className="aspect-video w-full rounded-lg" />
+            </>
+          ) : (
+            <>
+              {image1 && (
+                <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:300ms]">
+                  <Image
+                      src={image1.src}
+                      alt={image1.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      data-ai-hint="cottage interior"
+                    />
+                </div>
+              )}
+              {image2 && (
+                <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:400ms]">
+                  <Image
+                      src={image2.src}
+                      alt={image2.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      data-ai-hint="cottage amenities"
+                    />
+                </div>
+              )}
+              {image1 && !image2 && <Card className="hidden md:block bg-muted/50"/>}
+            </>
+          )}
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
             <Card className="p-6 flex flex-col items-center justify-center opacity-0 animate-fade-in-up [animation-delay:300ms] bg-background/70 backdrop-blur-sm">

@@ -7,11 +7,10 @@ import {
     getContent, 
     getAmenities as fetchAmenities, 
     getFacilities as fetchFacilities,
-    getActivities as fetchActivities, 
-    getGalleryImages, 
     getReviews as fetchReviews, 
     getFaqs,
-    getPageSections 
+    getPageSections,
+    getGalleryImages 
 } from '@/lib/content';
 import StructuredData from '@/components/structured-data';
 
@@ -47,110 +46,68 @@ const sectionComponents: { [key: string]: React.ComponentType<any> } = {
   video: Video,
 };
 
-async function getAllData() {
+// Fetch only the data needed for the initial server render.
+// All other data (especially images) will be fetched client-side inside each component.
+async function getInitialPageData() {
     const [
         content,
         amenities,
         facilities,
-        activities,
         reviews,
         faqs,
-        accommodationGalleryImages,
         heroImage,
-        accommodationBg,
-        amenitiesBg,
-        facilitiesBg,
-        activitiesBg,
-        reviewsBg,
-        bookingBg,
-        locationBg,
-        hostProfileImage,
-        hostBg,
-        faqBg,
-        ctaBg,
-        videoBg,
     ] = await Promise.all([
         getContent(),
         fetchAmenities(),
         fetchFacilities(),
-        fetchActivities(),
         fetchReviews(),
         getFaqs(),
-        getGalleryImages('accommodation'),
         getGalleryImages('hero').then(images => images[0]),
-        getGalleryImages('accommodation_bg').then(images => images[0]),
-        getGalleryImages('amenities_bg').then(images => images[0]),
-        getGalleryImages('facilities_bg').then(images => images[0]),
-        getGalleryImages('activities_bg').then(images => images[0]),
-        getGalleryImages('reviews').then(images => images[0]),
-        getGalleryImages('booking_bg').then(images => images[0]),
-        getGalleryImages('location_bg').then(images => images[0]),
-        getGalleryImages('host_profile').then(images => images[0]),
-        getGalleryImages('host_bg').then(images => images[0]),
-        getGalleryImages('faq_bg').then(images => images[0]),
-        getGalleryImages('cta_bg').then(images => images[0]),
-        getGalleryImages('video_bg').then(images => images[0]),
     ]);
 
     return {
         content,
         amenities,
         facilities,
-        activities,
         reviews,
         faqs,
-        accommodationGalleryImages,
-        hostProfileImage,
-        backgrounds: {
-            hero: heroImage,
-            accommodation: accommodationBg,
-            amenities: amenitiesBg,
-            facilities: facilitiesBg,
-            activities: activitiesBg,
-            reviews: reviewsBg,
-            booking: bookingBg,
-            location: locationBg,
-            host: hostBg,
-            faq: faqBg,
-            cta: ctaBg,
-            video: videoBg,
-        },
+        heroImage
     };
 }
 
 
 export default async function Home() {
   const pageSections = await getPageSections();
-  const allData = await getAllData();
+  const initialData = await getInitialPageData();
 
   const getSectionProps = (type: string) => {
     switch (type) {
       case 'hero':
-        return { content: allData.content.hero, image: allData.backgrounds.hero };
+        return { content: initialData.content.hero, image: initialData.heroImage };
       case 'accommodation':
-        return { content: allData.content.accommodation, images: allData.accommodationGalleryImages.slice(0, 2), imageBg: allData.backgrounds.accommodation };
+        return { content: initialData.content.accommodation };
       case 'gallery':
-        return { galleryImages: allData.accommodationGalleryImages };
+        return {};
       case 'amenities':
-        return { content: allData.content.amenities, amenities: allData.amenities, imageBg: allData.backgrounds.amenities };
+        return { content: initialData.content.amenities, amenities: initialData.amenities };
       case 'facilities':
-        return { content: allData.content.facilities, facilities: allData.facilities, imageBg: allData.backgrounds.facilities };
+        return { content: initialData.content.facilities, facilities: initialData.facilities };
       case 'activities':
-        return { content: allData.content.activities, activities: allData.activities, imageBg: allData.backgrounds.activities };
+        return { content: initialData.content.activities };
       case 'booking':
-        return { content: allData.content.booking, phone: allData.content.location?.phone, imageBg: allData.backgrounds.booking };
+        return { content: initialData.content.booking, phone: initialData.content.location?.phone };
       case 'reviews':
-        return { content: allData.content.reviews, reviews: allData.reviews, imageBg: allData.backgrounds.reviews };
+        return { content: initialData.content.reviews, reviews: initialData.reviews };
       case 'location':
-        return { content: allData.content.location, imageBg: allData.backgrounds.location };
+        return { content: initialData.content.location };
       case 'faq':
-        return { content: allData.content.faq, faqs: allData.faqs, imageBg: allData.backgrounds.faq };
+        return { content: initialData.content.faq, faqs: initialData.faqs };
       case 'host':
-        return { content: allData.content.host, image: allData.hostProfileImage, imageBg: allData.backgrounds.host };
+        return { content: initialData.content.host };
       case 'cta':
-        return { content: allData.content.cta, imageBg: allData.backgrounds.cta };
+        return { content: initialData.content.cta };
       case 'video':
-        return { content: allData.content.video, imageBg: allData.backgrounds.video };
+        return { content: initialData.content.video };
       default:
         return {};
     }
@@ -158,7 +115,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <StructuredData content={allData.content} heroImage={allData.backgrounds.hero} />
+      <StructuredData content={initialData.content} heroImage={initialData.heroImage} />
       <Header />
       <main className="flex-1">
         {pageSections.map((section) => {

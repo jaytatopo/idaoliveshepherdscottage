@@ -1,7 +1,11 @@
+'use client';
+
 import type { Facility, GalleryImage } from '@/lib/content';
 import DynamicIcon from './ui/dynamic-icon';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { useEffect, useState } from 'react';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
 
 interface FacilitiesContent {
   heading: string;
@@ -11,10 +15,21 @@ interface FacilitiesContent {
 interface FacilitiesProps {
   content: FacilitiesContent;
   facilities: Facility[];
-  imageBg?: GalleryImage;
 }
 
-export default function Facilities({ content, facilities, imageBg }: FacilitiesProps) {
+export default function Facilities({ content, facilities }: FacilitiesProps) {
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('facilities_bg');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+
   if (!facilities || facilities.length === 0) return null;
 
   return (

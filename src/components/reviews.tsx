@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, StarHalf } from 'lucide-react';
 import type { Review, GalleryImage } from '@/lib/content';
@@ -9,6 +9,7 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
 
 interface ReviewsProps {
   content: {
@@ -16,7 +17,6 @@ interface ReviewsProps {
     subheading: string;
   };
   reviews: Review[];
-  imageBg?: GalleryImage;
 }
 
 const renderStars = (rating: number) => {
@@ -59,8 +59,20 @@ const ReviewCard = ({ review, truncate = false }: { review: Review, truncate?: b
 );
 
 
-export default function Reviews({ content, reviews, imageBg }: ReviewsProps) {
+export default function Reviews({ content, reviews }: ReviewsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+
+  useEffect(() => {
+    const loadBgImage = async () => {
+      const result = await getClientGalleryImages('reviews');
+      if (result.success && result.data) {
+        setImageBg(result.data[0]);
+      }
+    };
+    loadBgImage();
+  }, []);
+
   const reviewsToShow = reviews.slice(0, 4);
 
   return (
