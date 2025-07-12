@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -47,6 +48,8 @@ function SortableTableRow({ section, onVisibilityChange, onSortOrderChange }: { 
         zIndex: isDragging ? 1 : 0,
         position: 'relative' as 'relative',
     };
+    
+    const isHeroSection = section.section_type === 'hero';
 
     return (
         <TableRow ref={setNodeRef} style={style} {...attributes} data-state={isDragging ? 'dragging' : undefined}>
@@ -64,8 +67,10 @@ function SortableTableRow({ section, onVisibilityChange, onSortOrderChange }: { 
             </TableCell>
             <TableCell>
                 <Switch
-                    checked={section.is_visible}
+                    checked={isHeroSection ? true : section.is_visible}
                     onCheckedChange={(checked) => onVisibilityChange(section.id, checked)}
+                    disabled={isHeroSection}
+                    aria-label={isHeroSection ? "Hero section cannot be hidden" : `Toggle visibility for ${section.title}`}
                 />
             </TableCell>
         </TableRow>
@@ -113,7 +118,12 @@ export function LayoutClientPage({ sections: initialSections }: { sections: Page
 
     const handleSave = async () => {
         setIsSaving(true);
-        const result = await updatePageLayout(sections);
+        // Ensure hero section is always visible before saving
+        const sectionsToSave = sections.map(s => 
+            s.section_type === 'hero' ? { ...s, is_visible: true } : s
+        );
+
+        const result = await updatePageLayout(sectionsToSave);
         if (result.success) {
             toast({ title: 'Layout Saved', description: 'Your homepage layout has been updated.' });
         } else {
