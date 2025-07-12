@@ -1,11 +1,12 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu } from "lucide-react";
+import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu, ShieldCheck } from "lucide-react";
 
 
 // Component to handle sidebar contents and logic
@@ -56,6 +57,14 @@ function AdminSidebar() {
               <Link href="/admin/dashboard/images" onClick={handleLinkClick}>
                 <ImageIcon />
                 <span>Images</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+           <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Legal Pages" isActive={pathname === '/admin/dashboard/legal'}>
+              <Link href="/admin/dashboard/legal" onClick={handleLinkClick}>
+                <ShieldCheck />
+                <span>Legal Pages</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

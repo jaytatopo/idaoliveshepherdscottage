@@ -1,16 +1,22 @@
-'use client';
 
-import { useState, useEffect } from 'react';
+import { getContent } from "@/lib/content";
+import { parse } from 'marked';
 
-export default function PrivacyPolicyPage() {
-    const [lastUpdated, setLastUpdated] = useState('');
+// This is a basic markdown parser. For a production app, you might want a more robust one.
+function Markdown({ content }: { content: string }) {
+    const html = parse(content, { gfm: true, breaks: true });
+    return (
+        <div 
+            className="prose prose-lg dark:prose-invert max-w-none" 
+            dangerouslySetInnerHTML={{ __html: html }}
+        />
+    )
+}
 
-    useEffect(() => {
-        // This code runs only on the client, after the component has mounted,
-        // which prevents a server-client mismatch (hydration error).
-        setLastUpdated(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-    }, []);
-
+export default async function PrivacyPolicyPage() {
+    const content = await getContent();
+    const policyContent = content.privacy_policy?.content || 'Privacy policy not configured yet.';
+    const lastUpdated = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     return (
         <main className="flex-1 py-24 md:py-32">
@@ -18,31 +24,11 @@ export default function PrivacyPolicyPage() {
                 <div className="max-w-3xl mx-auto space-y-6">
                     <h1 className="font-serif text-4xl md:text-5xl font-bold">Privacy Policy</h1>
                     
-                    <p className="text-lg text-muted-foreground h-7">
-                        {lastUpdated && `Last updated: ${lastUpdated}`}
+                    <p className="text-lg text-muted-foreground">
+                        Last updated: {lastUpdated}
                     </p>
                     
-                    <div className="prose prose-lg dark:prose-invert max-w-none">
-                        <p>This is a placeholder for your privacy policy. A privacy policy is a statement or a legal document that discloses some or all of the ways a party gathers, uses, discloses, and manages a customer or client's data. It fulfills a legal requirement to protect a customer or client's privacy.</p>
-                        
-                        <h2 className="font-serif">1. Information We Collect</h2>
-                        <p>We collect information that you provide to us directly, such as when you fill out our inquiry form. This may include your name, email address, phone number, and booking details.</p>
-                        
-                        <h2 className="font-serif">2. How We Use Your Information</h2>
-                        <p>We use the information we collect to respond to your inquiries, process your bookings, and communicate with you about your stay. We do not sell or share your personal information with third parties for marketing purposes.</p>
-                        
-                        <h2 className="font-serif">3. Cookies</h2>
-                        <p>Our website uses cookies to enhance your browsing experience and to help us understand how our site is used. A cookie is a small file placed on your device. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.</p>
-
-                        <h2 className="font-serif">4. Data Security</h2>
-                        <p>We are committed to ensuring that your information is secure. We have put in place suitable physical, electronic, and managerial procedures to safeguard and secure the information we collect online.</p>
-
-                        <h2 className="font-serif">5. Changes to This Policy</h2>
-                        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
-
-                        <h2 className="font-serif">6. Contact Us</h2>
-                        <p>If you have any questions about this Privacy Policy, you can contact us at our provided email address.</p>
-                    </div>
+                    <Markdown content={policyContent} />
                 </div>
             </div>
         </main>

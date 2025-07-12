@@ -124,7 +124,7 @@ function shapeContent(rows: any[]): WebsiteContent {
             facebook_url: '', 
             instagram_url: '',
             map_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3319.106517852355!2d19.82606087570201!3d-33.96414777328905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dd243491f893d5d%3A0xf6b5860731a31b41!2sMcGregor%2C%206708!5e0!3m2!1sen!2sza!4v1716900238148!5m2!1sen!2sza',
-            map_directions_url: 'https://www.google.com/maps/place/McGregor,+6708/@-33.9641478,19.8260609,17z/data=!3m1!4b1!4m6!3m5!1s0x1dd243491f893d5d:0xf6b5860731a31b41!8m2!3d-33.9641523!4d19.8286358!16s%2Fm%2F02pw_yq?entry=ttu',
+            map_directions_url: 'https://www.google.com/maps/place/McGregor,+6708/@-33.9641478,19.8260609,17z/data=!3m1!4b1!4m6!3m5!1s0x1dd243491f893d5d%3A0xf6b5860731a31b41!8m2!3d-33.9641523!4d19.8286358!16s%2Fm%2F02pw_yq?entry=ttu',
         },
         faq: {
             heading: 'Frequently Asked Questions',
@@ -146,6 +146,15 @@ function shapeContent(rows: any[]): WebsiteContent {
             heading: 'A Glimpse of Ida Olive',
             subheading: 'Press play and transport yourself to the tranquility of the Karoo.',
             url: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+        },
+        privacy_policy: {
+            content: `This is a placeholder for your privacy policy. A privacy policy is a statement or a legal document that discloses some or all of the ways a party gathers, uses, discloses, and manages a customer or client's data. It fulfills a legal requirement to protect a customer or client's privacy.\n\n## 1. Information We Collect\nWe collect information that you provide to us directly, such as when you fill out our inquiry form. This may include your name, email address, phone number, and booking details.\n\n## 2. How We Use Your Information\nWe use the information we collect to respond to your inquiries, process your bookings, and communicate with you about your stay. We do not sell or share your personal information with third parties for marketing purposes.\n\n## 3. Cookies\nOur website uses cookies to enhance your browsing experience and to help us understand how our site is used. A cookie is a small file placed on your device. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.\n\n## 4. Data Security\nWe are committed to ensuring that your information is secure. We have put in place suitable physical, electronic, and managerial procedures to safeguard and secure the information we collect online.\n\n## 5. Changes to This Policy\nWe may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.\n\n## 6. Contact Us\nIf you have any questions about this Privacy Policy, you can contact us at our provided email address.`
+        },
+        cookie_policy: {
+            content: `This is a placeholder for your cookie policy.`
+        },
+        terms_conditions: {
+            content: `This is a placeholder for your terms and conditions.`
         }
     };
 
