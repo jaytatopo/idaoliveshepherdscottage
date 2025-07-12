@@ -25,7 +25,7 @@ function AdminSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src="/admin-avatar.png" alt="Admin" />
+            <AvatarImage alt="Admin" />
             <AvatarFallback>A</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
