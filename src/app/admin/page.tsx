@@ -1,46 +1,59 @@
+
 'use client';
 
+import { useActionState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { login } from '@/app/actions/auth-actions';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+
+const initialState = {
+  success: true,
+  message: '',
+};
+
+function SubmitButton() {
+    // The `useFormStatus` hook provides status information of the last form submission.
+    // We can use it to show a loading state while the server action is running.
+    const { pending } = (React as any).useFormStatus();
+
+    return (
+        <Button type="submit" className="w-full" disabled={pending}>
+            {pending ? 'Signing In...' : 'Sign In'}
+        </Button>
+    );
+}
 
 export default function AdminLoginPage() {
-    const router = useRouter();
-
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        // In a real application, you would perform authentication here.
-        // For this prototype, we'll just navigate to the dashboard.
-        router.push('/admin/dashboard');
-    }
+    const [state, formAction] = useActionState(login, initialState);
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background">
             <Card className="w-full max-w-sm">
-                <form onSubmit={handleLogin}>
+                <form action={formAction}>
                     <CardHeader className="text-center">
                         <CardTitle className="text-2xl font-serif">Admin Portal</CardTitle>
                         <CardDescription>Ida Olive Shepherd’s Cottage</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" placeholder="admin@example.com" required />
-                        </div>
-                        <div className="space-y-2">
                             <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" required />
+                            <Input id="password" name="password" type="password" required />
                         </div>
+                        {state && !state.success && state.message && (
+                            <Alert variant="destructive">
+                                <AlertDescription>{state.message}</AlertDescription>
+                            </Alert>
+                        )}
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" className="w-full">
-                            Sign In
-                        </Button>
+                        <SubmitButton />
                     </CardFooter>
                 </form>
             </Card>
         </div>
     );
 }
+

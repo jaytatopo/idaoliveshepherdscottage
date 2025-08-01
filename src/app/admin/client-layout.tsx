@@ -7,6 +7,7 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem,
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu, ShieldCheck } from "lucide-react";
+import { logout } from '@/app/actions/auth-actions';
 
 
 // Component to handle sidebar contents and logic
@@ -20,12 +21,16 @@ function AdminSidebar() {
     }
   };
 
+  const handleLogout = async () => {
+      await logout();
+  }
+
   return (
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage alt="Admin" />
+            
             <AvatarFallback>A</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
@@ -129,12 +134,14 @@ function AdminSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Logout">
-              <Link href="/admin" onClick={handleLinkClick}>
-                <LogOut />
-                <span>Logout</span>
-              </Link>
-            </SidebarMenuButton>
+            <form action={handleLogout} className="w-full">
+                <SidebarMenuButton asChild tooltip="Logout">
+                    <button type="submit" className="w-full">
+                        <LogOut />
+                        <span>Logout</span>
+                    </button>
+                </SidebarMenuButton>
+            </form>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
@@ -175,3 +182,4 @@ export default function AdminClientLayout({
     </SidebarProvider>
   )
 }
+

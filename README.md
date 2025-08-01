@@ -1,3 +1,4 @@
+
 # Ida Olive Shepherd's Cottage Website
 
 This is a [Next.js](https://nextjs.org/) application for the Ida Olive Shepherd's Cottage website, complete with a dynamic content management system (CMS) for the admin.
@@ -18,10 +19,10 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
     *   In your Neon project dashboard (you can get there from Vercel's storage tab), navigate to the **SQL Editor**.
     *   Copy the entire content of the `sql/schema.sql` file from this repository.
     *   Paste the script into the SQL Editor and click **Run**. This will create all the necessary tables and populate them with default content.
-5.  **Add Resend API Key:**
-    *   In your Vercel project's **Settings -> Environment Variables**, add a new variable:
-        *   **Name:** `RESEND_API_KEY`
-        *   **Value:** Your API key from [Resend](https://resend.com).
+5.  **Add Environment Variables:**
+    *   In your Vercel project's **Settings -> Environment Variables**, add the following new variables:
+        *   **`ADMIN_PASSWORD`**: A secure password you will use to log into the admin panel.
+        *   **`RESEND_API_KEY`**: Your API key from [Resend](https://resend.com).
 6.  **Deploy:** Vercel will automatically build and deploy your site. Any future pushes to your repository will trigger a new deployment.
 
 ## Running the Project Locally
@@ -38,6 +39,7 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
     ```
     POSTGRES_URL="your_neon_connection_string"
     RESEND_API_KEY="your_resend_api_key"
+    ADMIN_PASSWORD="a_very_secure_password_here"
     ```
 
 3.  **Run the Development Server:**
@@ -45,3 +47,4 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
     npm run dev
     ```
     The application will be available at [http://localhost:3000](http://localhost:3000). The admin portal is at `/admin`.
+
