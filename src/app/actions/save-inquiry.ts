@@ -1,75 +1,51 @@
 'use server';
 
+import { createInquiry } from '@/lib/db';
 import { z } from 'zod';
-import { db } from '@/lib/db';
-import { Resend } from 'resend';
-import InquiryNotificationEmail from '@/components/emails/inquiry-notification';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const formSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
+const inquirySchema = z.object({
+  first_name: z.string().min(1, 'First name is required'),
+  last_name: z.string().min(1, 'Last name is required'),
+  email: z.string().email('Valid email is required'),
   phone: z.string().optional(),
-  guests: z.coerce.number().min(1, { message: "Please select the number of guests."}),
-  message: z.string().min(10, { message: 'Please provide a message of at least 10 characters.' }),
+  property_count: z.string().optional(),
+  property_value: z.string().optional(),
+  message: z.string().optional(),
 });
 
-type InquiryFormData = z.infer<typeof formSchema>;
-
-
-export async function saveInquiry(inquiry: InquiryFormData) {
+export async function saveInquiry(formData: FormData) {
   try {
-    const validatedInquiry = formSchema.parse(inquiry);
+    const rawData = {
+      first_name: formData.get('first_name') as string,
+      last_name: formData.get('last_name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      property_count: formData.get('property_count') as string,
+      property_value: formData.get('property_value') as string,
+      message: formData.get('message') as string,
+    };
 
-    // Save to database
-    try {
-        const sql = `
-          INSERT INTO inquiries (name, email, phone, guests, message)
-          VALUES ($1, $2, $3, $4, $5)
-        `;
-        const values = [
-          validatedInquiry.name,
-          validatedInquiry.email,
-          validatedInquiry.phone || null,
-          validatedInquiry.guests,
-          validatedInquiry.message,
-        ];
-        await db.execute(sql, values);
-    } catch (dbError: any) {
-        console.error('Database Error:', dbError);
-        return { success: false, message: `Database error: Could not save your inquiry. Please ensure the 'inquiries' table is set up correctly. Details: ${dbError.message}` };
-    }
+    const validatedData = inquirySchema.parse(rawData);
 
-    // Send email notification
-    if (process.env.RESEND_API_KEY) {
-        try {
-            // NOTE: For Resend to work, you MUST use a verified domain in the `from` field.
-            // The `onboarding@resend.dev` address is a temporary sandbox for testing.
-            // Replace `yourdomain.com` with your actual, verified domain before going live.
-            await resend.emails.send({
-                from: 'Ida Olive Cottage <onboarding@resend.dev>', // <-- Replace with your verified domain
-                to: 'reservations@idaolivecottagemcgregor.co.za', 
-                subject: 'New Web Inquiry for Ida Olive Cottage',
-                react: InquiryNotificationEmail(validatedInquiry),
-            });
-        } catch (emailError: any) {
-             console.error('Email Error:', emailError);
-             // The inquiry was saved, but email failed. Return a specific error.
-             return { success: false, message: `Your inquiry was saved, but the notification email failed to send. Check Resend configuration. Error: ${emailError.message}` };
-        }
-    } else {
-        console.warn('RESEND_API_KEY is not set. Skipping email notification.');
-    }
+    const inquiry = await createInquiry({
+      first_name: validatedData.first_name,
+      last_name: validatedData.last_name,
+      email: validatedData.email,
+      phone: validatedData.phone || undefined,
+      property_count: validatedData.property_count ? parseInt(validatedData.property_count) : undefined,
+      property_value: validatedData.property_value as any,
+      message: validatedData.message || undefined,
+      source: 'website',
+    });
 
-    return { success: true, message: "Enquiry sent successfully!" };
-
-  } catch (error: any) {
-    console.error('Action Error:', error);
-    if (error instanceof z.ZodError) {
-         return { success: false, message: error.errors.map(e => e.message).join(', ') };
-    }
-
-    return { success: false, message: 'An unexpected error occurred. Please check the server logs for more details.' };
+    return { success: true, data: inquiry };
+  } catch (error) {
+    console.error('Error saving inquiry:', error);
+    return { 
+      success: false, 
+      error: error instanceof z.ZodError 
+        ? 'Please fill in all required fields correctly.' 
+        : 'Failed to save inquiry. Please try again.' 
+    };
   }
 }

@@ -1,133 +1,230 @@
--- Drop tables if they exist to start clean
-DROP TABLE IF EXISTS `inquiries`, `admin_users`, `page_content`, `gallery_images`, `activities`, `amenities`, `reviews`;
+-- Property Management System Database Schema
+-- Drop existing tables to start fresh
+DROP TABLE IF EXISTS `maintenance_requests`, `financial_transactions`, `leases`, `tenants`, `properties`, `owners`, `admin_users`, `inquiries`;
 
--- Inquiries from the contact form
-CREATE TABLE `inquiries` (
+-- Property Owners
+CREATE TABLE `owners` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(255) DEFAULT NULL,
-  `check_in` date NOT NULL,
-  `check_out` date NOT NULL,
-  `guests` int NOT NULL,
+  `address` text,
+  `tax_id` varchar(255) DEFAULT NULL,
+  `bank_account` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Admin users for the portal
-CREATE TABLE `admin_users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- For simplicity, adding a default admin user. 
--- In a real app, use a secure password hashing library like bcrypt.
--- The password here is 'admin'.
-INSERT INTO `admin_users` (`email`, `password_hash`) VALUES ('admin@example.com', 'admin');
-
--- Generic key-value store for text content across the site
-CREATE TABLE `page_content` (
+-- Properties
+CREATE TABLE `properties` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `section` varchar(255) NOT NULL,
-  `content_key` varchar(255) NOT NULL,
-  `content_value` text,
+  `owner_id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `state` varchar(255) NOT NULL,
+  `zip_code` varchar(20) NOT NULL,
+  `property_type` enum('single_family', 'multi_family', 'condo', 'townhouse', 'commercial') NOT NULL,
+  `bedrooms` int DEFAULT NULL,
+  `bathrooms` decimal(3,1) DEFAULT NULL,
+  `square_feet` int DEFAULT NULL,
+  `year_built` int DEFAULT NULL,
+  `rent_amount` decimal(10,2) DEFAULT NULL,
+  `deposit_amount` decimal(10,2) DEFAULT NULL,
+  `status` enum('available', 'occupied', 'maintenance', 'off_market') DEFAULT 'available',
+  `description` text,
+  `amenities` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `section_key` (`section`,`content_key`)
+  KEY `owner_id` (`owner_id`),
+  CONSTRAINT `properties_owner_id_fk` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Pre-populate with current website content
-INSERT INTO `page_content` (`section`, `content_key`, `content_value`) VALUES
-('hero', 'heading', 'Your Serene, Off-Grid Karoo Escape'),
-('hero', 'subheading', 'Discover tranquility at Ida Olive Shepherd’s Cottage, a nature lover’s haven on a working dairy goat farm.'),
-('accommodation', 'heading', 'A Cozy, Off-Grid Retreat'),
-('accommodation', 'subheading', 'Experience the charm of shepherd’s cottage living, thoughtfully equipped for a comfortable and memorable stay in nature.'),
-('accommodation', 'main_text', 'Ida Olive Shepherd’s Cottage is a self-catering sanctuary on the remote Giddy Goat Farm. Surrounded by the endangered Robertson Succulent Karoo, large glass sliding doors and windows seamlessly connect you to the natural beauty outside, where indigenous vegetation and wildlife thrive.'),
-('accommodation', 'secondary_text', 'Completely off the grid, the cottage has no electricity. The open-plan lounge and kitchen feature a gas stove and refrigerator, while an indoor fireplace keeps the space warm on cooler nights. Solar lamps, candles, and fairy lights provide a magical ambiance.'),
-('activities', 'heading', 'Reconnect with Nature & Adventure'),
-('activities', 'subheading', 'From serene on-site activities to exciting local excursions, there''s something for every nature enthusiast.'),
-('reviews', 'heading', 'What Our Guests Say'),
-('reviews', 'subheading', 'Heartfelt words from those who have experienced the magic of Ida Olive.'),
-('location', 'heading', 'Find Your Way to Paradise'),
-('location', 'subheading', 'We''re nestled in the heart of the Karoo, just a few kilometers outside the charming village of McGregor.'),
-('location', 'address', 'Giddy Goat Farm, 6km outside McGregor, Western Cape, South Africa'),
-('location', 'email', 'reservations@idaolivecottagemcgregor.co.za'),
-('location', 'phone', '+27 12 345 6789 (Sample)'),
-('booking', 'heading', 'Rates & Availability'),
-('booking', 'subheading', 'Ready for your peaceful escape? Check our availability or send us an enquiry.');
-
--- Gallery images
-CREATE TABLE `gallery_images` (
+-- Tenants
+CREATE TABLE `tenants` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `src` varchar(255) NOT NULL,
-  `alt` varchar(255) NOT NULL,
-  `section` varchar(255) NOT NULL,
-  `sort_order` int DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `emergency_contact` varchar(255) DEFAULT NULL,
+  `emergency_phone` varchar(255) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `ssn` varchar(255) DEFAULT NULL,
+  `income` decimal(10,2) DEFAULT NULL,
+  `employment` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `gallery_images` (`src`, `alt`, `section`, `sort_order`) VALUES
-('/Main Bedroom.jpg', 'Cozy main bedroom with a king-size bed', 'accommodation', 1),
-('/Kitchen.jpg', 'Well-equipped kitchen with a gas stove', 'accommodation', 2),
-('/Bathroom.jpg', 'Bathroom with a bathtub and view', 'accommodation', 3),
-('/Outdoor Shower.jpg', 'An invigorating outdoor shower experience', 'accommodation', 4),
-('/Fire place.jpg', 'Cozy indoor fireplace for cool nights', 'accommodation', 5),
-('/Stoep.jpg', 'Relaxing stoep with a view', 'accommodation', 6);
-
--- Activities list
-CREATE TABLE `activities` (
+-- Leases
+CREATE TABLE `leases` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `icon` varchar(255) NOT NULL,
+  `property_id` int NOT NULL,
+  `tenant_id` int NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `rent_amount` decimal(10,2) NOT NULL,
+  `deposit_amount` decimal(10,2) NOT NULL,
+  `late_fee` decimal(10,2) DEFAULT NULL,
+  `pet_deposit` decimal(10,2) DEFAULT NULL,
+  `status` enum('active', 'expired', 'terminated', 'pending') DEFAULT 'pending',
+  `lease_document_url` varchar(500) DEFAULT NULL,
+  `notes` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `property_id` (`property_id`),
+  KEY `tenant_id` (`tenant_id`),
+  CONSTRAINT `leases_property_id_fk` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `leases_tenant_id_fk` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Maintenance Requests
+CREATE TABLE `maintenance_requests` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `property_id` int NOT NULL,
+  `tenant_id` int DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `sort_order` int DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `priority` enum('low', 'medium', 'high', 'emergency') DEFAULT 'medium',
+  `status` enum('open', 'in_progress', 'completed', 'cancelled') DEFAULT 'open',
+  `category` enum('plumbing', 'electrical', 'hvac', 'appliance', 'structural', 'pest_control', 'cleaning', 'other') DEFAULT 'other',
+  `estimated_cost` decimal(10,2) DEFAULT NULL,
+  `actual_cost` decimal(10,2) DEFAULT NULL,
+  `vendor_name` varchar(255) DEFAULT NULL,
+  `vendor_phone` varchar(255) DEFAULT NULL,
+  `scheduled_date` datetime DEFAULT NULL,
+  `completed_date` datetime DEFAULT NULL,
+  `photos` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `property_id` (`property_id`),
+  KEY `tenant_id` (`tenant_id`),
+  CONSTRAINT `maintenance_property_id_fk` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `maintenance_tenant_id_fk` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `activities` (`icon`, `title`, `description`, `sort_order`) VALUES
-('Mountain', 'Hiking Trails', 'Explore the scenic beauty of the Karoo on foot with our on-site trails.', 1),
-('Milk', 'Goat Experiences', 'Meet our dairy goats and enjoy a unique cheese tasting session on the farm.', 2),
-('Star', 'Stargazing', 'With no light pollution, the night sky offers a breathtaking celestial display.', 3),
-('Bird', 'Birdwatching', 'A haven for bird lovers, with diverse species to spot in their natural habitat.', 4),
-('Wine', 'Wine Tasting', 'The McGregor and Robertson valleys offer world-class wineries just a short drive away.', 5),
-('Bike', 'Mountain Biking', 'Challenge yourself on the numerous MTB routes available in the surrounding area.', 6),
-('Fish', 'Fishing', 'Cast a line in nearby dams and rivers for a relaxing day by the water.', 7),
-('BookOpen', 'Visit McGregor', 'Explore the charming village with its craft shops, restaurants, and theatre.', 8);
-
--- Amenities list
-CREATE TABLE `amenities` (
+-- Financial Transactions
+CREATE TABLE `financial_transactions` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `icon` varchar(255) NOT NULL,
-  `text` varchar(255) NOT NULL,
-  `sort_order` int DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `property_id` int NOT NULL,
+  `lease_id` int DEFAULT NULL,
+  `transaction_type` enum('rent_payment', 'deposit', 'late_fee', 'maintenance', 'utility', 'insurance', 'tax', 'management_fee', 'other') NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `transaction_date` date NOT NULL,
+  `payment_method` enum('check', 'bank_transfer', 'credit_card', 'cash', 'other') DEFAULT NULL,
+  `reference_number` varchar(255) DEFAULT NULL,
+  `status` enum('pending', 'completed', 'failed', 'cancelled') DEFAULT 'pending',
+  `notes` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `property_id` (`property_id`),
+  KEY `lease_id` (`lease_id`),
+  CONSTRAINT `transactions_property_id_fk` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `transactions_lease_id_fk` FOREIGN KEY (`lease_id`) REFERENCES `leases` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `amenities` (`icon`, `text`, `sort_order`) VALUES
-('BedDouble', '2 Bedrooms (King & Queen)', 1),
-('BedDouble', 'Twin beds on request', 2),
-('Bath', 'Indoor & Outdoor Showers', 3),
-('FlameKindling', 'Cozy Indoor Fireplace', 4),
-('UtensilsCrossed', 'Gas Stove & Fridge', 5),
-('Star', 'Boma & Gas Braai Areas', 6),
-('Waves', 'Water Tank Plunge Pool', 7),
-('WifiOff', 'Completely Off-the-Grid', 8),
-('Trees', 'Endangered Succulent Karoo', 9);
-
--- Guest Reviews
-CREATE TABLE `reviews` (
+-- Admin Users (for property management staff)
+CREATE TABLE `admin_users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `quote` text NOT NULL,
-  `author` varchar(255) NOT NULL,
-  `rating` float NOT NULL,
-  `sort_order` int DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `role` enum('admin', 'manager', 'assistant') DEFAULT 'assistant',
+  `is_active` boolean DEFAULT true,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `reviews` (`quote`, `author`, `rating`, `sort_order`) VALUES
-('The cottage was an absolute dream! So peaceful and quiet, we felt a million miles away. The outdoor shower is a must-try.', 'Sarah L.', 5, 1),
-('A perfect romantic getaway. The stars at night are unbelievable. The hosts were lovely and the goat cheese was delicious.', 'Michael B.', 5, 2),
-('Great base for hiking and exploring the McGregor area. The cottage had everything we needed for a comfortable stay.', 'The van der Merwe Family', 4.5, 3),
-('Waking up to the sounds of nature was the best part. A truly special place to disconnect and recharge.', 'Chloe T.', 5, 4);
+-- Property Images
+CREATE TABLE `property_images` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `property_id` int NOT NULL,
+  `image_url` varchar(500) NOT NULL,
+  `alt_text` varchar(255) DEFAULT NULL,
+  `is_primary` boolean DEFAULT false,
+  `sort_order` int DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `property_id` (`property_id`),
+  CONSTRAINT `images_property_id_fk` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Owner Portal Users
+CREATE TABLE `owner_portal_users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `owner_id` int NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `is_active` boolean DEFAULT true,
+  `last_login` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `owner_id` (`owner_id`),
+  CONSTRAINT `portal_owner_id_fk` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Lead Inquiries (for marketing website)
+CREATE TABLE `inquiries` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `property_count` int DEFAULT NULL,
+  `property_value` enum('under_100k', '100k_250k', '250k_500k', '500k_1m', 'over_1m') DEFAULT NULL,
+  `message` text,
+  `source` varchar(255) DEFAULT 'website',
+  `status` enum('new', 'contacted', 'qualified', 'converted', 'lost') DEFAULT 'new',
+  `assigned_to` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `assigned_to` (`assigned_to`),
+  CONSTRAINT `inquiries_assigned_to_fk` FOREIGN KEY (`assigned_to`) REFERENCES `admin_users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Insert sample data for testing
+INSERT INTO `admin_users` (`first_name`, `last_name`, `email`, `password_hash`, `role`) VALUES
+('Admin', 'User', 'admin@propertymanagement.com', 'admin', 'admin'),
+('Manager', 'User', 'manager@propertymanagement.com', 'manager', 'manager');
+
+INSERT INTO `owners` (`first_name`, `last_name`, `email`, `phone`, `address`) VALUES
+('John', 'Smith', 'john.smith@email.com', '+1-555-0123', '123 Main St, Anytown, USA'),
+('Sarah', 'Johnson', 'sarah.johnson@email.com', '+1-555-0456', '456 Oak Ave, Somewhere, USA');
+
+INSERT INTO `properties` (`owner_id`, `name`, `address`, `city`, `state`, `zip_code`, `property_type`, `bedrooms`, `bathrooms`, `rent_amount`, `deposit_amount`, `status`) VALUES
+(1, 'Sunset Apartments', '123 Sunset Blvd', 'Los Angeles', 'CA', '90210', 'multi_family', 2, 1.5, 2500.00, 2500.00, 'available'),
+(1, 'Downtown Loft', '456 Main St', 'Los Angeles', 'CA', '90211', 'condo', 1, 1.0, 1800.00, 1800.00, 'occupied'),
+(2, 'Family Home', '789 Pine St', 'San Francisco', 'CA', '94102', 'single_family', 3, 2.0, 3500.00, 3500.00, 'available');
+
+INSERT INTO `tenants` (`first_name`, `last_name`, `email`, `phone`) VALUES
+('Mike', 'Davis', 'mike.davis@email.com', '+1-555-0789'),
+('Lisa', 'Wilson', 'lisa.wilson@email.com', '+1-555-0120');
+
+INSERT INTO `leases` (`property_id`, `tenant_id`, `start_date`, `end_date`, `rent_amount`, `deposit_amount`, `status`) VALUES
+(2, 1, '2024-01-01', '2024-12-31', 1800.00, 1800.00, 'active');
+
+INSERT INTO `maintenance_requests` (`property_id`, `tenant_id`, `title`, `description`, `priority`, `status`, `category`) VALUES
+(2, 1, 'Leaky Faucet', 'Kitchen faucet is dripping constantly', 'medium', 'open', 'plumbing'),
+(1, NULL, 'HVAC Maintenance', 'Annual HVAC system check and filter replacement', 'low', 'completed', 'hvac');
+
+INSERT INTO `financial_transactions` (`property_id`, `lease_id`, `transaction_type`, `amount`, `description`, `transaction_date`, `status`) VALUES
+(2, 1, 'rent_payment', 1800.00, 'Monthly rent payment', '2024-01-01', 'completed'),
+(2, 1, 'rent_payment', 1800.00, 'Monthly rent payment', '2024-02-01', 'completed'),
+(1, NULL, 'maintenance', 150.00, 'HVAC filter replacement', '2024-01-15', 'completed');
