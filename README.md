@@ -18,7 +18,7 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
 4.  **Set Up Database Schema:**
     *   In your Neon project dashboard (you can get there from Vercel's storage tab), navigate to the **SQL Editor**.
     *   Copy the entire content of the `sql/schema.sql` file from this repository.
-    *   Paste the script into the SQL Editor and click **Run**. This will create all the necessary tables and populate them with default content.
+    *   Paste the script into the SQL Editor and click **Run**. This will create all the necessary tables and populate them with default content. **Note:** If you are updating an existing project with new features, it is safe to run this script again. It is designed to create tables only if they don't already exist.
 5.  **Add Environment Variables:**
     *   In your Vercel project's **Settings -> Environment Variables**, add the following new variables:
         *   **`ADMIN_PASSWORD`**: A secure password you will use to log into the admin panel.
