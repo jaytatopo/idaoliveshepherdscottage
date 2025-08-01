@@ -2,6 +2,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,7 @@ const initialState = {
 function SubmitButton() {
     // The `useFormStatus` hook provides status information of the last form submission.
     // We can use it to show a loading state while the server action is running.
-    const { pending } = (React as any).useFormStatus();
+    const { pending } = useFormStatus();
 
     return (
         <Button type="submit" className="w-full" disabled={pending}>
@@ -56,4 +57,3 @@ export default function AdminLoginPage() {
         </div>
     );
 }
-
