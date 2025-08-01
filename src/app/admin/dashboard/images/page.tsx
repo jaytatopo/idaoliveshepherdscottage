@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getGalleryImages } from '@/lib/content';
@@ -18,6 +19,7 @@ export default async function ImagesPage() {
     const hostBg = await getGalleryImages('host_bg');
     const ctaBg = await getGalleryImages('cta_bg');
     const videoBg = await getGalleryImages('video_bg');
+    const specialsBg = await getGalleryImages('specials_bg');
 
     return (
         <div className="space-y-8">
@@ -124,6 +126,19 @@ export default async function ImagesPage() {
                                 <ImageUploadSection 
                                     section="activities_bg"
                                     images={activitiesBg}
+                                    isSingleton={true}
+                                />
+                            </CardContent>
+                        </Card>
+                          <Card>
+                            <CardHeader>
+                                <CardTitle>Specials Section Background</CardTitle>
+                                <CardDescription>Optional background image for the specials section.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ImageUploadSection 
+                                    section="specials_bg"
+                                    images={specialsBg}
                                     isSingleton={true}
                                 />
                             </CardContent>

@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu, ShieldCheck } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu, ShieldCheck, Tag } from "lucide-react";
 import { logout } from '@/app/actions/auth-actions';
 
 
@@ -105,6 +105,14 @@ function AdminSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+           <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Specials" isActive={pathname === '/admin/dashboard/specials'}>
+              <Link href="/admin/dashboard/specials" onClick={handleLinkClick}>
+                <Tag />
+                <span>Specials</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Reviews" isActive={pathname === '/admin/dashboard/reviews'}>
               <Link href="/admin/dashboard/reviews" onClick={handleLinkClick}>
@@ -182,4 +190,3 @@ export default function AdminClientLayout({
     </SidebarProvider>
   )
 }
-

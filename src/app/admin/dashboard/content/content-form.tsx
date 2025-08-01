@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useActionState, useEffect } from 'react';
@@ -132,6 +133,20 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                     </CardContent>
                 </Card>
                 
+                <Card>
+                    <CardHeader><CardTitle>Specials Section</CardTitle></CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="specials_heading">Heading</Label>
+                            <Input id="specials_heading" name="specials_heading" defaultValue={content.specials?.heading} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="specials_subheading">Subheading</Label>
+                            <Textarea id="specials_subheading" name="specials_subheading" defaultValue={content.specials?.subheading} />
+                        </div>
+                    </CardContent>
+                </Card>
+
                 <Card>
                     <CardHeader><CardTitle>Booking Section</CardTitle></CardHeader>
                     <CardContent className="space-y-4">

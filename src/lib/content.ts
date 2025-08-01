@@ -1,3 +1,4 @@
+
 import { db } from './db';
 
 export interface Amenity {
@@ -68,6 +69,18 @@ export interface FAQ {
     sort_order: number;
 }
 
+export interface Special {
+    id: number;
+    headline: string;
+    description: string;
+    duration: string | null;
+    normal_price: number | null;
+    special_price: number | null;
+    image_src: string | null;
+    is_active: boolean;
+    sort_order: number;
+}
+
 
 type ContentValue = {
     [key: string]: string;
@@ -102,6 +115,10 @@ function shapeContent(rows: any[]): WebsiteContent {
         activities: { 
             heading: 'Explore & Experience', 
             subheading: `Enjoy on-site hiking, birdwatching, and unique "goat experiences." The lack of light pollution makes for exceptional stargazing. Nearby, explore McGregor's wineries, restaurants, and the Vrolijkheid Nature Reserve.` 
+        },
+        specials: {
+            heading: 'Seasonal Specials',
+            subheading: 'Take advantage of our special offers and make your stay even more memorable.'
         },
         booking: { 
             heading: 'Rates & Availability', 
@@ -263,6 +280,27 @@ export async function getInquiries(): Promise<Inquiry[]> {
     }
 }
 
+export async function getSpecials(): Promise<Special[]> {
+    try {
+        const { rows } = await db.query('SELECT id, headline, description, duration, normal_price, special_price, image_src, is_active, sort_order FROM specials WHERE is_active = TRUE ORDER BY sort_order ASC LIMIT 5');
+        return rows as Special[];
+    } catch (error) {
+        console.error("Failed to fetch specials:", error);
+        return [];
+    }
+}
+
+export async function getAllSpecials(): Promise<Special[]> {
+    try {
+        const { rows } = await db.query('SELECT * FROM specials ORDER BY sort_order ASC');
+        return rows as Special[];
+    } catch (error) {
+        console.error("Failed to fetch all specials:", error);
+        return [];
+    }
+}
+
+
 export async function getPageSections(): Promise<PageSection[]> {
     try {
         const { rows } = await db.query('SELECT * FROM page_sections WHERE is_visible = TRUE ORDER BY sort_order ASC');
@@ -278,6 +316,7 @@ export async function getPageSections(): Promise<PageSection[]> {
             { id: 4, section_type: 'facilities', title: 'Facilities', is_visible: true, sort_order: 40 },
             { id: 5, section_type: 'activities', title: 'Activities', is_visible: true, sort_order: 50 },
             { id: 6, section_type: 'gallery', title: 'Gallery', is_visible: true, sort_order: 60 },
+            { id: 10, section_type: 'specials', title: 'Specials', is_visible: true, sort_order: 65 },
             { id: 7, section_type: 'booking', title: 'Rates & Booking', is_visible: true, sort_order: 70 },
             { id: 8, section_type: 'reviews', title: 'Reviews', is_visible: true, sort_order: 80 },
             { id: 9, section_type: 'location', title: 'Location', is_visible: true, sort_order: 90 },

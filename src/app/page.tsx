@@ -1,3 +1,4 @@
+
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/header';
@@ -10,7 +11,8 @@ import {
     getReviews as fetchReviews, 
     getFaqs,
     getPageSections,
-    getGalleryImages 
+    getGalleryImages,
+    getSpecials
 } from '@/lib/content';
 import StructuredData from '@/components/structured-data';
 
@@ -29,6 +31,7 @@ const Faq = dynamic(() => import('@/components/faq'));
 const HostProfile = dynamic(() => import('@/components/host-profile'));
 const CallToAction = dynamic(() => import('@/components/cta'));
 const Video = dynamic(() => import('@/components/video'));
+const Specials = dynamic(() => import('@/components/specials'));
 
 const sectionComponents: { [key: string]: React.ComponentType<any> } = {
   hero: Hero,
@@ -44,6 +47,7 @@ const sectionComponents: { [key: string]: React.ComponentType<any> } = {
   host: HostProfile,
   cta: CallToAction,
   video: Video,
+  specials: Specials,
 };
 
 // Fetch only the data needed for the initial server render.
@@ -56,6 +60,7 @@ async function getInitialPageData() {
         reviews,
         faqs,
         heroImage,
+        specials,
     ] = await Promise.all([
         getContent(),
         fetchAmenities(),
@@ -63,6 +68,7 @@ async function getInitialPageData() {
         fetchReviews(),
         getFaqs(),
         getGalleryImages('hero').then(images => images[0]),
+        getSpecials(),
     ]);
 
     return {
@@ -71,7 +77,8 @@ async function getInitialPageData() {
         facilities,
         reviews,
         faqs,
-        heroImage
+        heroImage,
+        specials,
     };
 }
 
@@ -108,6 +115,8 @@ export default async function Home() {
         return { content: initialData.content.cta };
       case 'video':
         return { content: initialData.content.video };
+      case 'specials':
+        return { content: initialData.content.specials, specials: initialData.specials };
       default:
         return {};
     }

@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, Edit } from "lucide-react";
-import type { Activity, Amenity, Review, Facility, FAQ } from '@/lib/content';
+import { PlusCircle, Edit, CheckCircle, XCircle } from "lucide-react";
+import type { Activity, Amenity, Review, Facility, FAQ, Special } from '@/lib/content';
 import { useToast } from '@/hooks/use-toast';
 import {
     addAmenity, updateAmenity, deleteAmenity,
@@ -19,8 +19,11 @@ import {
     addReview, updateReview, deleteReview,
     addFacility, updateFacility, deleteFacility,
     addFaq, updateFaq, deleteFaq,
+    addSpecial, updateSpecial, deleteSpecial,
 } from '@/app/actions/content-actions';
 import { DeleteActionButton } from './delete-action-button';
+import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 
 // AMENITIES
 function AmenityForm({ amenity, onDone }: { amenity?: Amenity, onDone: () => void }) {
@@ -560,6 +563,153 @@ export function FaqsClientPage({ faqs }: { faqs: FAQ[] }) {
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow></TableHeader>
                     <TableBody>{faqs.map(item => <FaqRow key={item.id} faq={item} />)}</TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+
+// SPECIALS
+function SpecialForm({ special, onDone }: { special?: Special, onDone: () => void }) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+    const action = special ? updateSpecial.bind(null, special.id) : addSpecial;
+
+    async function handleSubmit(formData: FormData) {
+        setIsSubmitting(true);
+        const result = await action(formData);
+        if (result.success) {
+            toast({ title: 'Success!', description: result.message });
+            onDone();
+        } else {
+            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
+        }
+        setIsSubmitting(false);
+    }
+
+    return (
+        <form action={handleSubmit} className="space-y-4">
+            <fieldset className="space-y-4" disabled={isSubmitting}>
+                <div>
+                    <Label htmlFor="headline">Headline</Label>
+                    <Input id="headline" name="headline" defaultValue={special?.headline} required />
+                </div>
+                 <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea id="description" name="description" defaultValue={special?.description} required />
+                </div>
+                <div>
+                    <Label htmlFor="duration">Duration (e.g. 3-night stay)</Label>
+                    <Input id="duration" name="duration" defaultValue={special?.duration ?? ''} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <Label htmlFor="normal_price">Normal Price (p/p/n)</Label>
+                        <Input id="normal_price" name="normal_price" type="number" placeholder="e.g. 900" defaultValue={special?.normal_price ?? ''} />
+                    </div>
+                     <div>
+                        <Label htmlFor="special_price">Special Price (p/p/n)</Label>
+                        <Input id="special_price" name="special_price" type="number" placeholder="e.g. 750" defaultValue={special?.special_price ?? ''} />
+                    </div>
+                </div>
+                <div>
+                    <Label htmlFor="image">Special Image</Label>
+                    {special?.image_src && (
+                        <div className="my-2">
+                            <p className="text-sm text-muted-foreground mb-2">Current Image:</p>
+                            <Image src={special.image_src} alt={special.headline} width={100} height={60} className="rounded-md object-cover" />
+                        </div>
+                    )}
+                    <Input id="image" name="image" type="file" accept="image/*" />
+                    <p className="text-xs text-muted-foreground mt-1">{special?.image_src ? 'Leave blank to keep the current image.' : 'Upload an optional image for this special.'}</p>
+                </div>
+                 <div>
+                    <Label htmlFor="sort_order">Sort Order</Label>
+                    <Input id="sort_order" name="sort_order" type="number" defaultValue={special?.sort_order ?? 0} required />
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Switch id="is_active" name="is_active" defaultChecked={special?.is_active ?? true} />
+                    <Label htmlFor="is_active">Is Active</Label>
+                </div>
+            </fieldset>
+            <DialogFooter>
+                <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Saving...' : (special ? 'Save Changes' : 'Add Special')}
+                </Button>
+            </DialogFooter>
+        </form>
+    );
+}
+
+function SpecialRow({ special }: { special: Special }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
+    return (
+        <TableRow>
+             <TableCell>
+                {special.image_src ? (
+                     <Image src={special.image_src} alt={special.headline} width={80} height={60} className="rounded-md object-cover" />
+                ) : (
+                    <div className="w-20 h-12 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">No Image</div>
+                )}
+            </TableCell>
+            <TableCell>{special.headline}</TableCell>
+            <TableCell className="hidden md:table-cell max-w-xs truncate">{special.description}</TableCell>
+            <TableCell>
+                <div className={cn("flex items-center gap-1.5", special.is_active ? "text-green-600" : "text-muted-foreground")}>
+                    {special.is_active ? <CheckCircle className="w-4 h-4"/> : <XCircle className="w-4 h-4"/>}
+                    {special.is_active ? "Active" : "Inactive"}
+                </div>
+            </TableCell>
+            <TableCell className="hidden lg:table-cell">{special.sort_order}</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader><DialogTitle>Edit Special</DialogTitle></DialogHeader>
+                        <SpecialForm special={special} onDone={() => setIsEditOpen(false)} />
+                    </DialogContent>
+                </Dialog>
+                <DeleteActionButton 
+                    itemName={special.headline}
+                    deleteAction={deleteSpecial.bind(null, special.id)}
+                />
+            </TableCell>
+        </TableRow>
+    );
+}
+
+export function SpecialsClientPage({ specials }: { specials: Special[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Manage Specials</CardTitle>
+                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Special</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Add New Special</DialogTitle></DialogHeader>
+                            <SpecialForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+                 <CardDescription>Create and manage your promotional offers. Active specials will be shown on the homepage.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow>
+                        <TableHead>Image</TableHead>
+                        <TableHead>Headline</TableHead>
+                        <TableHead className="hidden md:table-cell">Description</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="hidden lg:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
+                    <TableBody>
+                        {specials.map(item => <SpecialRow key={item.id} special={item} />)}
+                    </TableBody>
                 </Table>
             </CardContent>
         </Card>

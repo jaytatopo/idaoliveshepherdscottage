@@ -4,10 +4,11 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { PageSection, GalleryImage, Activity } from '@/lib/content';
+import type { PageSection, GalleryImage, Activity, Special } from '@/lib/content';
 import { 
     getGalleryImages as fetchGalleryImages,
-    getActivities as fetchActivities
+    getActivities as fetchActivities,
+    getSpecials as fetchSpecials
 } from '@/lib/content';
 
 const MAX_FILE_SIZE_MB = 3;
@@ -87,7 +88,8 @@ export async function uploadGalleryImage(formData: FormData) {
         'host_bg',
         'faq_bg',
         'cta_bg',
-        'video_bg'
+        'video_bg',
+        'specials_bg'
     ];
 
     // For singleton sections, remove existing image record before uploading a new one.
@@ -471,6 +473,98 @@ export async function deleteFaq(id: number) {
 }
 
 
+// --- Specials Actions ---
+const specialSchema = z.object({
+    headline: z.string().min(1, 'Headline is required'),
+    description: z.string().min(1, 'Description is required'),
+    duration: z.string().optional(),
+    normal_price: z.coerce.number().positive('Normal price must be a positive number').optional().nullable(),
+    special_price: z.coerce.number().positive('Special price must be a positive number').optional().nullable(),
+    is_active: z.preprocess((val) => val === 'on' || val === true, z.boolean()),
+    sort_order: z.coerce.number().default(0)
+});
+
+export async function addSpecial(formData: FormData) {
+    const imageFile = formData.get('image') as File | undefined;
+    const rawData = Object.fromEntries(formData.entries());
+    delete rawData.image; 
+
+    try {
+        const data = specialSchema.parse(rawData);
+        const imageResult = await handleActivityImageUpload(imageFile, null);
+        
+        if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
+            return { success: false, message: imageResult.error };
+        }
+        const imageSrc = imageResult;
+
+        const columns = [...Object.keys(data), 'image_src'].join(', ');
+        const placeholders = [...Object.keys(data).map((_, i) => `$${i + 1}`), `$${Object.keys(data).length + 1}`].join(', ');
+        const values = [...Object.values(data), imageSrc];
+        
+        await db.execute(`INSERT INTO specials (${columns}) VALUES (${placeholders})`, values);
+
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/specials');
+        return { success: true, message: 'Special added successfully.' };
+    } catch (error: any) {
+        console.error(`Failed to add special:`, error);
+        if (error.code === '22001') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `specials` is of type TEXT.' };
+        }
+        return { success: false, message: error instanceof z.ZodError ? error.flatten().fieldErrors.headline?.[0] || error.message : `Database error: ${error.message}` };
+    }
+}
+
+export async function updateSpecial(id: number, formData: FormData) {
+    const imageFile = formData.get('image') as File | undefined;
+    const rawData = Object.fromEntries(formData.entries());
+    delete rawData.image; // Exclude from Zod parsing
+
+    try {
+        const data = specialSchema.parse(rawData);
+        
+        const { rows: existingRows } = await db.query('SELECT image_src FROM specials WHERE id = $1', [id]);
+        const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
+        
+        const imageResult = await handleActivityImageUpload(imageFile, existingImage);
+        
+        if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
+            return { success: false, message: imageResult.error };
+        }
+        const imageSrc = imageResult;
+        
+        const setClauses = [...Object.keys(data).map((key, i) => `${key} = $${i + 1}`), `image_src = $${Object.keys(data).length + 1}`].join(', ');
+        const values = [...Object.values(data), imageSrc, id];
+
+        await db.execute(`UPDATE specials SET ${setClauses} WHERE id = $${values.length}`, values);
+
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/specials');
+        return { success: true, message: 'Special updated successfully.' };
+    } catch (error: any) {
+        console.error(`Failed to update special:`, error);
+        if (error.code === '22001') {
+             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `specials` is of type TEXT.' };
+        }
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
+    }
+}
+
+export async function deleteSpecial(id: number) {
+    try {
+        await db.execute(`DELETE FROM specials WHERE id = $1`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/specials');
+        return { success: true, message: 'Special deleted successfully.' };
+    } catch (error: any) {
+        console.error(`Failed to delete from specials:`, error);
+        return { success: false, message: `Database error: ${error.message}` };
+    }
+}
+
+
+
 // --- Page Layout Actions ---
 export async function updatePageLayout(sections: PageSection[]) {
     try {
@@ -509,5 +603,16 @@ export async function getClientActivities(): Promise<{ success: boolean; data?: 
     } catch (error: any) {
         console.error(`Failed to fetch activities via action:`, error);
         return { success: false, message: `Failed to fetch activities. Details: ${error.message}` };
+    }
+}
+
+
+export async function getClientSpecials(): Promise<{ success: boolean; data?: Special[]; message?: string; }> {
+    try {
+        const specials = await fetchSpecials();
+        return { success: true, data: specials };
+    } catch (error: any) {
+        console.error(`Failed to fetch specials via action:`, error);
+        return { success: false, message: `Failed to fetch specials. Details: ${error.message}` };
     }
 }
