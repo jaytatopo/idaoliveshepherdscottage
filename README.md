@@ -23,7 +23,11 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
     *   In your Vercel project's **Settings -> Environment Variables**, add the following new variables:
         *   **`ADMIN_PASSWORD`**: A secure password you will use to log into the admin panel.
         *   **`RESEND_API_KEY`**: Your API key from [Resend](https://resend.com).
+        *   **`BLOB_READ_WRITE_TOKEN`**: Your read/write token from Vercel Blob storage.
 6.  **Deploy:** Vercel will automatically build and deploy your site. Any future pushes to your repository will trigger a new deployment.
+7.  **(Optional) Database Cleanup:**
+    *   After migrating to Vercel Blob storage, you can run the `sql/cleanup.sql` script in your Neon SQL Editor. This will remove old database columns that were used for storing image data, resulting in a cleaner schema. This step is optional and non-destructive.
+
 
 ## Running the Project Locally
 
@@ -40,6 +44,7 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
     POSTGRES_URL="your_neon_connection_string"
     RESEND_API_KEY="your_resend_api_key"
     ADMIN_PASSWORD="a_very_secure_password_here"
+    BLOB_READ_WRITE_TOKEN="your_vercel_blob_token"
     ```
 
 3.  **Run the Development Server:**
@@ -47,5 +52,6 @@ This project is configured to use Vercel Postgres (powered by Neon) for the data
     npm run dev
     ```
     The application will be available at [http://localhost:3000](http://localhost:3000). The admin portal is at `/admin`.
+
 
 
