@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -37,9 +38,9 @@ export default function Location({ content }: LocationProps) {
 
   return (
     <section id="location" className="relative py-12 md:py-20 bg-background overflow-hidden">
-        {imageBg && imageBg.src && (
+        {imageBg && imageBg.src_url && (
             <Image
-                src={imageBg.src}
+                src={imageBg.src_url}
                 alt={imageBg.alt}
                 fill
                 sizes="100vw"

@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { GalleryImage } from '@/lib/content';
@@ -51,9 +52,9 @@ export default function Accommodation({ content }: AccommodationProps) {
 
   return (
     <section id="accommodation" className="relative py-12 md:py-20 bg-card">
-      {imageBg && imageBg.src && (
+      {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           sizes="100vw"
@@ -82,7 +83,7 @@ export default function Accommodation({ content }: AccommodationProps) {
               {image1 && (
                 <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:300ms]">
                   <Image
-                      src={image1.src}
+                      src={image1.src_url}
                       alt={image1.alt}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -94,7 +95,7 @@ export default function Accommodation({ content }: AccommodationProps) {
               {image2 && (
                 <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:400ms]">
                   <Image
-                      src={image2.src}
+                      src={image2.src_url}
                       alt={image2.alt}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"

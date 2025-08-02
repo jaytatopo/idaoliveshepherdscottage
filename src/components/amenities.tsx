@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Amenity, GalleryImage } from '@/lib/content';
@@ -35,9 +36,9 @@ export default function Amenities({ content, amenities }: AmenitiesProps) {
 
   return (
     <section id="amenities" className="relative py-12 md:py-20 bg-background">
-      {imageBg && imageBg.src && (
+      {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           className="object-cover opacity-[0.18] z-0"

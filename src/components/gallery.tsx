@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -98,7 +99,7 @@ export default function Gallery({}: GalleryProps) {
                     style={{ animationDelay: `${300 + index * 75}ms` }}
                     >
                     <Image
-                        src={img.src}
+                        src={img.src_url}
                         alt={img.alt}
                         fill
                         sizes="(max-width: 640px) 50vw, 25vw"
@@ -137,7 +138,7 @@ export default function Gallery({}: GalleryProps) {
                 <div className="relative aspect-video">
                     {selectedImageIndex !== null && (
                         <Image
-                            src={images[selectedImageIndex].src}
+                            src={images[selectedImageIndex].src_url}
                             alt={images[selectedImageIndex].alt}
                             fill
                             sizes="100vw"

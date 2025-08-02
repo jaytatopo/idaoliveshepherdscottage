@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { getContent, getGalleryImages } from '@/lib/content';
+import { getContent } from '@/lib/content';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,9 +22,7 @@ const lora = Lora({
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getContent();
   const heroContent = content.hero;
-  // Note: Hero image is now fetched on the client side, so we use a placeholder for metadata.
-  const heroImage = (await getGalleryImages('hero'))[0]; 
-  const ogImageUrl = heroImage?.src || 'https://placehold.co/1200x630.png';
+  const ogImageUrl = 'https://placehold.co/1200x630.png';
 
   const title = heroContent?.heading || 'Ida Olive Shepherd’s Cottage, McGregor';
   const description = heroContent?.subheading || 'A serene, off-the-grid escape for nature lovers.';

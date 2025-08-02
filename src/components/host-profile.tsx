@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { GalleryImage } from '@/lib/content';
@@ -48,9 +49,9 @@ export default function HostProfile({ content }: HostProfileProps) {
 
   return (
     <section id="host" className="relative py-12 md:py-20 bg-background">
-      {imageBg && imageBg.src && (
+      {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           className="object-cover opacity-[0.18] z-0"
@@ -72,10 +73,10 @@ export default function HostProfile({ content }: HostProfileProps) {
                   <Skeleton className="w-[300px] h-[300px] rounded-full" />
                 </div>
             ) : (
-              image && image.src && (
+              image && image.src_url && (
                   <div className="md:col-span-1 opacity-0 animate-fade-in-up [animation-delay:300ms]">
                       <Image
-                          src={image.src}
+                          src={image.src_url}
                           alt={image.alt}
                           width={300}
                           height={300}
@@ -84,7 +85,7 @@ export default function HostProfile({ content }: HostProfileProps) {
                   </div>
               )
             )}
-            <div className={`opacity-0 animate-fade-in-up [animation-delay:400ms] ${(image && image.src && !isLoading) ? 'md:col-span-2' : 'md:col-span-3 text-center'}`}>
+            <div className={`opacity-0 animate-fade-in-up [animation-delay:400ms] ${(image && image.src_url && !isLoading) ? 'md:col-span-2' : 'md:col-span-3 text-center'}`}>
                 <h3 className="font-serif text-2xl font-semibold">{content.name}</h3>
                 <p className="mt-4 text-muted-foreground leading-relaxed whitespace-pre-line">
                     {content.bio}

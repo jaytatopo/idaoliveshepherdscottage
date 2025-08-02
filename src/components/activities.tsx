@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -52,9 +53,9 @@ export default function Activities({ content }: ActivitiesProps) {
       id="activities" 
       className="relative py-12 md:py-20 bg-card"
     >
-      {imageBg && imageBg.src && (
+      {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           sizes="100vw"
@@ -96,9 +97,9 @@ export default function Activities({ content }: ActivitiesProps) {
                 >
                   <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300 bg-background/80 backdrop-blur-sm overflow-hidden group">
                       <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                          {activity.image_src ? (
+                          {activity.src_url ? (
                               <Image
-                                  src={activity.image_src}
+                                  src={activity.src_url}
                                   alt={activity.title}
                                   fill
                                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -136,9 +137,9 @@ export default function Activities({ content }: ActivitiesProps) {
             {selectedActivity && (
                 <>
                     <div className="relative aspect-video w-full bg-muted overflow-hidden">
-                        {selectedActivity.image_src ? (
+                        {selectedActivity.src_url ? (
                             <Image
-                                src={selectedActivity.image_src}
+                                src={selectedActivity.src_url}
                                 alt={selectedActivity.title}
                                 fill
                                 sizes="100vw"

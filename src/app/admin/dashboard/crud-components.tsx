@@ -174,14 +174,14 @@ function ActivityForm({ activity, onDone }: { activity?: Activity, onDone: () =>
                 </div>
                 <div>
                     <Label htmlFor="image">Activity Image</Label>
-                    {activity?.image_src && (
+                    {activity?.src_url && (
                         <div className="my-2">
                             <p className="text-sm text-muted-foreground mb-2">Current Image:</p>
-                            <Image src={activity.image_src} alt={activity.title} width={100} height={60} className="rounded-md object-cover" />
+                            <Image src={activity.src_url} alt={activity.title} width={100} height={60} className="rounded-md object-cover" />
                         </div>
                     )}
                     <Input id="image" name="image" type="file" accept="image/*" />
-                    <p className="text-xs text-muted-foreground mt-1">{activity?.image_src ? 'Leave blank to keep the current image.' : 'Upload an image for this activity.'}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{activity?.src_url ? 'Leave blank to keep the current image.' : 'Upload an image for this activity.'}</p>
                 </div>
             </fieldset>
             <DialogFooter>
@@ -199,8 +199,8 @@ function ActivityRow({ activity }: { activity: Activity }) {
     return (
         <TableRow>
              <TableCell>
-                {activity.image_src ? (
-                     <Image src={activity.image_src} alt={activity.title} width={64} height={48} className="rounded-md object-cover" />
+                {activity.src_url ? (
+                     <Image src={activity.src_url} alt={activity.title} width={64} height={48} className="rounded-md object-cover" />
                 ) : (
                     <div className="w-16 h-12 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">No Image</div>
                 )}
@@ -615,14 +615,14 @@ function SpecialForm({ special, onDone }: { special?: Special, onDone: () => voi
                 </div>
                 <div>
                     <Label htmlFor="image">Special Image</Label>
-                    {special?.image_src && (
+                    {special?.src_url && (
                         <div className="my-2">
                             <p className="text-sm text-muted-foreground mb-2">Current Image:</p>
-                            <Image src={special.image_src} alt={special.headline} width={100} height={60} className="rounded-md object-cover" />
+                            <Image src={special.src_url} alt={special.headline} width={100} height={60} className="rounded-md object-cover" />
                         </div>
                     )}
                     <Input id="image" name="image" type="file" accept="image/*" />
-                    <p className="text-xs text-muted-foreground mt-1">{special?.image_src ? 'Leave blank to keep the current image.' : 'Upload an optional image for this special.'}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{special?.src_url ? 'Leave blank to keep the current image.' : 'Upload an optional image for this special.'}</p>
                 </div>
                  <div>
                     <Label htmlFor="sort_order">Sort Order</Label>
@@ -648,8 +648,8 @@ function SpecialRow({ special }: { special: Special }) {
     return (
         <TableRow>
              <TableCell>
-                {special.image_src ? (
-                     <Image src={special.image_src} alt={special.headline} width={80} height={60} className="rounded-md object-cover" />
+                {special.src_url ? (
+                     <Image src={special.src_url} alt={special.headline} width={80} height={60} className="rounded-md object-cover" />
                 ) : (
                     <div className="w-20 h-12 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">No Image</div>
                 )}

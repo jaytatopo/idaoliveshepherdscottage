@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { FAQ, GalleryImage } from '@/lib/content';
@@ -40,9 +41,9 @@ export default function Faq({ content, faqs }: FaqProps) {
 
   return (
     <section id="faq" className="relative py-12 md:py-20 bg-card">
-       {imageBg && imageBg.src && (
+       {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           className="object-cover opacity-[0.18] z-0"

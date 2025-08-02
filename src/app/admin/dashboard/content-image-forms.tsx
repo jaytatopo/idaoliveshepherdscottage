@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
@@ -55,9 +56,9 @@ export function ImageUploadSection({ section, images, isSingleton }: ImageUpload
     if (isSingleton) {
         return (
             <div className="space-y-4">
-                {firstImage && firstImage.src ? (
+                {firstImage && firstImage.src_url ? (
                     <div className="relative group w-full max-w-sm">
-                        <Image src={firstImage.src} alt={firstImage.alt} width={300} height={180} className="rounded-md object-cover aspect-video"/>
+                        <Image src={firstImage.src_url} alt={firstImage.alt} width={300} height={180} className="rounded-md object-cover aspect-video"/>
                         <div className="absolute top-2 right-2">
                              <DeleteActionButton
                                 itemName={firstImage.alt || 'this image'}
@@ -78,7 +79,7 @@ export function ImageUploadSection({ section, images, isSingleton }: ImageUpload
                             <Input id={`${section}_alt_text`} name="alt" type="text" placeholder="e.g., View from the stoep" required/>
                         </div>
                         <input type="hidden" name="section" value={section} />
-                        <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage?.src} />
+                        <SubmitButton isSingleton={isSingleton} hasImage={!!firstImage?.src_url} />
                     </div>
                 </form>
             </div>
@@ -91,7 +92,7 @@ export function ImageUploadSection({ section, images, isSingleton }: ImageUpload
                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                     {images.map(image => (
                         <div key={image.id} className="relative group">
-                            <Image src={image.src} alt={image.alt} width={300} height={200} className="rounded-md object-cover aspect-video"/>
+                            <Image src={image.src_url} alt={image.alt} width={300} height={200} className="rounded-md object-cover aspect-video"/>
                             <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                  <DeleteActionButton
                                     itemName={image.alt || 'this image'}

@@ -94,11 +94,11 @@ export async function uploadGalleryImage(formData: FormData) {
     // For singleton sections, remove existing image record before uploading a new one.
     if (singletonSections.includes(section)) {
         try {
-            const { rows } = await db.query('SELECT id, src FROM gallery_images WHERE section = $1', [section]);
-            if ((rows as { id: number, src: string }[]).length > 0) {
-                const oldImage = (rows as { id: number, src: string }[])[0];
-                if (oldImage.src) {
-                    await del(oldImage.src);
+            const { rows } = await db.query('SELECT id, src_url FROM gallery_images WHERE section = $1', [section]);
+            if ((rows as { id: number, src_url: string }[]).length > 0) {
+                const oldImage = (rows as { id: number, src_url: string }[])[0];
+                if (oldImage.src_url) {
+                    await del(oldImage.src_url);
                 }
                 await db.execute('DELETE FROM gallery_images WHERE id = $1', [oldImage.id]);
             }
@@ -111,7 +111,7 @@ export async function uploadGalleryImage(formData: FormData) {
         const blob = await put(file.name, file, { access: 'public' });
 
         await db.execute(
-            'INSERT INTO gallery_images (src, alt, section) VALUES ($1, $2, $3)',
+            'INSERT INTO gallery_images (src_url, alt, section) VALUES ($1, $2, $3)',
             [blob.url, alt || file.name, section]
         );
 
@@ -133,8 +133,8 @@ export async function deleteGalleryImage(id: number) {
 
     try {
         // First get the image URL to delete it from blob storage
-        const { rows } = await db.query('SELECT src FROM gallery_images WHERE id = $1', [id]);
-        const imageUrl = (rows as { src: string }[])[0]?.src;
+        const { rows } = await db.query('SELECT src_url FROM gallery_images WHERE id = $1', [id]);
+        const imageUrl = (rows as { src_url: string }[])[0]?.src_url;
         
         if (imageUrl) {
             await del(imageUrl);
@@ -256,11 +256,11 @@ export async function addActivity(formData: FormData) {
         if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
             return { success: false, message: imageResult.error };
         }
-        const imageSrc = imageResult;
+        const src_url = imageResult;
         
-        const columns = [...Object.keys(data), 'image_src'].join(', ');
+        const columns = [...Object.keys(data), 'src_url'].join(', ');
         const placeholders = [...Object.keys(data).map((_, i) => `$${i + 1}`), `$${Object.keys(data).length + 1}`].join(', ');
-        const values = [...Object.values(data), imageSrc];
+        const values = [...Object.values(data), src_url];
         
         await db.execute(`INSERT INTO activities (${columns}) VALUES (${placeholders})`, values);
 
@@ -281,18 +281,18 @@ export async function updateActivity(id: number, formData: FormData) {
     try {
         const data = activitySchema.parse(rawData);
         
-        const { rows: existingRows } = await db.query('SELECT image_src FROM activities WHERE id = $1', [id]);
-        const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
+        const { rows: existingRows } = await db.query('SELECT src_url FROM activities WHERE id = $1', [id]);
+        const existingImage = (existingRows as { src_url: string | null }[])[0]?.src_url;
         
         const imageResult = await handleActivityImageUpload(imageFile, existingImage);
         
         if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
             return { success: false, message: imageResult.error };
         }
-        const imageSrc = imageResult;
+        const src_url = imageResult;
         
-        const setClauses = [...Object.keys(data).map((key, i) => `${key} = $${i + 1}`), `image_src = $${Object.keys(data).length + 1}`].join(', ');
-        const values = [...Object.values(data), imageSrc, id];
+        const setClauses = [...Object.keys(data).map((key, i) => `${key} = $${i + 1}`), `src_url = $${Object.keys(data).length + 1}`].join(', ');
+        const values = [...Object.values(data), src_url, id];
 
         await db.execute(`UPDATE activities SET ${setClauses} WHERE id = $${values.length}`, values);
 
@@ -307,8 +307,8 @@ export async function updateActivity(id: number, formData: FormData) {
 
 export async function deleteActivity(id: number) {
     try {
-        const { rows } = await db.query('SELECT image_src FROM activities WHERE id = $1', [id]);
-        const imageUrl = (rows as { image_src: string | null }[])[0]?.image_src;
+        const { rows } = await db.query('SELECT src_url FROM activities WHERE id = $1', [id]);
+        const imageUrl = (rows as { src_url: string | null }[])[0]?.src_url;
 
         if (imageUrl) {
             await del(imageUrl);
@@ -505,11 +505,11 @@ export async function addSpecial(formData: FormData) {
         if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
             return { success: false, message: imageResult.error };
         }
-        const imageSrc = imageResult;
+        const src_url = imageResult;
 
-        const columns = [...Object.keys(data), 'image_src'].join(', ');
+        const columns = [...Object.keys(data), 'src_url'].join(', ');
         const placeholders = [...Object.keys(data).map((_, i) => `$${i + 1}`), `$${Object.keys(data).length + 1}`].join(', ');
-        const values = [...Object.values(data), imageSrc];
+        const values = [...Object.values(data), src_url];
         
         await db.execute(`INSERT INTO specials (${columns}) VALUES (${placeholders})`, values);
 
@@ -530,18 +530,18 @@ export async function updateSpecial(id: number, formData: FormData) {
     try {
         const data = specialSchema.parse(rawData);
         
-        const { rows: existingRows } = await db.query('SELECT image_src FROM specials WHERE id = $1', [id]);
-        const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
+        const { rows: existingRows } = await db.query('SELECT src_url FROM specials WHERE id = $1', [id]);
+        const existingImage = (existingRows as { src_url: string | null }[])[0]?.src_url;
         
         const imageResult = await handleActivityImageUpload(imageFile, existingImage);
         
         if (imageResult && typeof imageResult === 'object' && 'error' in imageResult) {
             return { success: false, message: imageResult.error };
         }
-        const imageSrc = imageResult;
+        const src_url = imageResult;
         
-        const setClauses = [...Object.keys(data).map((key, i) => `${key} = $${i + 1}`), `image_src = $${Object.keys(data).length + 1}`].join(', ');
-        const values = [...Object.values(data), imageSrc, id];
+        const setClauses = [...Object.keys(data).map((key, i) => `${key} = $${i + 1}`), `src_url = $${Object.keys(data).length + 1}`].join(', ');
+        const values = [...Object.values(data), src_url, id];
 
         await db.execute(`UPDATE specials SET ${setClauses} WHERE id = $${values.length}`, values);
 
@@ -556,8 +556,8 @@ export async function updateSpecial(id: number, formData: FormData) {
 
 export async function deleteSpecial(id: number) {
     try {
-        const { rows } = await db.query('SELECT image_src FROM specials WHERE id = $1', [id]);
-        const imageUrl = (rows as { image_src: string | null }[])[0]?.image_src;
+        const { rows } = await db.query('SELECT src_url FROM specials WHERE id = $1', [id]);
+        const imageUrl = (rows as { src_url: string | null }[])[0]?.src_url;
         
         if (imageUrl) {
             await del(imageUrl);

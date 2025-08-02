@@ -92,9 +92,9 @@ export default function Specials({ content, specials: initialSpecials }: Special
       id="specials" 
       className="relative py-12 md:py-20 bg-background"
     >
-      {imageBg && imageBg.src && (
+      {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           sizes="100vw"
@@ -119,10 +119,10 @@ export default function Specials({ content, specials: initialSpecials }: Special
               style={{ animationDelay: `${300 + index * 100}ms` }}
             >
               <Card className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur-sm group">
-                {special.image_src && (
+                {special.src_url && (
                   <div className="relative aspect-video w-full overflow-hidden">
                     <Image
-                      src={special.image_src}
+                      src={special.src_url}
                       alt={special.headline}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

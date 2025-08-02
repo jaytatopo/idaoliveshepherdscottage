@@ -40,9 +40,9 @@ export default function Hero({ content }: { content: HeroContent }) {
     <section id="home" className="relative h-screen w-full bg-secondary">
       {isLoading ? (
         <Skeleton className="absolute inset-0" />
-      ) : image?.src ? (
+      ) : image?.src_url ? (
         <Image
-          src={image.src}
+          src={image.src_url}
           alt={image.alt}
           fill
           sizes="100vw"

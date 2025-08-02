@@ -1,5 +1,4 @@
 
-
 import { db } from './db';
 
 export interface Amenity {
@@ -22,13 +21,13 @@ export interface Activity {
     icon: string;
     title: string;
     description: string;
-    image_src: string | null;
+    src_url: string | null;
     sort_order: number;
 }
 
 export interface GalleryImage {
     id: number;
-    src: string;
+    src_url: string;
     alt: string;
     section: string;
     sort_order: number;
@@ -77,7 +76,7 @@ export interface Special {
     duration: string | null;
     normal_price: number | null;
     special_price: number | null;
-    image_src: string | null;
+    src_url: string | null;
     is_active: boolean;
     sort_order: number;
 }
@@ -243,7 +242,7 @@ export async function getFaqs(): Promise<FAQ[]> {
 
 export async function getActivities(): Promise<Activity[]> {
     try {
-        const { rows } = await db.query('SELECT id, icon, title, description, image_src, sort_order FROM activities ORDER BY sort_order ASC');
+        const { rows } = await db.query('SELECT id, icon, title, description, src_url, sort_order FROM activities ORDER BY sort_order ASC');
         return rows as Activity[];
     } catch (error) {
         console.error("Failed to fetch activities:", error);
@@ -253,7 +252,7 @@ export async function getActivities(): Promise<Activity[]> {
 
 export async function getGalleryImages(section: string): Promise<GalleryImage[]> {
     try {
-        const { rows } = await db.query('SELECT id, src, alt, section, sort_order FROM gallery_images WHERE section = $1 ORDER BY sort_order ASC', [section]);
+        const { rows } = await db.query('SELECT id, src_url, alt, section, sort_order FROM gallery_images WHERE section = $1 ORDER BY sort_order ASC', [section]);
         return rows as GalleryImage[];
     } catch (error) {
         console.error(`Failed to fetch gallery images for section "${section}":`, error);
@@ -283,7 +282,7 @@ export async function getInquiries(): Promise<Inquiry[]> {
 
 export async function getSpecials(): Promise<Special[]> {
     try {
-        const { rows } = await db.query('SELECT id, headline, description, duration, normal_price, special_price, image_src, is_active, sort_order FROM specials WHERE is_active = TRUE ORDER BY sort_order ASC LIMIT 5');
+        const { rows } = await db.query('SELECT id, headline, description, duration, normal_price, special_price, src_url, is_active, sort_order FROM specials WHERE is_active = TRUE ORDER BY sort_order ASC LIMIT 5');
         return rows as Special[];
     } catch (error) {
         console.error("Failed to fetch specials:", error);

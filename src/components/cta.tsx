@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { GalleryImage } from '@/lib/content';
@@ -35,9 +36,9 @@ export default function CallToAction({ content }: CTAProps) {
 
   return (
     <section id="cta" className="relative py-12 md:py-20 bg-background">
-      {imageBg && imageBg.src && (
+      {imageBg && imageBg.src_url && (
         <Image
-          src={imageBg.src}
+          src={imageBg.src_url}
           alt={imageBg.alt}
           fill
           className="object-cover opacity-[0.18] z-0"
