@@ -10,8 +10,9 @@ import {
     getActivities as fetchActivities,
     getSpecials as fetchSpecials
 } from '@/lib/content';
+import { put, del } from '@vercel/blob';
 
-const MAX_FILE_SIZE_MB = 3;
+const MAX_FILE_SIZE_MB = 4; // Vercel Blob hobby plan limit is 4.5MB
 
 // Helper function to update a single content entry
 async function updateSingleContent(section: string, key: string, value: string) {
@@ -69,8 +70,6 @@ export async function uploadGalleryImage(formData: FormData) {
         return { success: false, message: 'Missing section for image upload.' };
     }
     
-    // Vercel serverless function has a 4.5MB body limit. Base64 is ~33% larger.
-    // Let's set a limit around 3MB for the original file.
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
         return { success: false, message: `File is too large. Please upload an image under ${MAX_FILE_SIZE_MB}MB.` };
     }
@@ -95,21 +94,25 @@ export async function uploadGalleryImage(formData: FormData) {
     // For singleton sections, remove existing image record before uploading a new one.
     if (singletonSections.includes(section)) {
         try {
-            await db.execute('DELETE FROM gallery_images WHERE section = $1', [section]);
+            const { rows } = await db.query('SELECT src FROM gallery_images WHERE section = $1', [section]);
+            if ((rows as { src: string }[]).length > 0) {
+                const oldImageUrl = (rows as { src: string }[])[0].src;
+                if (oldImageUrl) {
+                    await del(oldImageUrl);
+                }
+                await db.execute('DELETE FROM gallery_images WHERE section = $1', [section]);
+            }
         } catch (error) {
             console.error(`Failed to cleanup existing image for section ${section}:`, error);
-            // Don't block the upload if cleanup fails, just log it.
         }
     }
     
     try {
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-        const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
+        const blob = await put(file.name, file, { access: 'public' });
 
         await db.execute(
             'INSERT INTO gallery_images (src, alt, section) VALUES ($1, $2, $3)',
-            [dataUri, alt || file.name, section]
+            [blob.url, alt || file.name, section]
         );
 
         revalidatePath('/');
@@ -118,11 +121,7 @@ export async function uploadGalleryImage(formData: FormData) {
 
     } catch (error: any) {
         console.error('Failed to upload image:', error);
-        // Check for a common Postgres error when data is too long for the column
-        if (error.code === '22001') { // data_too_long
-             return { success: false, message: 'Image is too large for database storage. The schema might be incorrect; please ensure the `src` column in `gallery_images` is of type TEXT.' };
-        }
-        return { success: false, message: `Failed to save image to the database. Details: ${error.message}` };
+        return { success: false, message: `Failed to save image to blob storage. Details: ${error.message}` };
     }
 }
 
@@ -133,6 +132,14 @@ export async function deleteGalleryImage(id: number) {
     }
 
     try {
+        // First get the image URL to delete it from blob storage
+        const { rows } = await db.query('SELECT src FROM gallery_images WHERE id = $1', [id]);
+        const imageUrl = (rows as { src: string }[])[0]?.src;
+        
+        if (imageUrl) {
+            await del(imageUrl);
+        }
+
         await db.execute('DELETE FROM gallery_images WHERE id = $1', [id]);
         
         revalidatePath('/');
@@ -213,10 +220,9 @@ export async function deleteAmenity(id: number) {
 // --- Activities Actions ---
 const activitySchema = z.object({ title: z.string().min(1), description: z.string().min(1), icon: z.string().min(1), sort_order: z.coerce.number().default(0) });
 
-async function handleActivityImageUpload(file: File | undefined, existingImage: string | null | undefined): Promise<string | null | { error: string }> {
-    // If no new file is uploaded, keep the existing image.
+async function handleActivityImageUpload(file: File | undefined, existingImageUrl: string | null | undefined): Promise<string | null | { error: string }> {
     if (!file || file.size === 0) {
-        return existingImage || null;
+        return existingImageUrl || null;
     }
 
     if (!(file instanceof File)) {
@@ -227,17 +233,21 @@ async function handleActivityImageUpload(file: File | undefined, existingImage: 
         return { error: `File is too large. Please upload an image under ${MAX_FILE_SIZE_MB}MB.` };
     }
     
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const dataUri = `data:${file.type};base64,${buffer.toString('base64')}`;
-    
-    return dataUri;
+    try {
+        if (existingImageUrl) {
+            await del(existingImageUrl);
+        }
+        const blob = await put(file.name, file, { access: 'public' });
+        return blob.url;
+    } catch (error: any) {
+        return { error: `Failed to upload image: ${error.message}` };
+    }
 }
 
 export async function addActivity(formData: FormData) {
     const imageFile = formData.get('image') as File | undefined;
     const rawData = Object.fromEntries(formData.entries());
-    delete rawData.image; // Exclude from Zod parsing
+    delete rawData.image; 
 
     try {
         const data = activitySchema.parse(rawData);
@@ -259,9 +269,6 @@ export async function addActivity(formData: FormData) {
         return { success: true, message: 'Activity added successfully.' };
     } catch (error: any) {
         console.error(`Failed to add to activities:`, error);
-        if (error.code === '22001') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type TEXT.' };
-        }
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
@@ -269,12 +276,11 @@ export async function addActivity(formData: FormData) {
 export async function updateActivity(id: number, formData: FormData) {
     const imageFile = formData.get('image') as File | undefined;
     const rawData = Object.fromEntries(formData.entries());
-    delete rawData.image; // Exclude from Zod parsing
+    delete rawData.image;
 
     try {
         const data = activitySchema.parse(rawData);
         
-        // Get the existing image path to decide whether to keep it or replace it.
         const { rows: existingRows } = await db.query('SELECT image_src FROM activities WHERE id = $1', [id]);
         const existingImage = (existingRows as { image_src: string | null }[])[0]?.image_src;
         
@@ -295,16 +301,19 @@ export async function updateActivity(id: number, formData: FormData) {
         return { success: true, message: 'Activity updated successfully.' };
     } catch (error: any) {
         console.error(`Failed to update activity:`, error);
-        if (error.code === '22001') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `activities` is of type TEXT.' };
-        }
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 };
 
 export async function deleteActivity(id: number) {
     try {
-        // Just delete the database record. The image data is stored in it.
+        const { rows } = await db.query('SELECT image_src FROM activities WHERE id = $1', [id]);
+        const imageUrl = (rows as { image_src: string | null }[])[0]?.image_src;
+
+        if (imageUrl) {
+            await del(imageUrl);
+        }
+
         await db.execute(`DELETE FROM activities WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard');
@@ -509,9 +518,6 @@ export async function addSpecial(formData: FormData) {
         return { success: true, message: 'Special added successfully.' };
     } catch (error: any) {
         console.error(`Failed to add special:`, error);
-        if (error.code === '22001') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `specials` is of type TEXT.' };
-        }
         return { success: false, message: error instanceof z.ZodError ? error.flatten().fieldErrors.headline?.[0] || error.message : `Database error: ${error.message}` };
     }
 }
@@ -519,7 +525,7 @@ export async function addSpecial(formData: FormData) {
 export async function updateSpecial(id: number, formData: FormData) {
     const imageFile = formData.get('image') as File | undefined;
     const rawData = Object.fromEntries(formData.entries());
-    delete rawData.image; // Exclude from Zod parsing
+    delete rawData.image;
 
     try {
         const data = specialSchema.parse(rawData);
@@ -544,15 +550,19 @@ export async function updateSpecial(id: number, formData: FormData) {
         return { success: true, message: 'Special updated successfully.' };
     } catch (error: any) {
         console.error(`Failed to update special:`, error);
-        if (error.code === '22001') {
-             return { success: false, message: 'Image is too large for database storage. Please make sure the `image_src` column in `specials` is of type TEXT.' };
-        }
         return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
     }
 }
 
 export async function deleteSpecial(id: number) {
     try {
+        const { rows } = await db.query('SELECT image_src FROM specials WHERE id = $1', [id]);
+        const imageUrl = (rows as { image_src: string | null }[])[0]?.image_src;
+        
+        if (imageUrl) {
+            await del(imageUrl);
+        }
+
         await db.execute(`DELETE FROM specials WHERE id = $1`, [id]);
         revalidatePath('/');
         revalidatePath('/admin/dashboard/specials');
