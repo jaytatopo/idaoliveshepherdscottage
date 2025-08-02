@@ -20,7 +20,6 @@ export const revalidate = 3600; // Revalidate at most every hour
 // Lazy load components that are not critical for the initial view
 const Accommodation = dynamic(() => import('@/components/accommodation'));
 const Activities = dynamic(() => import('@/components/activities'));
-const Booking = dynamic(() => import('@/components/booking'));
 const Reviews = dynamic(() => import('@/components/reviews'));
 const Location = dynamic(() => import('@/components/location'));
 const Gallery = dynamic(() => import('@/components/gallery'));
@@ -31,6 +30,8 @@ const HostProfile = dynamic(() => import('@/components/host-profile'));
 const CallToAction = dynamic(() => import('@/components/cta'));
 const Video = dynamic(() => import('@/components/video'));
 const Specials = dynamic(() => import('@/components/specials'));
+const BookingLoader = dynamic(() => import('@/components/booking-loader'));
+
 
 const sectionComponents: { [key: string]: React.ComponentType<any> } = {
   hero: Hero,
@@ -39,7 +40,7 @@ const sectionComponents: { [key: string]: React.ComponentType<any> } = {
   facilities: Facilities,
   activities: Activities,
   gallery: Gallery,
-  booking: Booking,
+  booking: BookingLoader,
   reviews: Reviews,
   location: Location,
   faq: Faq,
