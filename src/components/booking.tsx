@@ -170,7 +170,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                 </CardHeader>
                                 <CardContent>
                                     <Form {...form}>
-                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" suppressHydrationWarning>
                                             <FormField control={form.control} name="name" render={({ field }) => (
                                                 <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>
                                             )} />
