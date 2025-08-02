@@ -1,7 +1,9 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -35,7 +37,7 @@ export default function Header() {
     isScrolled ? 'bg-background/90 shadow-md backdrop-blur-sm' : 'bg-transparent'
   }`;
 
-  const linkClasses = `text-lg font-serif font-bold transition-colors duration-300 ${
+  const linkClasses = `transition-colors duration-300 ${
     isScrolled ? 'text-primary' : 'text-primary-foreground [text-shadow:1px_1px_2px_rgba(0,0,0,0.5)]'
   }`;
 
@@ -93,7 +95,17 @@ export default function Header() {
     <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="#home" className={linkClasses}>
-          Ida Olive Shepherd’s Cottage
+          <div className="flex items-center gap-2">
+            <Image 
+              src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolive.png"
+              alt="Ida Olive Logo"
+              width={120}
+              height={30}
+              className={`h-auto transition-all duration-300 ${isScrolled ? 'w-24' : 'w-32'}`}
+              priority
+            />
+            <span className="hidden sm:inline font-serif text-lg font-bold -ml-1">Shepherd’s Cottage</span>
+          </div>
         </Link>
 
         <nav className="hidden items-center space-x-2 md:flex">
@@ -123,7 +135,16 @@ export default function Header() {
                   className="text-lg font-serif font-bold text-primary"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Ida Olive Cottage
+                  <div className="flex items-center gap-2">
+                    <Image 
+                      src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolive.png"
+                      alt="Ida Olive Logo"
+                      width={100}
+                      height={25}
+                      className="h-auto"
+                    />
+                    <span className="font-serif text-lg font-bold -ml-1">Shepherd’s Cottage</span>
+                  </div>
                 </Link>
                 <Button
                   variant="ghost"
