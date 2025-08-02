@@ -286,6 +286,4 @@ export default function Booking({ content, phone }: BookingProps) {
             </div>
         </section>
     );
-
-    
-
+}
