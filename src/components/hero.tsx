@@ -24,7 +24,7 @@ export default function Hero({ content }: { content: HeroContent }) {
     const loadImage = async () => {
       try {
         const result = await getClientGalleryImages('hero');
-        if (result.success && result.data) {
+        if (result.success && result.data && result.data.length > 0) {
           setImage(result.data[0]);
         }
       } catch (error) {
@@ -40,18 +40,16 @@ export default function Hero({ content }: { content: HeroContent }) {
     <section id="home" className="relative h-screen w-full bg-secondary">
       {isLoading ? (
         <Skeleton className="absolute inset-0" />
-      ) : image?.src_url ? (
+      ) : (
         <Image
-          src={image.src_url}
-          alt={image.alt}
+          src={image?.src_url || 'https://placehold.co/1920x1080.png'}
+          alt={image?.alt || 'A placeholder landscape view of the cottage'}
           fill
           sizes="100vw"
           className="object-cover"
           priority
           data-ai-hint="cottage landscape"
         />
-      ) : (
-        <div className="absolute inset-0 bg-primary/20" />
       )}
 
       <div className={cn(

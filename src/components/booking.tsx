@@ -108,6 +108,7 @@ export default function Booking({ content, phone }: BookingProps) {
                     src={imageBg.src_url}
                     alt={imageBg.alt}
                     fill
+                    sizes="100vw"
                     className="object-cover opacity-[0.18] z-0"
                     data-ai-hint="booking calendar"
                 />
@@ -177,7 +178,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                 </CardHeader>
                                 <CardContent>
                                     <Form {...form}>
-                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" suppressHydrationWarning>
+                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                                             <FormField control={form.control} name="name" render={({ field }) => (
                                                 <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>
                                             )} />

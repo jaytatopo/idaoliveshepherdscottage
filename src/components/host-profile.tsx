@@ -30,10 +30,10 @@ export default function HostProfile({ content }: HostProfileProps) {
           getClientGalleryImages('host_profile'),
           getClientGalleryImages('host_bg')
         ]);
-        if (profileResult.success && profileResult.data) {
+        if (profileResult.success && profileResult.data && profileResult.data.length > 0) {
           setImage(profileResult.data[0]);
         }
-        if (bgResult.success && bgResult.data) {
+        if (bgResult.success && bgResult.data && bgResult.data.length > 0) {
           setImageBg(bgResult.data[0]);
         }
       } catch(error) {
@@ -68,24 +68,20 @@ export default function HostProfile({ content }: HostProfileProps) {
             </p>
         </div>
         <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 items-center">
-            {isLoading ? (
-               <div className="md:col-span-1 flex justify-center">
+            <div className="md:col-span-1 flex justify-center opacity-0 animate-fade-in-up [animation-delay:300ms]">
+                {isLoading ? (
                   <Skeleton className="w-[300px] h-[300px] rounded-full" />
-                </div>
-            ) : (
-              image && image.src_url && (
-                  <div className="md:col-span-1 opacity-0 animate-fade-in-up [animation-delay:300ms]">
-                      <Image
-                          src={image.src_url}
-                          alt={image.alt}
-                          width={300}
-                          height={300}
-                          className="rounded-full aspect-square object-cover mx-auto shadow-lg border-4 border-card"
-                      />
-                  </div>
-              )
-            )}
-            <div className={`opacity-0 animate-fade-in-up [animation-delay:400ms] ${(image && image.src_url && !isLoading) ? 'md:col-span-2' : 'md:col-span-3 text-center'}`}>
+                ) : (
+                  <Image
+                      src={image?.src_url || 'https://placehold.co/300x300.png'}
+                      alt={image?.alt || 'A portrait of the host'}
+                      width={300}
+                      height={300}
+                      className="rounded-full aspect-square object-cover mx-auto shadow-lg border-4 border-card"
+                  />
+                )}
+            </div>
+            <div className={`opacity-0 animate-fade-in-up [animation-delay:400ms] ${(!isLoading && image?.src_url) ? 'md:col-span-2' : 'md:col-span-3 text-center'}`}>
                 <h3 className="font-serif text-2xl font-semibold">{content.name}</h3>
                 <p className="mt-4 text-muted-foreground leading-relaxed whitespace-pre-line">
                     {content.bio}

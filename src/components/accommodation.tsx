@@ -47,8 +47,8 @@ export default function Accommodation({ content }: AccommodationProps) {
     loadData();
   }, []);
 
-  const image1 = images?.[0];
-  const image2 = images?.[1];
+  const image1 = images?.[0]?.src_url ? images[0] : null;
+  const image2 = images?.[1]?.src_url ? images[1] : null;
 
   return (
     <section id="accommodation" className="relative py-12 md:py-20 bg-card">
@@ -80,31 +80,26 @@ export default function Accommodation({ content }: AccommodationProps) {
             </>
           ) : (
             <>
-              {image1 && (
                 <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:300ms]">
                   <Image
-                      src={image1.src_url}
-                      alt={image1.alt}
+                      src={image1?.src_url || 'https://placehold.co/600x400.png'}
+                      alt={image1?.alt || 'Interior view of the cottage'}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       data-ai-hint="cottage interior"
                     />
                 </div>
-              )}
-              {image2 && (
                 <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl group opacity-0 animate-fade-in [animation-delay:400ms]">
                   <Image
-                      src={image2.src_url}
-                      alt={image2.alt}
+                      src={image2?.src_url || 'https://placehold.co/600x400.png'}
+                      alt={image2?.alt || 'Cottage amenities'}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       data-ai-hint="cottage amenities"
                     />
                 </div>
-              )}
-              {image1 && !image2 && <Card className="hidden md:block bg-muted/50"/>}
             </>
           )}
         </div>
