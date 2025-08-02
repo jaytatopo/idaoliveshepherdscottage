@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Inter, Lora } from 'next/font/google';
 import './globals.css';
@@ -21,11 +22,12 @@ const lora = Lora({
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getContent();
   const heroContent = content.hero;
-  const heroImage = await getGalleryImages('hero').then(images => images[0]);
+  // Note: Hero image is now fetched on the client side, so we use a placeholder for metadata.
+  const heroImage = (await getGalleryImages('hero'))[0]; 
+  const ogImageUrl = heroImage?.src || 'https://placehold.co/1200x630.png';
 
   const title = heroContent?.heading || 'Ida Olive Shepherd’s Cottage, McGregor';
   const description = heroContent?.subheading || 'A serene, off-the-grid escape for nature lovers.';
-  const ogImageUrl = heroImage?.src || 'https://placehold.co/1200x630.png';
 
   // TODO: Replace with your actual production domain
   const siteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
