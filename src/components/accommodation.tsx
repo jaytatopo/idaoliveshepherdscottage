@@ -47,12 +47,12 @@ export default function Accommodation({ content }: AccommodationProps) {
     loadData();
   }, []);
 
-  const image1 = images?.[0]?.src_url ? images[0] : null;
-  const image2 = images?.[1]?.src_url ? images[1] : null;
+  const image1 = images?.[0];
+  const image2 = images?.[1];
 
   return (
     <section id="accommodation" className="relative py-12 md:py-20 bg-card">
-      {imageBg && imageBg.src_url && (
+      {imageBg?.src_url && (
         <Image
           src={imageBg.src_url}
           alt={imageBg.alt}
