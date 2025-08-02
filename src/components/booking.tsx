@@ -51,13 +51,20 @@ interface BookingProps {
 export default function Booking({ content, phone }: BookingProps) {
     const { toast } = useToast();
     const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const loadBgImage = async () => {
-        const result = await getClientGalleryImages('booking_bg');
-        if (result.success && result.data) {
-            setImageBg(result.data[0]);
-        }
+          try {
+            const result = await getClientGalleryImages('booking_bg');
+            if (result.success && result.data) {
+                setImageBg(result.data[0]);
+            }
+          } catch (error) {
+            console.error("Failed to load booking background", error);
+          } finally {
+            setIsLoading(false);
+          }
         };
         loadBgImage();
     }, []);
@@ -96,7 +103,7 @@ export default function Booking({ content, phone }: BookingProps) {
             id="booking" 
             className="relative py-12 md:py-20 bg-background overflow-hidden"
         >
-             {imageBg && imageBg.src_url && (
+             {!isLoading && imageBg && imageBg.src_url && (
                 <Image
                     src={imageBg.src_url}
                     alt={imageBg.alt}
@@ -278,4 +285,5 @@ export default function Booking({ content, phone }: BookingProps) {
             </div>
         </section>
     );
-}
+
+    
