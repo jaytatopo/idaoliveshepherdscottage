@@ -1,4 +1,5 @@
 
+
 import { db } from './db';
 
 export interface Amenity {
@@ -337,4 +338,3 @@ export async function getAllPageSections(): Promise<PageSection[]> {
         return getPageSections();
     }
 }
-

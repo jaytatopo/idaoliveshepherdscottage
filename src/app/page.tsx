@@ -11,7 +11,6 @@ import {
     getReviews as fetchReviews, 
     getFaqs,
     getPageSections,
-    getGalleryImages,
     getSpecials
 } from '@/lib/content';
 import StructuredData from '@/components/structured-data';
@@ -60,7 +59,6 @@ async function getInitialPageData() {
         reviews,
         faqs,
         specials,
-        heroImage,
     ] = await Promise.all([
         getContent(),
         fetchAmenities(),
@@ -68,7 +66,6 @@ async function getInitialPageData() {
         fetchReviews(),
         getFaqs(),
         getSpecials(),
-        getGalleryImages('hero').then(images => images[0]),
     ]);
 
     return {
@@ -78,7 +75,6 @@ async function getInitialPageData() {
         reviews,
         faqs,
         specials,
-        heroImage,
     };
 }
 
@@ -90,7 +86,7 @@ export default async function Home() {
   const getSectionProps = (type: string) => {
     switch (type) {
       case 'hero':
-        return { content: initialData.content.hero, image: initialData.heroImage };
+        return { content: initialData.content.hero };
       case 'accommodation':
         return { content: initialData.content.accommodation };
       case 'gallery':
@@ -124,7 +120,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <StructuredData content={initialData.content} heroImage={initialData.heroImage} />
+      <StructuredData content={initialData.content} />
       <Header />
       <main className="flex-1">
         {pageSections.map((section) => {

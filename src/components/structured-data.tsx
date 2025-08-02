@@ -1,3 +1,4 @@
+
 import type { WebsiteContent, GalleryImage } from '@/lib/content';
 
 interface StructuredDataProps {
@@ -13,7 +14,7 @@ export default function StructuredData({ content, heroImage }: StructuredDataPro
 
     // TODO: Replace with your actual production domain
     const siteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
-    const ogImageUrl = heroImage?.src || `${siteUrl}/og-image.png`;
+    const ogImageUrl = heroImage?.src || 'https://placehold.co/1200x630.png';
 
     const data = {
         "@context": "https://schema.org",

@@ -1,31 +1,59 @@
+
+'use client';
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowDown, BedDouble, Camera } from 'lucide-react';
 import type { GalleryImage } from '@/lib/content';
 import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react';
+import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { Skeleton } from './ui/skeleton';
 
 interface HeroContent {
   heading: string;
   subheading: string;
 }
 
-export default function Hero({ content, image }: { content: HeroContent, image?: GalleryImage }) {
+export default function Hero({ content }: { content: HeroContent }) {
+  const [image, setImage] = useState<GalleryImage | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+
+   useEffect(() => {
+    const loadImage = async () => {
+      try {
+        const result = await getClientGalleryImages('hero');
+        if (result.success && result.data) {
+          setImage(result.data[0]);
+        }
+      } catch (error) {
+        console.error("Failed to load hero image", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadImage();
+  }, []);
+
   return (
     <section id="home" className="relative h-screen w-full bg-secondary">
-      {image && image.src ? (
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-            data-ai-hint="cottage landscape"
-          />
+      {isLoading ? (
+        <Skeleton className="absolute inset-0" />
+      ) : image?.src ? (
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+          data-ai-hint="cottage landscape"
+        />
       ) : (
         <div className="absolute inset-0 bg-primary/20" />
       )}
+
       <div className={cn(
         "absolute inset-0",
         "bg-gradient-to-t from-black/60 to-transparent"
