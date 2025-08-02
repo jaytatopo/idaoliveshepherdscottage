@@ -6,17 +6,19 @@ import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { getContent } from '@/lib/content';
+import { getContent, getGalleryImages } from '@/lib/content';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 });
 
 const lora = Lora({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-lora',
+  display: 'swap',
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -58,13 +60,26 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const heroImage = await getGalleryImages('hero');
+  const heroImageUrl = heroImage[0]?.src_url;
+
   return (
     <html lang="en" className="!scroll-smooth" suppressHydrationWarning>
+       <head>
+        {heroImageUrl && (
+          <link
+            rel="preload"
+            href={heroImageUrl}
+            as="image"
+            fetchPriority="high"
+          />
+        )}
+      </head>
       <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         {children}
         <Analytics />

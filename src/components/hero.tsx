@@ -46,8 +46,9 @@ export default function Hero({ content }: { content: HeroContent }) {
           alt={image?.alt || 'A placeholder landscape view of the cottage'}
           fill
           sizes="100vw"
-          className="object-cover opacity-0 animate-fade-in"
+          className="object-cover animate-fade-in"
           priority
+          fetchPriority="high"
           data-ai-hint="cottage landscape"
         />
       )}

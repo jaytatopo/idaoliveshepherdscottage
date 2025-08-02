@@ -3,8 +3,25 @@
 
 import type { GalleryImage } from '@/lib/content';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { getClientGalleryImages } from '@/app/actions/content-actions';
 import { useEffect, useState } from 'react';
+import { Skeleton } from './ui/skeleton';
+
+const VideoPlayer = dynamic(() => Promise.resolve(({ url }: { url: string }) => (
+    <iframe
+      src={url}
+      title="Video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      className="w-full h-full border-0"
+    ></iframe>
+  )), {
+    loading: () => <Skeleton className="w-full h-full" />,
+    ssr: false,
+  }
+);
+
 
 interface VideoContent {
   heading: string;
@@ -52,13 +69,7 @@ export default function Video({ content }: VideoProps) {
             </p>
         </div>
         <div className="max-w-4xl mx-auto aspect-video rounded-lg overflow-hidden shadow-2xl opacity-0 animate-fade-in-up [animation-delay:300ms]">
-          <iframe
-            src={content.url}
-            title="Video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="w-full h-full border-0"
-          ></iframe>
+          <VideoPlayer url={content.url} />
         </div>
       </div>
     </section>
