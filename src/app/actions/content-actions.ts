@@ -94,13 +94,13 @@ export async function uploadGalleryImage(formData: FormData) {
     // For singleton sections, remove existing image record before uploading a new one.
     if (singletonSections.includes(section)) {
         try {
-            const { rows } = await db.query('SELECT src FROM gallery_images WHERE section = $1', [section]);
-            if ((rows as { src: string }[]).length > 0) {
-                const oldImageUrl = (rows as { src: string }[])[0].src;
-                if (oldImageUrl) {
-                    await del(oldImageUrl);
+            const { rows } = await db.query('SELECT id, src FROM gallery_images WHERE section = $1', [section]);
+            if ((rows as { id: number, src: string }[]).length > 0) {
+                const oldImage = (rows as { id: number, src: string }[])[0];
+                if (oldImage.src) {
+                    await del(oldImage.src);
                 }
-                await db.execute('DELETE FROM gallery_images WHERE section = $1', [section]);
+                await db.execute('DELETE FROM gallery_images WHERE id = $1', [oldImage.id]);
             }
         } catch (error) {
             console.error(`Failed to cleanup existing image for section ${section}:`, error);

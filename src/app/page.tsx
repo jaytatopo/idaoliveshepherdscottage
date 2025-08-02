@@ -59,16 +59,16 @@ async function getInitialPageData() {
         facilities,
         reviews,
         faqs,
-        heroImage,
         specials,
+        heroImage,
     ] = await Promise.all([
         getContent(),
         fetchAmenities(),
         fetchFacilities(),
         fetchReviews(),
         getFaqs(),
-        getGalleryImages('hero').then(images => images[0]),
         getSpecials(),
+        getGalleryImages('hero').then(images => images[0]),
     ]);
 
     return {
@@ -77,8 +77,8 @@ async function getInitialPageData() {
         facilities,
         reviews,
         faqs,
-        heroImage,
         specials,
+        heroImage,
     };
 }
 
