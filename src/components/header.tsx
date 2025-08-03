@@ -97,10 +97,10 @@ export default function Header() {
         <Link href="#home" className={linkClasses}>
           <div className="flex items-center gap-2">
             <Image 
-              src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolive.png"
+              src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolivelogo.png"
               alt="Ida Olive Logo"
-              width={120}
-              height={30}
+              width={160}
+              height={60}
               className={`h-auto transition-all duration-300 ${isScrolled ? 'w-24' : 'w-32'}`}
               priority
             />
@@ -138,20 +138,12 @@ export default function Header() {
                     <Image 
                       src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolivelogo.png"
                       alt="Ida Olive Logo"
-                      width={100}
-                      height={25}
+                      width={160}
+                      height={60}
                       className="h-auto"
                     />
                   </div>
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <X className="h-6 w-6" />
-                  <span className="sr-only">Close menu</span>
-                </Button>
               </div>
               <nav className="flex flex-col items-stretch space-y-6">
                 <MobileNav />
