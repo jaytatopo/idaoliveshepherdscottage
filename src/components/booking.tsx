@@ -24,6 +24,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useEffect, useState } from 'react';
 import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 
 const formSchema = z.object({
@@ -47,6 +48,20 @@ interface BookingProps {
   content: BookingContent;
   phone?: string;
 }
+
+const rates2526 = [
+    { persons: 1, price: 1440 },
+    { persons: 2, price: 720 },
+    { persons: 3, price: 640 },
+    { persons: 4, price: 600 },
+];
+
+const rates2627 = [
+    { persons: 1, price: 1540 },
+    { persons: 2, price: 770 },
+    { persons: 3, price: 690 },
+    { persons: 4, price: 650 },
+];
 
 export default function Booking({ content, phone }: BookingProps) {
     const { toast } = useToast();
@@ -157,15 +172,57 @@ export default function Booking({ content, phone }: BookingProps) {
                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
                              <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
-                                <CardTitle className="font-serif">Seasonal Rates</CardTitle>
-                                <CardDescription>Per night for the cottage (sleeps 4). Min 2-night stay.</CardDescription>
+                                    <CardTitle className="font-serif">Accommodation Rates</CardTitle>
+                                    <CardDescription>Valid 1 Feb 2025 to 31 Jan 2026</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ul className="space-y-2 text-sm">
-                                        <li className="flex justify-between items-center"><span>Mid-Season:</span> <span className="font-semibold text-primary text-base">R1800</span></li>
-                                        <li className="flex justify-between items-center"><span>High-Season:</span> <span className="font-semibold text-primary text-base">R2200</span></li>
-                                        <li className="flex justify-between items-center"><span>Peak-Season:</span> <span className="font-semibold text-primary text-base">R2500</span></li>
-                                    </ul>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Guests</TableHead>
+                                                <TableHead className="text-right">Price</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {rates2526.map(rate => (
+                                                <TableRow key={rate.persons}>
+                                                    <TableCell>{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
+                                                    <TableCell className="text-right">
+                                                        R {rate.price.toFixed(2)} pp per night
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
+                             <Card className="bg-card/80 backdrop-blur-sm">
+                                <CardHeader>
+                                    <CardTitle className="font-serif">Accommodation Rates</CardTitle>
+                                    <CardDescription>Valid 1 Feb 2026 to 31 Jan 2027</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Guests</TableHead>
+                                                <TableHead className="text-right">Price</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {rates2627.map(rate => (
+                                                <TableRow key={rate.persons}>
+                                                    <TableCell>{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
+                                                    <TableCell className="text-right">
+                                                        R {rate.price.toFixed(2)} pp per night
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
                                 </CardContent>
                             </Card>
                         </div>
