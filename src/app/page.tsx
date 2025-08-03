@@ -11,7 +11,8 @@ import {
     getReviews as fetchReviews, 
     getFaqs,
     getPageSections,
-    getSpecials
+    getSpecials,
+    getRates,
 } from '@/lib/content';
 import StructuredData from '@/components/structured-data';
 
@@ -60,6 +61,7 @@ async function getInitialPageData() {
         reviews,
         faqs,
         specials,
+        rates,
     ] = await Promise.all([
         getContent(),
         fetchAmenities(),
@@ -67,6 +69,7 @@ async function getInitialPageData() {
         fetchReviews(),
         getFaqs(),
         getSpecials(),
+        getRates(),
     ]);
 
     return {
@@ -76,6 +79,7 @@ async function getInitialPageData() {
         reviews,
         faqs,
         specials,
+        rates,
     };
 }
 
@@ -99,7 +103,7 @@ export default async function Home() {
       case 'activities':
         return { content: initialData.content.activities };
       case 'booking':
-        return { content: initialData.content.booking, phone: initialData.content.location?.phone };
+        return { content: initialData.content.booking, phone: initialData.content.location?.phone, rates: initialData.rates };
       case 'reviews':
         return { content: initialData.content.reviews, reviews: initialData.reviews };
       case 'location':

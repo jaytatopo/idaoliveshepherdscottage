@@ -4,11 +4,12 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { PageSection, GalleryImage, Activity, Special } from '@/lib/content';
+import type { PageSection, GalleryImage, Activity, Special, Rate } from '@/lib/content';
 import { 
     getGalleryImages as fetchGalleryImages,
     getActivities as fetchActivities,
-    getSpecials as fetchSpecials
+    getSpecials as fetchSpecials,
+    getRates as fetchRates
 } from '@/lib/content';
 import { put, del } from '@vercel/blob';
 
@@ -574,6 +575,56 @@ export async function deleteSpecial(id: number) {
 }
 
 
+// --- Rates Actions ---
+const rateSchema = z.object({
+    validity_period_label: z.string().min(1, 'Label is required'),
+    persons: z.coerce.number().min(1, 'Persons must be at least 1'),
+    price: z.coerce.number().positive('Price must be a positive number'),
+    sort_order: z.coerce.number().default(0)
+});
+
+export async function addRate(formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = rateSchema.parse(rawData);
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map((_, i) => `$${i + 1}`).join(', ');
+        const values = Object.values(data);
+        await db.execute(`INSERT INTO rates (${columns}) VALUES (${placeholders})`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/rates');
+        return { success: true, message: 'Rate added successfully.' };
+    } catch (error: any) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
+    }
+}
+
+export async function updateRate(id: number, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    try {
+        const data = rateSchema.parse(rawData);
+        const setClauses = Object.keys(data).map((key, i) => `${key} = $${i + 1}`).join(', ');
+        const values = [...Object.values(data), id];
+        await db.execute(`UPDATE rates SET ${setClauses} WHERE id = $${values.length}`, values);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/rates');
+        return { success: true, message: 'Rate updated successfully.' };
+    } catch (error: any) {
+        return { success: false, message: error instanceof z.ZodError ? error.message : `Database error: ${error.message}` };
+    }
+}
+
+export async function deleteRate(id: number) {
+    try {
+        await db.execute(`DELETE FROM rates WHERE id = $1`, [id]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/rates');
+        return { success: true, message: 'Rate deleted successfully.' };
+    } catch (error: any) {
+        return { success: false, message: `Database error: ${error.message}` };
+    }
+}
+
 
 // --- Page Layout Actions ---
 export async function updatePageLayout(sections: PageSection[]) {
@@ -624,5 +675,15 @@ export async function getClientSpecials(): Promise<{ success: boolean; data?: Sp
     } catch (error: any) {
         console.error(`Failed to fetch specials via action:`, error);
         return { success: false, message: `Failed to fetch specials. Details: ${error.message}` };
+    }
+}
+
+export async function getClientRates(): Promise<{ success: boolean; data?: Rate[]; message?: string; }> {
+    try {
+        const rates = await fetchRates();
+        return { success: true, data: rates };
+    } catch (error: any) {
+        console.error(`Failed to fetch rates via action:`, error);
+        return { success: false, message: `Failed to fetch rates. Details: ${error.message}` };
     }
 }

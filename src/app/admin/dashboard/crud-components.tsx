@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle, Edit, CheckCircle, XCircle } from "lucide-react";
-import type { Activity, Amenity, Review, Facility, FAQ, Special } from '@/lib/content';
+import type { Activity, Amenity, Review, Facility, FAQ, Special, Rate } from '@/lib/content';
 import { useToast } from '@/hooks/use-toast';
 import {
     addAmenity, updateAmenity, deleteAmenity,
@@ -20,6 +20,7 @@ import {
     addFacility, updateFacility, deleteFacility,
     addFaq, updateFaq, deleteFaq,
     addSpecial, updateSpecial, deleteSpecial,
+    addRate, updateRate, deleteRate,
 } from '@/app/actions/content-actions';
 import { DeleteActionButton } from './delete-action-button';
 import { Switch } from '@/components/ui/switch';
@@ -709,6 +710,114 @@ export function SpecialsClientPage({ specials }: { specials: Special[] }) {
                     </TableRow></TableHeader>
                     <TableBody>
                         {specials.map(item => <SpecialRow key={item.id} special={item} />)}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
+}
+
+// RATES
+function RateForm({ rate, onDone }: { rate?: Rate, onDone: () => void }) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+    const action = rate ? updateRate.bind(null, rate.id) : addRate;
+
+    async function handleSubmit(formData: FormData) {
+        setIsSubmitting(true);
+        const result = await action(formData);
+        if (result.success) {
+            toast({ title: 'Success!', description: result.message });
+            onDone();
+        } else {
+            toast({ variant: 'destructive', title: 'An error occurred', description: result.message });
+        }
+        setIsSubmitting(false);
+    }
+
+    return (
+        <form action={handleSubmit} className="space-y-4">
+            <fieldset className="space-y-4" disabled={isSubmitting}>
+                <div>
+                    <Label htmlFor="validity_period_label">Validity Period Label</Label>
+                    <Input id="validity_period_label" name="validity_period_label" defaultValue={rate?.validity_period_label} required placeholder="e.g., Valid 1 Feb 2025 to 31 Jan 2026" />
+                </div>
+                <div>
+                    <Label htmlFor="persons">Number of Persons</Label>
+                    <Input id="persons" name="persons" type="number" defaultValue={rate?.persons} required />
+                </div>
+                <div>
+                    <Label htmlFor="price">Price (per person per night)</Label>
+                    <Input id="price" name="price" type="number" step="0.01" defaultValue={rate?.price} required />
+                </div>
+                <div>
+                    <Label htmlFor="sort_order">Sort Order</Label>
+                    <Input id="sort_order" name="sort_order" type="number" defaultValue={rate?.sort_order ?? 0} required />
+                </div>
+            </fieldset>
+            <DialogFooter>
+                <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Saving...' : (rate ? 'Save Changes' : 'Add Rate')}
+                </Button>
+            </DialogFooter>
+        </form>
+    );
+}
+
+function RateRow({ rate }: { rate: Rate }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
+    return (
+        <TableRow>
+            <TableCell>{rate.validity_period_label}</TableCell>
+            <TableCell className="hidden sm:table-cell">{rate.persons}</TableCell>
+            <TableCell>R {rate.price.toFixed(2)}</TableCell>
+            <TableCell className="hidden lg:table-cell">{rate.sort_order}</TableCell>
+            <TableCell className="text-right">
+                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                    <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit /></Button></DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader><DialogTitle>Edit Rate</DialogTitle></DialogHeader>
+                        <RateForm rate={rate} onDone={() => setIsEditOpen(false)} />
+                    </DialogContent>
+                </Dialog>
+                <DeleteActionButton 
+                    itemName={`rate for ${rate.persons} persons`}
+                    deleteAction={deleteRate.bind(null, rate.id)}
+                />
+            </TableCell>
+        </TableRow>
+    );
+}
+
+export function RatesClientPage({ rates }: { rates: Rate[] }) {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Manage Accommodation Rates</CardTitle>
+                     <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                        <DialogTrigger asChild><Button><PlusCircle className="mr-2"/> Add Rate</Button></DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Add New Rate</DialogTitle></DialogHeader>
+                            <RateForm onDone={() => setIsAddOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+                 <CardDescription>Add, edit, or remove accommodation rates. Group rates by using the same "Validity Period Label".</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader><TableRow>
+                        <TableHead>Validity Period</TableHead>
+                        <TableHead className="hidden sm:table-cell">Persons</TableHead>
+                        <TableHead>Price (p/p/n)</TableHead>
+                        <TableHead className="hidden lg:table-cell">Order</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow></TableHeader>
+                    <TableBody>
+                        {rates.map(item => <RateRow key={item.id} rate={item} />)}
                     </TableBody>
                 </Table>
             </CardContent>

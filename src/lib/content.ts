@@ -81,6 +81,14 @@ export interface Special {
     sort_order: number;
 }
 
+export interface Rate {
+    id: number;
+    validity_period_label: string;
+    persons: number;
+    price: number;
+    sort_order: number;
+}
+
 
 type ContentValue = {
     [key: string]: string;
@@ -296,6 +304,17 @@ export async function getAllSpecials(): Promise<Special[]> {
         return rows as Special[];
     } catch (error) {
         console.error("Failed to fetch all specials:", error);
+        return [];
+    }
+}
+
+
+export async function getRates(): Promise<Rate[]> {
+    try {
+        const { rows } = await db.query('SELECT id, validity_period_label, persons, price, sort_order FROM rates ORDER BY sort_order ASC');
+        return rows as Rate[];
+    } catch (error) {
+        console.error("Failed to fetch rates:", error);
         return [];
     }
 }

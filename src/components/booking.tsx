@@ -19,12 +19,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { saveInquiry } from '@/app/actions/save-inquiry';
 import { Textarea } from './ui/textarea';
-import type { GalleryImage } from '@/lib/content';
+import type { GalleryImage, Rate } from '@/lib/content';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useEffect, useState } from 'react';
-import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { getClientGalleryImages, getClientRates } from '@/app/actions/content-actions';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { Skeleton } from './ui/skeleton';
 
 
 const formSchema = z.object({
@@ -47,42 +48,50 @@ interface BookingContent {
 interface BookingProps {
   content: BookingContent;
   phone?: string;
+  rates: Rate[];
 }
 
-const rates2526 = [
-    { persons: 1, price: 1440 },
-    { persons: 2, price: 720 },
-    { persons: 3, price: 640 },
-    { persons: 4, price: 600 },
-];
+// Group rates by their validity period label
+const groupRatesByPeriod = (rates: Rate[]) => {
+    return rates.reduce((acc, rate) => {
+        const period = rate.validity_period_label;
+        if (!acc[period]) {
+            acc[period] = [];
+        }
+        acc[period].push(rate);
+        return acc;
+    }, {} as Record<string, Rate[]>);
+};
 
-const rates2627 = [
-    { persons: 1, price: 1540 },
-    { persons: 2, price: 770 },
-    { persons: 3, price: 690 },
-    { persons: 4, price: 650 },
-];
 
-export default function Booking({ content, phone }: BookingProps) {
+export default function Booking({ content, phone, rates: initialRates }: BookingProps) {
     const { toast } = useToast();
+    const [rates, setRates] = useState<Rate[]>(initialRates);
     const [imageBg, setImageBg] = useState<GalleryImage | undefined>();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const loadBgImage = async () => {
+        const loadData = async () => {
           try {
-            const result = await getClientGalleryImages('booking_bg');
-            if (result.success && result.data) {
-                setImageBg(result.data[0]);
+            const [bgResult, ratesResult] = await Promise.all([
+                getClientGalleryImages('booking_bg'),
+                initialRates.length === 0 ? getClientRates() : Promise.resolve({ success: true, data: initialRates })
+            ]);
+
+            if (bgResult.success && bgResult.data) {
+                setImageBg(bgResult.data[0]);
+            }
+             if (ratesResult.success && ratesResult.data) {
+                setRates(ratesResult.data);
             }
           } catch (error) {
-            console.error("Failed to load booking background", error);
+            console.error("Failed to load booking data", error);
           } finally {
             setIsLoading(false);
           }
         };
-        loadBgImage();
-    }, []);
+        loadData();
+    }, [initialRates]);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -112,13 +121,20 @@ export default function Booking({ content, phone }: BookingProps) {
             });
         }
     };
+    
+    const groupedRates = groupRatesByPeriod(rates);
+    const ratePeriods = Object.keys(groupedRates).sort((a,b) => {
+        const aMinOrder = Math.min(...groupedRates[a].map(r => r.sort_order));
+        const bMinOrder = Math.min(...groupedRates[b].map(r => r.sort_order));
+        return aMinOrder - bMinOrder;
+    });
 
     return (
         <section 
             id="booking" 
             className="relative py-12 md:py-20 bg-background overflow-hidden"
         >
-             {!isLoading && imageBg?.src_url && (
+             {imageBg?.src_url && (
                 <Image
                     src={imageBg.src_url}
                     alt={imageBg.alt}
@@ -168,59 +184,46 @@ export default function Booking({ content, phone }: BookingProps) {
                         </Card>
                     </div>
 
-                    <div className="lg:col-span-1 space-y-6">
+                    <div className="lg:col-span-1 space-y-4">
                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
                              <Card className="bg-card/80 backdrop-blur-sm">
-                                <CardHeader className="pb-0">
+                                <CardHeader>
                                     <CardTitle className="font-serif">Accommodation Rates</CardTitle>
-                                    <CardDescription>Valid 1 Feb 2025 to 31 Jan 2026</CardDescription>
                                 </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="py-2 px-4">Guests</TableHead>
-                                                <TableHead className="text-right py-2 px-4">Price</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {rates2526.map(rate => (
-                                                <TableRow key={rate.persons}>
-                                                    <TableCell className="py-2 px-4">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
-                                                    <TableCell className="text-right py-2 px-4">
-                                                        R {rate.price.toFixed(2)} pp per night
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                                <CardHeader className="pb-0 pt-0">
-                                    <CardDescription>Valid 1 Feb 2026 to 31 Jan 2027</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="py-2 px-4">Guests</TableHead>
-                                                <TableHead className="text-right py-2 px-4">Price</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {rates2627.map(rate => (
-                                                <TableRow key={rate.persons}>
-                                                    <TableCell className="py-2 px-4">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
-                                                    <TableCell className="text-right py-2 px-4">
-                                                        R {rate.price.toFixed(2)} pp per night
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
+                                <CardContent className="space-y-4">
+                                     {isLoading ? (
+                                        <Skeleton className="h-48 w-full" />
+                                     ) : ratePeriods.length > 0 ? (
+                                        ratePeriods.map(period => (
+                                            <div key={period}>
+                                                <h4 className="font-semibold text-sm mb-2">{period}</h4>
+                                                <Table>
+                                                    <TableHeader>
+                                                        <TableRow>
+                                                            <TableHead className="py-2 px-3 h-auto">Guests</TableHead>
+                                                            <TableHead className="text-right py-2 px-3 h-auto">Price p/p/n</TableHead>
+                                                        </TableRow>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        {groupedRates[period].sort((a,b) => a.persons - b.persons).map(rate => (
+                                                            <TableRow key={rate.id}>
+                                                                <TableCell className="py-2 px-3">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
+                                                                <TableCell className="text-right py-2 px-3">
+                                                                    R {rate.price.toFixed(2)}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </div>
+                                        ))
+                                     ) : (
+                                        <p className="text-sm text-muted-foreground">No rates have been configured yet.</p>
+                                     )}
                                 </CardContent>
                             </Card>
                         </div>
-                        <div className="opacity-0 animate-fade-in-up [animation-delay:600ms]">
+                        <div className="opacity-0 animate-fade-in-up [animation-delay:500ms]">
                             <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle className="font-serif">Send an Enquiry</CardTitle>
@@ -336,5 +339,4 @@ export default function Booking({ content, phone }: BookingProps) {
             </div>
         </section>
     );
-
-    
+}

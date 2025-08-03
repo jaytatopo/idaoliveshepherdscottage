@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarInset, SidebarFooter, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu, ShieldCheck, Tag } from "lucide-react";
+import { LayoutDashboard, LogOut, Home, FileText, Mountain, Star, LayoutTemplate, Sparkles, HelpCircle, Building2, Image as ImageIcon, Menu, ShieldCheck, Tag, DollarSign } from "lucide-react";
 import { logout } from '@/app/actions/auth-actions';
 
 
@@ -78,6 +78,14 @@ function AdminSidebar() {
               <Link href="/admin/dashboard/layout" onClick={handleLinkClick}>
                 <LayoutTemplate />
                 <span>Page Layout</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+           <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Rates" isActive={pathname === '/admin/dashboard/rates'}>
+              <Link href="/admin/dashboard/rates" onClick={handleLinkClick}>
+                <DollarSign />
+                <span>Rates</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
