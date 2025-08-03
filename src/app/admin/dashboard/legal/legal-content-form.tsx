@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useActionState, useEffect } from 'react';
+import React, { useActionState, useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { updateContent } from '@/app/actions/content-actions';
 import { PublishButton } from '../publish-button';
@@ -21,6 +21,17 @@ const initialState = {
 export function LegalContentForm({ content }: { content: WebsiteContent }) {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateContent, initialState);
+
+    const [textareas, setTextareas] = useState({
+        privacy_policy_content: content.privacy_policy?.content || '',
+        cookie_policy_content: content.cookie_policy?.content || '',
+        terms_conditions_content: content.terms_conditions?.content || '',
+    });
+
+    const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setTextareas(prevState => ({ ...prevState, [name]: value }));
+    };
 
     useEffect(() => {
         if (state && state.message) {
@@ -59,7 +70,7 @@ export function LegalContentForm({ content }: { content: WebsiteContent }) {
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="privacy_policy_content" className="sr-only">Privacy Policy Content</Label>
-                            <Textarea id="privacy_policy_content" name="privacy_policy_content" rows={15} defaultValue={content.privacy_policy?.content} />
+                            <Textarea id="privacy_policy_content" name="privacy_policy_content" rows={15} value={textareas.privacy_policy_content} onChange={handleTextareaChange} />
                         </div>
                     </CardContent>
                 </Card>
@@ -72,7 +83,7 @@ export function LegalContentForm({ content }: { content: WebsiteContent }) {
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="cookie_policy_content" className="sr-only">Cookie Policy Content</Label>
-                            <Textarea id="cookie_policy_content" name="cookie_policy_content" rows={15} defaultValue={content.cookie_policy?.content} />
+                            <Textarea id="cookie_policy_content" name="cookie_policy_content" rows={15} value={textareas.cookie_policy_content} onChange={handleTextareaChange} />
                         </div>
                     </CardContent>
                 </Card>
@@ -85,7 +96,7 @@ export function LegalContentForm({ content }: { content: WebsiteContent }) {
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="terms_conditions_content" className="sr-only">Terms and Conditions Content</Label>
-                            <Textarea id="terms_conditions_content" name="terms_conditions_content" rows={15} defaultValue={content.terms_conditions?.content} />
+                            <Textarea id="terms_conditions_content" name="terms_conditions_content" rows={15} value={textareas.terms_conditions_content} onChange={handleTextareaChange} />
                         </div>
                     </CardContent>
                 </Card>
