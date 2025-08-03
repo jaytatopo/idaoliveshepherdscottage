@@ -771,7 +771,7 @@ function RateRow({ rate }: { rate: Rate }) {
         <TableRow>
             <TableCell>{rate.validity_period_label}</TableCell>
             <TableCell className="hidden sm:table-cell">{rate.persons}</TableCell>
-            <TableCell>R {rate.price.toFixed(2)}</TableCell>
+            <TableCell>R {Number(rate.price).toFixed(2)}</TableCell>
             <TableCell className="hidden lg:table-cell">{rate.sort_order}</TableCell>
             <TableCell className="text-right">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
