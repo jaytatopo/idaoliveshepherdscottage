@@ -23,34 +23,6 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateContent, initialState);
 
-    // State for Textarea components
-    const [textareas, setTextareas] = useState({
-        hero_subheading: content.hero?.subheading || '',
-        accommodation_subheading: content.accommodation?.subheading || '',
-        accommodation_main_text: content.accommodation?.main_text || '',
-        accommodation_secondary_text: content.accommodation?.secondary_text || '',
-        amenities_subheading: content.amenities?.subheading || '',
-        facilities_subheading: content.facilities?.subheading || '',
-        activities_subheading: content.activities?.subheading || '',
-        specials_subheading: content.specials?.subheading || '',
-        booking_subheading: content.booking?.subheading || '',
-        booking_rules_items: content.booking?.rules_items || '',
-        booking_checkin_items: content.booking?.checkin_items || '',
-        booking_practical_items: content.booking?.practical_items || '',
-        reviews_subheading: content.reviews?.subheading || '',
-        host_subheading: content.host?.subheading || '',
-        host_bio: content.host?.bio || '',
-        faq_subheading: content.faq?.subheading || '',
-        cta_subheading: content.cta?.subheading || '',
-        video_subheading: content.video?.subheading || '',
-        location_subheading: content.location?.subheading || '',
-    });
-
-    const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setTextareas(prevState => ({ ...prevState, [name]: value }));
-    };
-
     useEffect(() => {
         if (state && state.message) {
              if (state.success) {
@@ -89,7 +61,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="hero_subheading">Subheading</Label>
-                            <Textarea id="hero_subheading" name="hero_subheading" value={textareas.hero_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="hero_subheading" name="hero_subheading" defaultValue={content.hero?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -103,15 +75,15 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="accommodation_subheading">Subheading</Label>
-                            <Textarea id="accommodation_subheading" name="accommodation_subheading" value={textareas.accommodation_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="accommodation_subheading" name="accommodation_subheading" defaultValue={content.accommodation?.subheading} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="accommodation_main_text">Main Text Block (The Vibe)</Label>
-                            <Textarea id="accommodation_main_text" name="accommodation_main_text" rows={5} value={textareas.accommodation_main_text} onChange={handleTextareaChange} />
+                            <Textarea id="accommodation_main_text" name="accommodation_main_text" rows={5} defaultValue={content.accommodation?.main_text} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="accommodation_secondary_text">Secondary Text (The Space)</Label>
-                            <Textarea id="accommodation_secondary_text" name="accommodation_secondary_text" rows={5} value={textareas.accommodation_secondary_text} onChange={handleTextareaChange} />
+                            <Textarea id="accommodation_secondary_text" name="accommodation_secondary_text" rows={5} defaultValue={content.accommodation?.secondary_text} />
                         </div>
                     </CardContent>
                 </Card>
@@ -125,7 +97,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="amenities_subheading">Subheading</Label>
-                            <Textarea id="amenities_subheading" name="amenities_subheading" value={textareas.amenities_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="amenities_subheading" name="amenities_subheading" defaultValue={content.amenities?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -139,7 +111,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="facilities_subheading">Subheading</Label>
-                            <Textarea id="facilities_subheading" name="facilities_subheading" value={textareas.facilities_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="facilities_subheading" name="facilities_subheading" defaultValue={content.facilities?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -153,7 +125,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="activities_subheading">Subheading</Label>
-                            <Textarea id="activities_subheading" name="activities_subheading" value={textareas.activities_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="activities_subheading" name="activities_subheading" defaultValue={content.activities?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -167,7 +139,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="specials_subheading">Subheading</Label>
-                            <Textarea id="specials_subheading" name="specials_subheading" value={textareas.specials_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="specials_subheading" name="specials_subheading" defaultValue={content.specials?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -181,7 +153,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="booking_subheading">Subheading</Label>
-                            <Textarea id="booking_subheading" name="booking_subheading" value={textareas.booking_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="booking_subheading" name="booking_subheading" defaultValue={content.booking?.subheading} />
                         </div>
                          <div className="space-y-2">
                             <Label htmlFor="booking_booking_url">Booking Engine URL</Label>
@@ -198,15 +170,15 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="booking_rules_items">House Rules Items</Label>
-                            <Textarea id="booking_rules_items" name="booking_rules_items" rows={4} value={textareas.booking_rules_items} onChange={handleTextareaChange} />
+                            <Textarea id="booking_rules_items" name="booking_rules_items" rows={4} defaultValue={content.booking?.rules_items} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="booking_checkin_items">Check-in & Check-out Items</Label>
-                            <Textarea id="booking_checkin_items" name="booking_checkin_items" rows={4} value={textareas.booking_checkin_items} onChange={handleTextareaChange} />
+                            <Textarea id="booking_checkin_items" name="booking_checkin_items" rows={4} defaultValue={content.booking?.checkin_items} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="booking_practical_items">Practical Info Items</Label>
-                            <Textarea id="booking_practical_items" name="booking_practical_items" rows={4} value={textareas.booking_practical_items} onChange={handleTextareaChange} />
+                            <Textarea id="booking_practical_items" name="booking_practical_items" rows={4} defaultValue={content.booking?.practical_items} />
                         </div>
                     </CardContent>
                 </Card>
@@ -220,7 +192,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="reviews_subheading">Subheading</Label>
-                            <Textarea id="reviews_subheading" name="reviews_subheading" value={textareas.reviews_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="reviews_subheading" name="reviews_subheading" defaultValue={content.reviews?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -234,7 +206,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="host_subheading">Subheading</Label>
-                            <Textarea id="host_subheading" name="host_subheading" value={textareas.host_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="host_subheading" name="host_subheading" defaultValue={content.host?.subheading} />
                         </div>
                             <div className="space-y-2">
                             <Label htmlFor="host_name">Host Name</Label>
@@ -242,7 +214,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="host_bio">Host Bio</Label>
-                            <Textarea id="host_bio" name="host_bio" rows={4} value={textareas.host_bio} onChange={handleTextareaChange} />
+                            <Textarea id="host_bio" name="host_bio" rows={4} defaultValue={content.host?.bio} />
                         </div>
                     </CardContent>
                 </Card>
@@ -256,7 +228,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="faq_subheading">Subheading</Label>
-                            <Textarea id="faq_subheading" name="faq_subheading" value={textareas.faq_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="faq_subheading" name="faq_subheading" defaultValue={content.faq?.subheading} />
                         </div>
                     </CardContent>
                 </Card>
@@ -270,7 +242,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="cta_subheading">Subheading</Label>
-                            <Textarea id="cta_subheading" name="cta_subheading" value={textareas.cta_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="cta_subheading" name="cta_subheading" defaultValue={content.cta?.subheading} />
                         </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -294,7 +266,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="video_subheading">Subheading</Label>
-                            <Textarea id="video_subheading" name="video_subheading" value={textareas.video_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="video_subheading" name="video_subheading" defaultValue={content.video?.subheading} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="video_url">Video Embed URL</Label>
@@ -312,7 +284,7 @@ export function ContentForm({ content }: { content: WebsiteContent }) {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="location_subheading">Subheading</Label>
-                            <Textarea id="location_subheading" name="location_subheading" value={textareas.location_subheading} onChange={handleTextareaChange} />
+                            <Textarea id="location_subheading" name="location_subheading" defaultValue={content.location?.subheading} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="location_address">Address</Label>
