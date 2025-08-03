@@ -55,7 +55,7 @@ export default function Hero({ content }: { content: HeroContent }) {
 
       <div className={cn(
         "absolute inset-0",
-        "bg-gradient-to-t from-black/60 to-transparent"
+        "bg-gradient-to-t from-black/60 via-black/20 to-transparent"
       )} />
       <div className={cn(
         "relative z-10 flex h-full flex-col items-center justify-center text-center",

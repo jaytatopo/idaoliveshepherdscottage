@@ -11,7 +11,7 @@
     --popover: 30 50% 99%;
     --popover-foreground: 25 30% 25%;
     --primary: 80 35% 35%; /* Olive green */
-    --primary-foreground: 40 30% 96%; /* Off-white */
+    --primary-foreground: 40 30% 92%; /* Creamy white */
     --secondary: 40 30% 92%;
     --secondary-foreground: 80 25% 25%;
     --muted: 40 30% 94%;
@@ -55,5 +55,11 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
