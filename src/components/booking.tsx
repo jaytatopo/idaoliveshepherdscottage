@@ -168,7 +168,7 @@ export default function Booking({ content, phone }: BookingProps) {
                         </Card>
                     </div>
 
-                    <div className="lg:col-span-1 space-y-8">
+                    <div className="lg:col-span-1 space-y-6">
                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
                              <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
@@ -179,15 +179,15 @@ export default function Booking({ content, phone }: BookingProps) {
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
-                                                <TableHead>Guests</TableHead>
-                                                <TableHead className="text-right">Price</TableHead>
+                                                <TableHead className="py-2 px-4">Guests</TableHead>
+                                                <TableHead className="text-right py-2 px-4">Price</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
                                             {rates2526.map(rate => (
                                                 <TableRow key={rate.persons}>
-                                                    <TableCell>{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
-                                                    <TableCell className="text-right">
+                                                    <TableCell className="py-2 px-4">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
+                                                    <TableCell className="text-right py-2 px-4">
                                                         R {rate.price.toFixed(2)} pp per night
                                                     </TableCell>
                                                 </TableRow>
@@ -207,15 +207,15 @@ export default function Booking({ content, phone }: BookingProps) {
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
-                                                <TableHead>Guests</TableHead>
-                                                <TableHead className="text-right">Price</TableHead>
+                                                <TableHead className="py-2 px-4">Guests</TableHead>
+                                                <TableHead className="text-right py-2 px-4">Price</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
                                             {rates2627.map(rate => (
                                                 <TableRow key={rate.persons}>
-                                                    <TableCell>{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
-                                                    <TableCell className="text-right">
+                                                    <TableCell className="py-2 px-4">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
+                                                    <TableCell className="text-right py-2 px-4">
                                                         R {rate.price.toFixed(2)} pp per night
                                                     </TableCell>
                                                 </TableRow>
@@ -341,4 +341,5 @@ export default function Booking({ content, phone }: BookingProps) {
             </div>
         </section>
     );
-}
+
+    
