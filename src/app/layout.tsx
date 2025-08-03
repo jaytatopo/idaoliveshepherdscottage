@@ -81,6 +81,16 @@ export default async function RootLayout({
           />
         )}
       </head>
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-JYYF199R2F"></Script>
+      <Script id="google-analytics">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-JYYF199R2F');
+        `}
+      </Script>
       <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         {children}
         <Analytics />
@@ -88,17 +98,6 @@ export default async function RootLayout({
         <Toaster />
         <CookieBanner />
         
-        {/* Google tag (gtag.js) */}
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-JYYF199R2F"></Script>
-        <Script id="google-analytics">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-JYYF199R2F');
-          `}
-        </Script>
       </body>
     </html>
   );
