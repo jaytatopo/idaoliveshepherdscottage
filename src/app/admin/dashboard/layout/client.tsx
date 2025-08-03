@@ -141,21 +141,21 @@ export function LayoutClientPage({ sections: initialSections }: { sections: Page
             <CardContent>
                 <form action={handleSave}>
                     <div className="rounded-md border">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[50px]"></TableHead>
-                                    <TableHead>Section Title</TableHead>
-                                    <TableHead className="w-[120px]">Sort Order</TableHead>
-                                    <TableHead className="w-[100px]">Visible</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <DndContext
-                                sensors={sensors}
-                                collisionDetection={closestCenter}
-                                onDragEnd={handleDragEnd}
-                                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-                            >
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                        >
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[50px]"></TableHead>
+                                        <TableHead>Section Title</TableHead>
+                                        <TableHead className="w-[120px]">Sort Order</TableHead>
+                                        <TableHead className="w-[100px]">Visible</TableHead>
+                                    </TableRow>
+                                </TableHeader>
                                 <SortableContext
                                     items={sections.map(s => s.id)}
                                     strategy={verticalListSortingStrategy}
@@ -171,8 +171,8 @@ export function LayoutClientPage({ sections: initialSections }: { sections: Page
                                         ))}
                                     </TableBody>
                                 </SortableContext>
-                            </DndContext>
-                        </Table>
+                            </Table>
+                        </DndContext>
                     </div>
                     <Button type="submit" className="mt-6" disabled={isSaving}>
                         {isSaving ? 'Saving...' : 'Save Layout'}
