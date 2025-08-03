@@ -185,43 +185,47 @@ export default function Booking({ content, phone, rates: initialRates }: Booking
                     </div>
 
                     <div className="lg:col-span-1 space-y-4">
-                        <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
-                             <Card className="bg-card/80 backdrop-blur-sm">
-                                <CardHeader>
-                                    <CardTitle className="font-serif">Accommodation Rates</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                     {isLoading ? (
-                                        <Skeleton className="h-48 w-full" />
-                                     ) : ratePeriods.length > 0 ? (
-                                        ratePeriods.map(period => (
-                                            <div key={period}>
-                                                <h4 className="font-semibold text-sm mb-2">{period}</h4>
-                                                <Table>
-                                                    <TableHeader>
-                                                        <TableRow>
-                                                            <TableHead className="py-2 px-3 h-auto">Guests</TableHead>
-                                                            <TableHead className="text-right py-2 px-3 h-auto">Price p/p/n</TableHead>
+                        <div className="opacity-0 animate-fade-in-up [animation-delay:400ms] space-y-4">
+                             {isLoading ? (
+                                <Skeleton className="h-48 w-full" />
+                             ) : ratePeriods.length > 0 ? (
+                                ratePeriods.map(period => (
+                                    <Card key={period} className="bg-card/80 backdrop-blur-sm">
+                                        <CardHeader>
+                                            <CardTitle className="font-serif text-base">{period}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow>
+                                                        <TableHead className="py-2 px-3 h-auto">Guests</TableHead>
+                                                        <TableHead className="text-right py-2 px-3 h-auto">Price p/p/n</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    {groupedRates[period].sort((a,b) => a.persons - b.persons).map(rate => (
+                                                        <TableRow key={rate.id}>
+                                                            <TableCell className="py-2 px-3">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
+                                                            <TableCell className="text-right py-2 px-3">
+                                                                R {Number(rate.price).toFixed(2)}
+                                                            </TableCell>
                                                         </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {groupedRates[period].sort((a,b) => a.persons - b.persons).map(rate => (
-                                                            <TableRow key={rate.id}>
-                                                                <TableCell className="py-2 px-3">{rate.persons} Person{rate.persons > 1 ? 's' : ''}</TableCell>
-                                                                <TableCell className="text-right py-2 px-3">
-                                                                    R {rate.price.toFixed(2)}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                </Table>
-                                            </div>
-                                        ))
-                                     ) : (
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                        </CardContent>
+                                    </Card>
+                                ))
+                             ) : (
+                                <Card className="bg-card/80 backdrop-blur-sm">
+                                    <CardHeader>
+                                        <CardTitle className="font-serif">Accommodation Rates</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
                                         <p className="text-sm text-muted-foreground">No rates have been configured yet.</p>
-                                     )}
-                                </CardContent>
-                            </Card>
+                                    </CardContent>
+                                </Card>
+                             )}
                         </div>
                         <div className="opacity-0 animate-fade-in-up [animation-delay:500ms]">
                             <Card className="bg-card/80 backdrop-blur-sm">
@@ -340,3 +344,5 @@ export default function Booking({ content, phone, rates: initialRates }: Booking
         </section>
     );
 }
+
+    
