@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { getClientGalleryImages } from '@/app/actions/content-actions';
 import { useEffect, useState } from 'react';
 import { Skeleton } from './ui/skeleton';
+import { cn } from '@/lib/utils';
 
 interface HostContent {
   heading: string;
@@ -47,6 +48,8 @@ export default function HostProfile({ content }: HostProfileProps) {
 
   if (!content.name) return null;
 
+  const hasImage = !isLoading && !!image?.src_url;
+
   return (
     <section id="host" className="relative py-12 md:py-20 bg-background">
       {imageBg && imageBg.src_url && (
@@ -67,21 +70,32 @@ export default function HostProfile({ content }: HostProfileProps) {
                 {content.subheading}
             </p>
         </div>
-        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 items-center">
-            <div className="md:col-span-1 flex justify-center opacity-0 animate-fade-in-up [animation-delay:300ms]">
-                {isLoading ? (
-                  <Skeleton className="w-[300px] h-[300px] rounded-full" />
-                ) : (
-                  <Image
-                      src={image?.src_url || 'https://placehold.co/300x300.png'}
-                      alt={image?.alt || 'A portrait of the host'}
-                      width={300}
-                      height={300}
-                      className="rounded-full aspect-square object-cover mx-auto shadow-lg border-4 border-card"
-                  />
-                )}
-            </div>
-            <div className={`opacity-0 animate-fade-in-up [animation-delay:400ms] ${(!isLoading && image?.src_url) ? 'md:col-span-2' : 'md:col-span-3 text-center'}`}>
+        <div className={cn(
+          "max-w-4xl mx-auto grid gap-8 items-center",
+          hasImage ? "md:grid-cols-3" : "md:grid-cols-1"
+        )}>
+            {isLoading && (
+              <div className="md:col-span-1 flex justify-center">
+                <Skeleton className="w-[300px] h-[300px] rounded-full" />
+              </div>
+            )}
+            
+            {hasImage && (
+              <div className="md:col-span-1 flex justify-center opacity-0 animate-fade-in-up [animation-delay:300ms]">
+                <Image
+                    src={image.src_url}
+                    alt={image.alt}
+                    width={300}
+                    height={300}
+                    className="rounded-full aspect-square object-cover mx-auto shadow-lg border-4 border-card"
+                />
+              </div>
+            )}
+            
+            <div className={cn(
+              "opacity-0 animate-fade-in-up [animation-delay:400ms]",
+              hasImage ? "md:col-span-2" : "md:col-span-1 text-center"
+            )}>
                 <h3 className="font-serif text-2xl font-semibold">{content.name}</h3>
                 <p className="mt-4 text-muted-foreground leading-relaxed whitespace-pre-line">
                     {content.bio}
