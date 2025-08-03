@@ -197,8 +197,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                 </CardContent>
                             </Card>
                         </div>
-
-                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
+                         <div className="opacity-0 animate-fade-in-up [animation-delay:500ms]">
                              <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle className="font-serif">Accommodation Rates</CardTitle>
@@ -226,8 +225,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                 </CardContent>
                             </Card>
                         </div>
-                        
-                        <div className="opacity-0 animate-fade-in-up [animation-delay:500ms]">
+                        <div className="opacity-0 animate-fade-in-up [animation-delay:600ms]">
                             <Card className="bg-card/80 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle className="font-serif">Send an Enquiry</CardTitle>
