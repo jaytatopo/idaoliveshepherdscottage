@@ -150,7 +150,7 @@ export default function Booking({ content, phone }: BookingProps) {
                             <CardContent>
                                 {content.booking_url ? (
                                     <>
-                                        <div className="h-[750px] bg-muted rounded-lg p-2 shadow-inner">
+                                        <div className="h-[1050px] bg-muted rounded-lg p-2 shadow-inner">
                                             <iframe 
                                                 src={content.booking_url}
                                                 className="w-full h-full border-0 rounded-md"
@@ -171,7 +171,7 @@ export default function Booking({ content, phone }: BookingProps) {
                     <div className="lg:col-span-1 space-y-6">
                         <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
                              <Card className="bg-card/80 backdrop-blur-sm">
-                                <CardHeader>
+                                <CardHeader className="pb-0">
                                     <CardTitle className="font-serif">Accommodation Rates</CardTitle>
                                     <CardDescription>Valid 1 Feb 2025 to 31 Jan 2026</CardDescription>
                                 </CardHeader>
@@ -195,12 +195,7 @@ export default function Booking({ content, phone }: BookingProps) {
                                         </TableBody>
                                     </Table>
                                 </CardContent>
-                            </Card>
-                        </div>
-                         <div className="opacity-0 animate-fade-in-up [animation-delay:500ms]">
-                             <Card className="bg-card/80 backdrop-blur-sm">
-                                <CardHeader>
-                                    <CardTitle className="font-serif">Accommodation Rates</CardTitle>
+                                <CardHeader className="pb-0 pt-0">
                                     <CardDescription>Valid 1 Feb 2026 to 31 Jan 2027</CardDescription>
                                 </CardHeader>
                                 <CardContent>
