@@ -97,11 +97,11 @@ export default function Header() {
         <Link href="#home" className={linkClasses}>
           <div className="flex items-center gap-2">
             <Image 
-              src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolivelogo.png"
+              src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolive.png"
               alt="Ida Olive Logo"
               width={160}
               height={60}
-              className={`h-auto transition-all duration-300 ${isScrolled ? 'w-24' : 'w-32'}`}
+              className={`h-auto transition-all duration-300 ${isScrolled ? 'w-28' : 'w-40'}`}
               priority
             />
           </div>
@@ -136,11 +136,11 @@ export default function Header() {
                 >
                   <div className="flex items-center gap-2">
                     <Image 
-                      src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolivelogo.png"
+                      src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolive.png"
                       alt="Ida Olive Logo"
                       width={160}
                       height={60}
-                      className="h-auto"
+                      className="h-auto w-40"
                     />
                   </div>
                 </Link>
