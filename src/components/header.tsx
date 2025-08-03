@@ -136,7 +136,7 @@ export default function Header() {
                 >
                   <div className="flex items-center gap-2">
                     <Image 
-                      src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolive.png"
+                      src="https://tfxogfrdzfk9ugja.public.blob.vercel-storage.com/idaolivelogo.png"
                       alt="Ida Olive Logo"
                       width={100}
                       height={25}

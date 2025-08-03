@@ -17,10 +17,24 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'tfxogfrdzfk9ugja.public.blob.vercel-storage.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.public.blob.vercel-storage.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
-  // This is needed to allow the Next.js dev server to work correctly in the web-based IDE
-  allowedDevOrigins: ["https://*.cluster-iesosxm5fzdewqvhlwn5qivgry.cloudworkstations.dev"],
+  experimental: {
+    // This is needed to allow the Next.js dev server to work correctly in the web-based IDE
+    // allowedDevOrigins: ["https://*.cluster-iesosxm5fzdewqvhlwn5qivgry.cloudworkstations.dev"],
+  }
 };
 
 export default nextConfig;

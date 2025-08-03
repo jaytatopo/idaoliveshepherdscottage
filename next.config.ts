@@ -26,10 +26,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  experimental: {
-    // This is needed to allow the Next.js dev server to work correctly in the web-based IDE
-    allowedDevOrigins: ["https://*.cluster-iesosxm5fzdewqvhlwn5qivgry.cloudworkstations.dev"],
-  }
 };
 
 export default nextConfig;
