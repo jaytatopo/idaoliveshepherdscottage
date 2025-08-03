@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 import CookieBanner from '@/components/cookie-banner';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { getContent, getGalleryImages } from '@/lib/content';
+import { getGalleryImages } from '@/lib/content';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,19 +22,13 @@ const lora = Lora({
   display: 'swap',
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const content = await getContent();
-  const heroContent = content.hero;
-  const ogImageUrl = 'https://placehold.co/1200x630.png';
+// TODO: Replace with your actual production domain
+const siteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+const ogImageUrl = 'https://placehold.co/1200x630.png';
+const title = 'Ida Olive Shepherd’s Cottage, McGregor';
+const description = 'A serene, off-the-grid escape for nature lovers.';
 
-  const title = heroContent?.heading || 'Ida Olive Shepherd’s Cottage, McGregor';
-  const description = heroContent?.subheading || 'A serene, off-the-grid escape for nature lovers.';
-
-  // TODO: Replace with your actual production domain
-  const siteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
-
-
-  return {
+export const metadata: Metadata = {
     title,
     description,
     openGraph: {
@@ -57,8 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: [ogImageUrl],
     },
-  };
-}
+};
 
 
 export default async function RootLayout({
@@ -81,23 +74,22 @@ export default async function RootLayout({
           />
         )}
       </head>
-      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-JYYF199R2F"></Script>
-      <Script id="google-analytics">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-JYYF199R2F');
-        `}
-      </Script>
       <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         {children}
         <Analytics />
         <SpeedInsights />
         <Toaster />
         <CookieBanner />
-        
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-JYYF199R2F"></Script>
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-JYYF199R2F');
+          `}
+        </Script>
       </body>
     </html>
   );
