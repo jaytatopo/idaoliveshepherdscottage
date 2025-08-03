@@ -55,17 +55,17 @@ export default function Hero({ content }: { content: HeroContent }) {
 
       <div className={cn(
         "absolute inset-0",
-        "bg-gradient-to-t from-black/60 via-black/20 to-transparent"
+        "bg-gradient-to-t from-black/70 via-black/30 to-black/10"
       )} />
       <div className={cn(
         "relative z-10 flex h-full flex-col items-center justify-center text-center",
         "text-primary-foreground"
       )}>
         <div className="max-w-4xl p-6">
-            <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl drop-shadow-xl opacity-0 animate-fade-in [animation-delay:200ms]">
+            <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl [text-shadow:2px_2px_8px_rgba(0,0,0,0.8)] opacity-0 animate-fade-in [animation-delay:200ms]">
               {content.heading}
             </h1>
-            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl drop-shadow-lg opacity-0 animate-fade-in [animation-delay:400ms]">
+            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl [text-shadow:1px_1px_4px_rgba(0,0,0,0.7)] opacity-0 animate-fade-in [animation-delay:400ms]">
               {content.subheading}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in-up [animation-delay:600ms]">

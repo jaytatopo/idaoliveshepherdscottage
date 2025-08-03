@@ -164,14 +164,6 @@ export default function Gallery({}: GalleryProps) {
                         <ChevronRight className="h-8 w-8" />
                     </Button>
                 </div>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleClose}
-                    className="absolute top-0 right-0 rounded-full h-12 w-12 bg-black/50 text-white hover:bg-black/75 hover:text-white -mr-16"
-                >
-                    <X className="h-8 w-8" />
-                </Button>
             </DialogContent>
         </Dialog>
     </section>
