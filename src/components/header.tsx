@@ -104,7 +104,6 @@ export default function Header() {
               className={`h-auto transition-all duration-300 ${isScrolled ? 'w-24' : 'w-32'}`}
               priority
             />
-            <span className="hidden sm:inline font-serif text-lg font-bold -ml-1">Shepherd’s Cottage</span>
           </div>
         </Link>
 
@@ -120,7 +119,7 @@ export default function Header() {
               className={`transition-colors duration-300 ${
                 isScrolled
                   ? 'text-foreground'
-                  : 'text-white hover:bg-white/10 hover:text-white'
+                  : 'text-primary-foreground hover:bg-white/10 hover:text-primary-foreground'
               }`}
             >
               <Menu className="h-6 w-6" />
@@ -143,7 +142,6 @@ export default function Header() {
                       height={25}
                       className="h-auto"
                     />
-                    <span className="font-serif text-lg font-bold -ml-1">Shepherd’s Cottage</span>
                   </div>
                 </Link>
                 <Button
