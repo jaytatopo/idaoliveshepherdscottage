@@ -165,36 +165,28 @@ function AdminSidebar() {
   );
 }
 
-
-export default function AdminClientLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname();
-
-  // Do not show the sidebar on the login page itself.
-  if (pathname === '/admin') {
-    return <>{children}</>;
-  }
-  
-  // Show the sidebar for all other authenticated admin pages.
+  // The `if` statement is gone! This layout is now dedicated to the dashboard.
   return (
     <SidebarProvider>
-        <AdminSidebar />
-        <SidebarInset>
-            <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 md:hidden">
-              <SidebarTrigger>
-                 <Menu />
-              </SidebarTrigger>
-              <h1 className="text-lg font-semibold text-primary font-serif">
-                  Admin Panel
-              </h1>
-            </header>
-            <div className="p-4 md:p-6 lg:p-8">
-                 {children}
-            </div>
-        </SidebarInset>
+      <AdminSidebar />
+      <SidebarInset>
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 md:hidden">
+          <SidebarTrigger>
+            <Menu />
+          </SidebarTrigger>
+          <h1 className="text-lg font-semibold text-primary font-serif">
+            Admin Panel
+          </h1>
+        </header>
+        <div className="p-4 md:p-6 lg:p-8">
+          {children}
+        </div>
+      </SidebarInset>
     </SidebarProvider>
   )
 }
