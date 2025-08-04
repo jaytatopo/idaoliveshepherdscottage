@@ -2,43 +2,78 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl.clone();
-  const hostname = request.headers.get('host');
+    // 1. Get all necessary details from the request
+    const url = request.nextUrl.clone();
+    const { pathname } = url;
+    const hostname = request.headers.get('host');
+    const authCookie = request.cookies.get('admin_auth');
 
-  const adminHostname = 'admin.idaolivecottagemcgregor.co.za';
-  const ADMIN_LOGIN_PATH = '/admin'; // This now correctly points to your login page
+    // 2. Define constants for easy configuration
+    const adminHostname = 'admin.idaolivecottagemcgregor.co.za';
+    const ADMIN_LOGIN_PATH = '/admin';
+    const ADMIN_DASHBOARD_PATH = '/admin/dashboard';
 
-  // In development, we can skip host checks.
-  if (process.env.NODE_ENV === 'development') {
-    return NextResponse.next();
-  }
-
-  // --- Handle traffic on the ADMIN subdomain ---
-  if (hostname === adminHostname) {
-    // If user is at the root, show them the login page content
-    if (url.pathname === '/') {
-      return NextResponse.rewrite(new URL(ADMIN_LOGIN_PATH, request.url));
+    // 3. In development mode, we only care about the auth logic for simplicity.
+    if (process.env.NODE_ENV === 'development') {
+        // If trying to access dashboard without a cookie, redirect to login
+        if (pathname.startsWith(ADMIN_DASHBOARD_PATH) && !authCookie) {
+            return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
+        }
+        // If on the login page with a cookie, redirect to dashboard
+        if (pathname === ADMIN_LOGIN_PATH && authCookie) {
+            return NextResponse.redirect(new URL(ADMIN_DASHBOARD_PATH, request.url));
+        }
+        return NextResponse.next();
     }
-    // If they try to visit any OTHER non-admin page (like /about) on the admin domain,
-    // send them to the main site. This correctly handles the "Back to Site" link.
-    if (!url.pathname.startsWith('/admin')) {
+
+    // --- PRODUCTION LOGIC ---
+
+    // 4. Handle Subdomain Routing first
+    // If an admin path is accessed on the main domain, redirect to the admin subdomain.
+    if (hostname !== adminHostname && pathname.startsWith('/admin')) {
+        url.hostname = adminHostname;
+        return NextResponse.redirect(url);
+    }
+    // If a non-admin page is accessed on the admin domain, redirect to the main site.
+    // We exclude the root path '/' because it has special handling below.
+    if (hostname === adminHostname && !pathname.startsWith('/admin') && pathname !== '/') {
         const mainDomain = adminHostname.replace('admin.', '');
-        return NextResponse.redirect(new URL(url.pathname, `https://${mainDomain}`));
+        url.hostname = mainDomain;
+        return NextResponse.redirect(url);
     }
-  } 
-  // --- Handle traffic on the MAIN subdomain ---
-  else {
-    // If an admin path is being accessed on the main domain, redirect to admin domain
-    if (url.pathname.startsWith('/admin')) {
-      url.hostname = adminHostname;
-      return NextResponse.redirect(url);
-    }
-  }
+    
+    // 5. Handle Authentication & Root Path on the Admin Domain
+    if (hostname === adminHostname) {
+        // Case A: User is at the root of the admin domain ('admin.domain.com/')
+        if (pathname === '/') {
+            return authCookie
+                ? NextResponse.redirect(new URL(ADMIN_DASHBOARD_PATH, request.url)) // If logged in, go straight to dashboard
+                : NextResponse.rewrite(new URL(ADMIN_LOGIN_PATH, request.url));      // If not, show the login page content
+        }
 
-  return NextResponse.next();
+        // Case B: User is explicitly on the login page ('/admin')
+        if (pathname === ADMIN_LOGIN_PATH) {
+            if (authCookie) {
+                // If they have a cookie, don't let them see the login page again
+                return NextResponse.redirect(new URL(ADMIN_DASHBOARD_PATH, request.url));
+            }
+        }
+        
+        // Case C: User is trying to access a protected dashboard page
+        if (pathname.startsWith(ADMIN_DASHBOARD_PATH)) {
+            if (!authCookie) {
+                // If they don't have a cookie, send them to the login page
+                return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
+            }
+        }
+    }
+
+    // If none of the above conditions are met, allow the request to proceed.
+    return NextResponse.next();
 }
 
+// We use a more general matcher to ensure the middleware can check the
+// hostname on ALL incoming requests, which is necessary for subdomain routing.
 export const config = {
-  // Match all paths except for static files and API routes.
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
