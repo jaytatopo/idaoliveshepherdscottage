@@ -34,7 +34,7 @@ export default async function Footer() {
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link href="/admin" className="hover:text-primary transition-colors">Admin Login</Link>
+            {/* <Link href="/admin" className="hover:text-primary transition-colors">Admin Login</Link> */}
           </div>
         </div>
       </div>

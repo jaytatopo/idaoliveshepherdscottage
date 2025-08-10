@@ -48,7 +48,7 @@ export async function saveInquiry(inquiry: InquiryFormData) {
             // The `onboarding@resend.dev` address is a temporary sandbox for testing.
             // Replace `yourdomain.com` with your actual, verified domain before going live.
             await resend.emails.send({
-                from: 'Ida Olive Cottage <onboarding@resend.dev>', // <-- Replace with your verified domain
+                from: 'Ida Olive Cottage <website@idaolivecottagemcgregor.co.za>', // <-- Replace with your verified domain
                 to: 'reservations@idaolivecottagemcgregor.co.za', 
                 subject: 'New Web Inquiry for Ida Olive Cottage',
                 react: InquiryNotificationEmail(validatedInquiry),

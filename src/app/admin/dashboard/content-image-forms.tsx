@@ -2,17 +2,21 @@
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
-import { uploadGalleryImage, deleteGalleryImage } from "@/app/actions/content-actions";
+import { uploadGalleryImage, deleteGalleryImage, updateGalleryImageOrder } from "@/app/actions/content-actions";
 import type { GalleryImage } from "@/lib/content";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload } from "lucide-react";
+import { Upload, GripVertical } from "lucide-react";
 import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { DeleteActionButton } from "./delete-action-button";
+import { useState } from "react";
+import { DndContext, closestCorners, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'amenities_bg' | 'facilities_bg' | 'activities_bg' | 'booking_bg' | 'location_bg' | 'host_profile' | 'host_bg' | 'faq_bg' | 'cta_bg' | 'video_bg';
+type SectionType = 'hero' | 'reviews' | 'accommodation' | 'accommodation_bg' | 'amenities_bg' | 'facilities_bg' | 'activities_bg' | 'specials_bg' | 'booking_bg' | 'location_bg' | 'host_profile' | 'host_bg' | 'faq_bg' | 'cta_bg' | 'video_bg';
 
 interface ImageUploadSectionProps {
     section: SectionType;
@@ -35,13 +39,68 @@ function SubmitButton({ isSingleton, hasImage }: { isSingleton: boolean; hasImag
     );
 }
 
+// Sortable image item component for drag and drop
+function SortableImageItem({ image, onDelete }: { image: GalleryImage; onDelete: (id: number) => Promise<{ success: boolean; message: string; }> }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+        isOver,
+        over,
+    } = useSortable({ id: image.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
+
+    // Determine if this item is being dragged over
+    const isDragOver = over && over.id === image.id && !isDragging;
+
+    return (
+        <div ref={setNodeRef} style={style} className="relative group">
+            {isDragOver && (
+                <div className="absolute inset-0 bg-blue-500/20 rounded-md z-20 pointer-events-none flex items-center justify-center">
+                    <div className="text-blue-500 font-bold text-lg">Drop here</div>
+                </div>
+            )}
+            <div className="absolute top-2 left-2 z-10 cursor-grab bg-black/50 rounded p-1 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical {...attributes} {...listeners} size={16} />
+            </div>
+            <Image src={image.src_url} alt={image.alt} width={300} height={200} className="rounded-md object-cover aspect-video" />
+            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <DeleteActionButton
+                    itemName={image.alt || 'this image'}
+                    deleteAction={async () => onDelete(image.id)}
+                />
+            </div>
+        </div>
+    );
+}
+
 export function ImageUploadSection({ section, images, isSingleton }: ImageUploadSectionProps) {
     const { toast } = useToast();
+    const [galleryImages, setGalleryImages] = useState<GalleryImage[]>(images);
+    const [activeId, setActiveId] = useState<number | null>(null);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     async function handleUpload(formData: FormData) {
         const result = await uploadGalleryImage(formData);
         if (result.success) {
             toast({ title: 'Success!', description: result.message });
+            // After successful upload, we need to refresh the page to get the updated image list
+            // This is a simple solution - in a more complex app, you might fetch the updated list
+            window.location.reload();
         } else {
             toast({
                 variant: 'destructive',
@@ -51,7 +110,53 @@ export function ImageUploadSection({ section, images, isSingleton }: ImageUpload
         }
     }
 
-    const firstImage = images?.[0];
+    async function handleDelete(id: number) {
+        const result = await deleteGalleryImage(id);
+        if (result.success) {
+            // After successful deletion, refresh the page to get the updated image list
+            window.location.reload();
+        }
+        return result;
+    }
+
+    function handleDragStart(event: DragStartEvent) {
+        setActiveId(event.active.id as number);
+    }
+
+    async function handleDragEnd(event: DragEndEvent) {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            const oldIndex = galleryImages.findIndex(image => image.id === active.id);
+            const newIndex = galleryImages.findIndex(image => image.id === over.id);
+            
+            const newImages = arrayMove(galleryImages, oldIndex, newIndex);
+            setGalleryImages(newImages);
+
+            // Update the sort_order in the database
+            try {
+                await Promise.all(newImages.map((image, index) =>
+                    updateGalleryImageOrder(image.id, index)
+                ));
+                toast({ title: 'Success!', description: 'Image order updated successfully.' });
+            } catch (error) {
+                console.error('Failed to update image order:', error);
+                toast({
+                    variant: 'destructive',
+                    title: 'Update Failed',
+                    description: 'Failed to update image order.',
+                });
+                // Revert to original order on failure
+                setGalleryImages(galleryImages);
+            }
+        }
+        
+        setActiveId(null);
+    }
+
+    const activeImage = activeId ? galleryImages.find(image => image.id === activeId) : null;
+
+    const firstImage = galleryImages?.[0];
 
     if (isSingleton) {
         return (
@@ -62,7 +167,13 @@ export function ImageUploadSection({ section, images, isSingleton }: ImageUpload
                         <div className="absolute top-2 right-2">
                              <DeleteActionButton
                                 itemName={firstImage.alt || 'this image'}
-                                deleteAction={deleteGalleryImage.bind(null, firstImage.id)}
+                                deleteAction={async () => {
+                                    const result = await deleteGalleryImage(firstImage.id);
+                                    if (result.success) {
+                                        window.location.reload();
+                                    }
+                                    return result;
+                                }}
                             />
                         </div>
                     </div>
@@ -88,20 +199,38 @@ export function ImageUploadSection({ section, images, isSingleton }: ImageUpload
 
     return (
         <>
-            {images.length > 0 ? (
-                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-                    {images.map(image => (
-                        <div key={image.id} className="relative group">
-                            <Image src={image.src_url} alt={image.alt} width={300} height={200} className="rounded-md object-cover aspect-video"/>
-                            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                 <DeleteActionButton
-                                    itemName={image.alt || 'this image'}
-                                    deleteAction={deleteGalleryImage.bind(null, image.id)}
-                                />
+            {galleryImages.length > 0 ? (
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCorners}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                >
+                    <div className="mb-4">
+                        <p className="text-sm text-muted-foreground mb-2">Drag and drop images to reorder them</p>
+                        <SortableContext items={galleryImages.map(img => img.id)} strategy={rectSortingStrategy}>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                                {galleryImages.map(image => (
+                                    <SortableImageItem
+                                        key={image.id}
+                                        image={image}
+                                        onDelete={handleDelete}
+                                    />
+                                ))}
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        </SortableContext>
+                    </div>
+                    <DragOverlay>
+                        {activeImage ? (
+                            <div className="relative opacity-80">
+                                <div className="absolute top-2 left-2 z-10 cursor-grabbing bg-black/50 rounded p-1 text-white">
+                                    <GripVertical size={16} />
+                                </div>
+                                <Image src={activeImage.src_url} alt={activeImage.alt} width={300} height={200} className="rounded-md object-cover aspect-video shadow-lg" />
+                            </div>
+                        ) : null}
+                    </DragOverlay>
+                </DndContext>
             ) : (
                  <p className="text-sm text-muted-foreground mb-4">No images have been uploaded for this gallery.</p>
             )}

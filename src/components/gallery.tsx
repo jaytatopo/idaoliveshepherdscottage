@@ -24,7 +24,7 @@ const GallerySkeleton = () => (
           </p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
+          {Array.from({ length: 12 }).map((_, index) => (
             <Skeleton key={index} className="aspect-square w-full rounded-lg" />
           ))}
         </div>
@@ -77,7 +77,7 @@ export default function Gallery({}: GalleryProps) {
     return null; // Don't render the section if there are no images
   }
   
-  const imagesToShow = images.slice(0, images.length > 8 ? 7 : 8);
+  const imagesToShow = images.slice(0, images.length > 12 ? 11 : 12);
 
   return (
     <section id="gallery" className="relative py-12 md:py-20 bg-card overflow-hidden">
@@ -108,17 +108,17 @@ export default function Gallery({}: GalleryProps) {
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>
                 ))}
-                {images.length > 8 && (
+                {images.length > 12 && (
                     <button
                         key="view-more"
-                        onClick={() => handleOpen(7)}
+                        onClick={() => handleOpen(11)}
                         className="relative aspect-square w-full h-full rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center bg-muted hover:bg-muted/80 opacity-0 animate-fade-in"
                         style={{ animationDelay: `${300 + imagesToShow.length * 75}ms` }}
                     >
                         <div className="text-center text-muted-foreground">
                         <Plus className="h-8 w-8 mx-auto" />
                         <span className="text-sm font-medium mt-1">
-                            +{images.length - 7} More
+                            +{images.length - 11} More
                         </span>
                         </div>
                     </button>

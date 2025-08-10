@@ -197,7 +197,9 @@ function shapeContent(rows: any[]): WebsiteContent {
         } else {
             for (const key in defaultContent[section as keyof typeof defaultContent]) {
                 if (!content[section][key]) {
-                    content[section][key] = defaultContent[section as keyof typeof defaultContent][key as keyof typeof content[section]];
+                    const sectionKey = section as keyof typeof defaultContent;
+                    const contentKey = key as keyof typeof defaultContent[typeof sectionKey];
+                    content[section][key] = defaultContent[sectionKey][contentKey];
                 }
             }
         }

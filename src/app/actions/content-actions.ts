@@ -687,3 +687,16 @@ export async function getClientRates(): Promise<{ success: boolean; data?: Rate[
         return { success: false, message: `Failed to fetch rates. Details: ${error.message}` };
     }
 }
+
+// Action to update the sort order of gallery images
+export async function updateGalleryImageOrder(imageId: number, newSortOrder: number) {
+    try {
+        await db.execute('UPDATE gallery_images SET sort_order = $1 WHERE id = $2', [newSortOrder, imageId]);
+        revalidatePath('/');
+        revalidatePath('/admin/dashboard/images');
+        return { success: true, message: 'Image order updated successfully.' };
+    } catch (error: any) {
+        console.error('Failed to update image order:', error);
+        return { success: false, message: `Failed to update image order. Details: ${error.message}` };
+    }
+}
