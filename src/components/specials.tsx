@@ -10,6 +10,7 @@ import { Tag } from 'lucide-react';
 import type { Special, GalleryImage } from '@/lib/content';
 import { getClientGalleryImages, getClientSpecials } from '@/app/actions/content-actions';
 import { Skeleton } from './ui/skeleton';
+import { cn } from '@/lib/utils';
 
 interface SpecialsContent {
   heading: string;
@@ -111,11 +112,21 @@ export default function Specials({ content, specials: initialSpecials }: Special
             {content.subheading}
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch justify-center">
+        <div
+          className={cn(
+            'gap-8 items-stretch',
+            specials.length === 1
+              ? 'flex justify-center'
+              : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center'
+          )}
+        >
           {specials.map((special, index) => (
             <div
               key={special.id}
-              className="opacity-0 animate-fade-in-up"
+              className={cn(
+                'opacity-0 animate-fade-in-up',
+                specials.length === 1 && 'w-full max-w-md'
+              )}
               style={{ animationDelay: `${300 + index * 100}ms` }}
             >
               <Card className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur-sm group">
