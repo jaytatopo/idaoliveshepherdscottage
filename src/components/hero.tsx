@@ -4,11 +4,11 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowDown, BedDouble, Camera } from 'lucide-react';
-import type { GalleryImage } from '@/lib/content';
+import { ArrowDown, BedDouble, Camera, Sparkles } from 'lucide-react';
+import type { GalleryImage, Special } from '@/lib/content';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { getClientGalleryImages } from '@/app/actions/content-actions';
+import { getClientGalleryImages, getClientSpecials } from '@/app/actions/content-actions';
 import { Skeleton } from './ui/skeleton';
 
 interface HeroContent {
@@ -19,6 +19,7 @@ interface HeroContent {
 export default function Hero({ content }: { content: HeroContent }) {
   const [image, setImage] = useState<GalleryImage | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+  const [special, setSpecial] = useState<Special | undefined>();
 
    useEffect(() => {
     const loadImage = async () => {
@@ -34,6 +35,20 @@ export default function Hero({ content }: { content: HeroContent }) {
       }
     };
     loadImage();
+  }, []);
+
+  useEffect(() => {
+    const loadSpecial = async () => {
+      try {
+        const result = await getClientSpecials();
+        if (result.success && result.data && result.data.length > 0) {
+          setSpecial(result.data[0]);
+        }
+      } catch (error) {
+        console.error("Failed to load hero special", error);
+      }
+    };
+    loadSpecial();
   }, []);
 
   return (
@@ -62,7 +77,19 @@ export default function Hero({ content }: { content: HeroContent }) {
         "text-primary-foreground"
       )}>
         <div className="max-w-4xl p-6">
-            <h1 className="font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl [text-shadow:2px_2px_8px_rgba(0,0,0,0.8)] opacity-0 animate-fade-in [animation-delay:200ms]">
+            {special && (
+              <Link
+                href="#specials"
+                className="inline-flex items-center gap-2 rounded-full border border-accent/60 bg-accent/90 px-4 py-1.5 text-sm font-medium text-accent-foreground shadow-lg backdrop-blur-sm transition-transform hover:scale-105 hover:bg-accent opacity-0 animate-fade-in-up"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>{special.headline}</span>
+                {special.duration && (
+                  <span className="hidden sm:inline opacity-80">· {special.duration}</span>
+                )}
+              </Link>
+            )}
+            <h1 className="mt-4 font-serif text-5xl font-bold leading-tight md:text-7xl lg:text-8xl [text-shadow:2px_2px_8px_rgba(0,0,0,0.8)] opacity-0 animate-fade-in [animation-delay:200ms]">
               {content.heading}
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl [text-shadow:1px_1px_4px_rgba(0,0,0,0.7)] opacity-0 animate-fade-in [animation-delay:400ms]">
