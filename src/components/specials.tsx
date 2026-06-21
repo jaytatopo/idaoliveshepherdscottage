@@ -164,7 +164,7 @@ export default function Specials({ content, specials: initialSpecials }: Special
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground -mt-2">per person per night</p>
+                  <p className="text-xs text-muted-foreground -mt-2">For 2 Persons for 3 Nights</p>
                   <Button asChild className="w-full">
                     <Link href="#booking">Book This Special</Link>
                   </Button>
